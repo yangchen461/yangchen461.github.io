@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="John Doe">
+
+
+
+
+
+<title>如何使用 GitHub 搭建自己的博客？- 入门教程（1） | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">如何使用 GitHub 搭建自己的博客？- 入门教程（1）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">John Doe</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 21, 2025&nbsp;&nbsp;15:48:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/blog/">blog</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>本文参考链接如下：</p>
+<ul>
+<li>哔哩哔哩视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Eg41157tL/?spm_id_from=333.337.search-card.all.click">【教程】Hexo &amp; GitHub 搭建自己的专属博客</a>  </li>
+<li>百度网盘文件（主题和教程 PDF）：<br>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1lZNI9BbnDl_wzrqU7DAmxA">https://pan.baidu.com/s/1lZNI9BbnDl_wzrqU7DAmxA</a><br>提取码：<code>2ez8</code></li>
+</ul>
+<p>经过半天时间的搭建，最终完成了个人博客的初步构建。<br>在此对整个搭建过程做一个简要的记录，供自己和他人参考。</p>
+<p>编辑工具：泗洪 Typora（用于编辑 Markdown 格式）</p>
+<hr>
+<h3 id="1-注意-Git-与-cmd-的区别"><a href="#1-注意-Git-与-cmd-的区别" class="headerlink" title="1. 注意 Git 与 cmd 的区别"></a>1. 注意 Git 与 cmd 的区别</h3><p>在文档《Hexo + GitHub 搭建自己的专属博客》的第一部分，安装完毕之后查看是否成功，可以在 Windows 下按 <code>Win + R</code> 输入 <code>cmd</code> 打开命令提示符，然后输入以下指令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git version</span><br><span class="line">node -v</span><br><span class="line">npm -v</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这些命令<strong>应在 cmd 命令行中执行</strong>，而不是 Git Bash。执行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">bash复制编辑Microsoft Windows [版本 10.0.22631.4602]</span><br><span class="line">(c) Microsoft Corporation。保留所有权利。</span><br><span class="line"></span><br><span class="line">C:\Users\11360&gt;git version</span><br><span class="line">git version 2.49.0.windows.1</span><br><span class="line"></span><br><span class="line">C:\Users\11360&gt;node -v</span><br><span class="line">v22.14.0</span><br><span class="line"></span><br><span class="line">C:\Users\11360&gt;npm -v</span><br><span class="line">10.9.2</span><br><span class="line"></span><br><span class="line">C:\Users\11360&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-部署主题"><a href="#2-部署主题" class="headerlink" title="2. 部署主题"></a>2. 部署主题</h3><p>在配置 Hexo 主题时，我曾遇到一个报错。路径如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">makefile</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">D:\Cloud\myBlog\themes\hexo-theme-Chic</span><br></pre></td></tr></table></figure>
+
+<p>该主题目录中有一个 <code>*_config.yml*</code> 文件。需要注意的是：<strong>Hexo 项目中存在两个 <code>_config.yml</code> 文件</strong>：</p>
+<ul>
+<li>项目根目录下的 <code>_config.yml</code>：控制全局配置</li>
+<li>主题文件夹下的 <code>_config.yml</code>：控制主题样式和内容</li>
+</ul>
+<p>报错内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yaml复制编辑### this variable is MarkDown form.</span><br><span class="line">## description: Lorem ipsum dolor sit amet, **consectetur adipiscing elit.** &lt;br&gt;Fusce eget urna vitae velit *eleifend interdum at ac* nisi.</span><br><span class="line"></span><br><span class="line">#description: &quot;**Passion makes every day different. **&quot;&lt;br&gt; *Aerospace and programming enthusiasts, welcome to communicate.*</span><br><span class="line"></span><br><span class="line">description: |</span><br><span class="line">  **Passion makes every day different.**&lt;br&gt;</span><br><span class="line">  *Aerospace and programming enthusiasts, welcome to communicate.*</span><br><span class="line">avatar: /image/avatar.jpg</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong><br> 第一种写法在 YAML 中可能会导致解析错误，因为 <code>&quot;</code> 引号中混入了 <code>&lt;br&gt;</code> HTML 标签，YAML 会难以正确处理。使用 <code>|</code> 多行文本格式可避免解析问题。</p>
+<h3 id="3-GitHub-新建库"><a href="#3-GitHub-新建库" class="headerlink" title="3. GitHub 新建库"></a>3. GitHub 新建库</h3><p>这方面尤其需要注意 <strong>仓库命名规则</strong>。本次搭建过程中，GitHub 仓库名称<strong>必须严格按照以下格式命名</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lua</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">用户名.github.io</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">lua</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">yangchen461.github.io</span><br></pre></td></tr></table></figure>
+
+<p>命名要点如下：</p>
+<ul>
+<li>“用户名”应与你的 GitHub 用户名保持一致</li>
+<li>后缀 <code>.github.io</code> 必不可少，用于 GitHub Pages 识别</li>
+</ul>
+<hr>
+<p>GitHub 仓库命名与 Hexo 部署配置紧密相关，需要在博客根目录的 <code>_config.yml</code> 中指定正确的仓库地址和分支：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yaml复制编辑deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:yangchen461/yangchen461.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>✅ 小贴士：每次部署前可以执行以下命令，确保更新生效：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash复制编辑hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-配置-SSH-与部署注意事项（重点）"><a href="#4-配置-SSH-与部署注意事项（重点）" class="headerlink" title="4. 配置 SSH 与部署注意事项（重点）"></a>4. 配置 SSH 与部署注意事项（重点）</h3><p>这一部分是我认为最麻烦的一步，特别是 SSH 配置和 GitHub Pages 设置，建议重点关注。</p>
+<hr>
+<h3 id="🔐-1-查看自己的-SSH-Key"><a href="#🔐-1-查看自己的-SSH-Key" class="headerlink" title="🔐 1. 查看自己的 SSH Key"></a>🔐 1. 查看自己的 SSH Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>如果没有生成过 SSH Key，可以使用以下命令创建：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="✅-2-验证-SSH-是否添加成功"><a href="#✅-2-验证-SSH-是否添加成功" class="headerlink" title="✅ 2. 验证 SSH 是否添加成功"></a>✅ 2. 验证 SSH 是否添加成功</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<p>如果终端返回以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vbnet</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">Hi xxx! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<p>说明 SSH 配置成功。</p>
+<p>⚠️ 注意：这一步必须在 GitHub 中添加 SSH Key 后再进行验证。</p>
+<hr>
+<h3 id="📦-3-关于-GitHub-仓库分支（main-与-master）"><a href="#📦-3-关于-GitHub-仓库分支（main-与-master）" class="headerlink" title="📦 3. 关于 GitHub 仓库分支（main 与 master）"></a>📦 3. 关于 GitHub 仓库分支（main 与 master）</h3><p>GitHub 默认分支通常为 <code>main</code>，而 Hexo 默认使用 <code>master</code> 分支部署。需要手动在 <code>_config.yml</code> 文件中指定部署分支为 <code>master</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yaml复制编辑deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:yangchen461/yangchen461.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<p>然后运行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bash复制编辑hexo g   # 生成静态文件</span><br><span class="line">hexo d   # 部署到 GitHub</span><br></pre></td></tr></table></figure>
+
+<p>此时会将本地生成的博客内容上传到 GitHub，但注意仓库的 <code>main</code> 分支仍可能是空的。</p>
+<h3 id="🌐-4-检查-GitHub-Pages-设置"><a href="#🌐-4-检查-GitHub-Pages-设置" class="headerlink" title="🌐 4. 检查 GitHub Pages 设置"></a>🌐 4. 检查 GitHub Pages 设置</h3><ol>
+<li><p>登录 GitHub，进入仓库：<a target="_blank" rel="noopener" href="https://github.com/yangchen461/yangchen461.github.io">https://github.com/yangchen461/yangchen461.github.io</a></p>
+</li>
+<li><p>点击右上角 <code>Settings</code> → 左侧选择 <code>Pages</code></p>
+</li>
+<li><p>找到 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Branch</span><br></pre></td></tr></table></figure>
+
+<p> 设置部分：</p>
+<ul>
+<li>确保 “Source” 分支选择的是 <code>master</code>（或者你实际使用的分支）</li>
+<li>如果没有设置，选择后点击 Save</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="🖥️-5-最终验证部署是否成功"><a href="#🖥️-5-最终验证部署是否成功" class="headerlink" title="🖥️ 5. 最终验证部署是否成功"></a>🖥️ 5. 最终验证部署是否成功</h3><p>部署完成后，你的博客地址将从本地地址：</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a></p>
+<p>变为线上地址：</p>
+<p><a href="https://yangchen461.github.io/">https://yangchen461.github.io</a></p>
+<h3 id="5-Github库的删除"><a href="#5-Github库的删除" class="headerlink" title="5. Github库的删除"></a>5. Github库的删除</h3><p>在我想要删除test2的库的时候，不小心删除了整个库，这里注意在setting设置中执行命令<strong>Delete this repository</strong>，会删除整个库，而不是其中的某个文件夹或文件。</p>
+<p><img src="C:\Users\11360\AppData\Roaming\Typora\typora-user-images\image-20250321164606677.png" alt="image-20250321164606677"></p>
+<p>如果想要删除某个文件，只能够在编辑界面删除，如下：</p>
+<p><img src="C:\Users\11360\AppData\Roaming\Typora\typora-user-images\image-20250321164548910.png" alt="image-20250321164548910"></p>
+<p><img src="C:\Users\11360\AppData\Roaming\Typora\typora-user-images\image-20250321164649781.png" alt="image-20250321164649781"></p>
+<p>如果想要删除某个文件夹，只能够一个个的删除其中的文件，然后文件夹自动消失。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>John Doe</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://yangchen461.github.io/2025/03/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89/">https://yangchen461.github.io/2025/03/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/blog/"># blog</a>
+                    
+                        <a href="/tags/study/"># study</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2025/03/21/hello-world/">Hello World</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© John Doe | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
