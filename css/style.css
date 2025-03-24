@@ -1361,6 +1361,12 @@ header label {
 .post-content pre .javascript .function {
   color: #8959a8;
 }
+.post-copyright a {
+  word-break: break-all;
+  white-space: normal;
+  display: inline-block;
+  max-width: 100%;
+}
 body.dark-mode {
   background-color: #1e1e1e;
   color: #ddd;
