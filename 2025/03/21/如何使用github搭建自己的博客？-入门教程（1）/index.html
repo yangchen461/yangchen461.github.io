@@ -267,12 +267,12 @@
 
 <h3 id="4-配置-SSH-与部署注意事项（重点）"><a href="#4-配置-SSH-与部署注意事项（重点）" class="headerlink" title="4. 配置 SSH 与部署注意事项（重点）"></a>4. 配置 SSH 与部署注意事项（重点）</h3><p>这一部分是我认为最麻烦的一步，特别是 SSH 配置和 GitHub Pages 设置，建议重点关注。</p>
 <hr>
-<h3 id="🔐-1-查看自己的-SSH-Key"><a href="#🔐-1-查看自己的-SSH-Key" class="headerlink" title="🔐 1. 查看自己的 SSH Key"></a>🔐 1. 查看自己的 SSH Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<h3 id="1-查看自己的-SSH-Key"><a href="#1-查看自己的-SSH-Key" class="headerlink" title="1. 查看自己的 SSH Key"></a>1. 查看自己的 SSH Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
 
 <p>如果没有生成过 SSH Key，可以使用以下命令创建：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">ssh-keygen -t rsa -C &quot;你的邮箱&quot;</span><br></pre></td></tr></table></figure>
 
-<h3 id="✅-2-验证-SSH-是否添加成功"><a href="#✅-2-验证-SSH-是否添加成功" class="headerlink" title="✅ 2. 验证 SSH 是否添加成功"></a>✅ 2. 验证 SSH 是否添加成功</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<h3 id="2-验证-SSH-是否添加成功"><a href="#2-验证-SSH-是否添加成功" class="headerlink" title="2. 验证 SSH 是否添加成功"></a>2. 验证 SSH 是否添加成功</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
 
 <p>如果终端返回以下内容：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vbnet</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">复制编辑</span><br><span class="line">Hi xxx! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
@@ -280,14 +280,14 @@
 <p>说明 SSH 配置成功。</p>
 <p>⚠️ 注意：这一步必须在 GitHub 中添加 SSH Key 后再进行验证。</p>
 <hr>
-<h3 id="📦-3-关于-GitHub-仓库分支（main-与-master）"><a href="#📦-3-关于-GitHub-仓库分支（main-与-master）" class="headerlink" title="📦 3. 关于 GitHub 仓库分支（main 与 master）"></a>📦 3. 关于 GitHub 仓库分支（main 与 master）</h3><p>GitHub 默认分支通常为 <code>main</code>，而 Hexo 默认使用 <code>master</code> 分支部署。需要手动在 <code>_config.yml</code> 文件中指定部署分支为 <code>master</code>：</p>
+<h3 id="3-关于-GitHub-仓库分支（main-与-master）"><a href="#3-关于-GitHub-仓库分支（main-与-master）" class="headerlink" title="3. 关于 GitHub 仓库分支（main 与 master）"></a>3. 关于 GitHub 仓库分支（main 与 master）</h3><p>GitHub 默认分支通常为 <code>main</code>，而 Hexo 默认使用 <code>master</code> 分支部署。需要手动在 <code>_config.yml</code> 文件中指定部署分支为 <code>master</code>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yaml复制编辑deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:yangchen461/yangchen461.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
 
 <p>然后运行以下命令：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bash复制编辑hexo g   # 生成静态文件</span><br><span class="line">hexo d   # 部署到 GitHub</span><br></pre></td></tr></table></figure>
 
 <p>此时会将本地生成的博客内容上传到 GitHub，但注意仓库的 <code>main</code> 分支仍可能是空的。</p>
-<h3 id="🌐-4-检查-GitHub-Pages-设置"><a href="#🌐-4-检查-GitHub-Pages-设置" class="headerlink" title="🌐 4. 检查 GitHub Pages 设置"></a>🌐 4. 检查 GitHub Pages 设置</h3><ol>
+<h3 id="4-检查-GitHub-Pages-设置"><a href="#4-检查-GitHub-Pages-设置" class="headerlink" title="4. 检查 GitHub Pages 设置"></a>4. 检查 GitHub Pages 设置</h3><ol>
 <li><p>登录 GitHub，进入仓库：<a target="_blank" rel="noopener" href="https://github.com/yangchen461/yangchen461.github.io">https://github.com/yangchen461/yangchen461.github.io</a></p>
 </li>
 <li><p>点击右上角 <code>Settings</code> → 左侧选择 <code>Pages</code></p>
@@ -303,7 +303,7 @@
 </li>
 </ol>
 <hr>
-<h3 id="🖥️-5-最终验证部署是否成功"><a href="#🖥️-5-最终验证部署是否成功" class="headerlink" title="🖥️ 5. 最终验证部署是否成功"></a>🖥️ 5. 最终验证部署是否成功</h3><p>部署完成后，你的博客地址将从本地地址：</p>
+<h3 id="5-最终验证部署是否成功"><a href="#5-最终验证部署是否成功" class="headerlink" title="5. 最终验证部署是否成功"></a>5. 最终验证部署是否成功</h3><p>部署完成后，你的博客地址将从本地地址：</p>
 <p><a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a></p>
 <p>变为线上地址：</p>
 <p><a href="https://yangchen461.github.io/">https://yangchen461.github.io</a></p>
