@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>如何使用 GitHub 搭建自己的博客？- 入门教程（2） | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+  
+  
+    <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">March 25, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/Blog-Building/">Blog Building</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <blockquote>
+<p>本文将进一步介绍如何优化 Hexo 博客的功能与外观，包括分类与标签页面、代码高亮、评论系统等。</p>
+</blockquote>
+<p>📌 <strong>参考链接：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">Highlight.js 代码高亮样式 - Atom One Dark</a></li>
+</ul>
+<hr>
+<h2 id="✅-本文优化内容概览："><a href="#✅-本文优化内容概览：" class="headerlink" title="✅ 本文优化内容概览："></a>✅ 本文优化内容概览：</h2><ol>
+<li>Categories 分类跳转功能（新增：<code>Blog Building</code>、<code>C++ Program</code>）</li>
+<li>Tags 标签跳转功能（新增：<code>Blog</code>、<code>Study</code>）</li>
+<li>Categories 与 Tags 页面视觉优化：<ul>
+<li>卡片式标签布局</li>
+<li>支持页面明暗模式同步</li>
+<li>标签边缘圆角处理</li>
+</ul>
+</li>
+<li>About 页面设置跳转，显示邮箱联系方式，采用卡片样式美化排版</li>
+<li>引入 <code>atom-one-dark</code> 主题，实现代码高亮展示</li>
+<li>博客文章底部增加 Giscus 评论区，评论宽度与正文一致</li>
+</ol>
+<p>编辑工具推荐：<strong>Typora</strong>（Markdown 编辑）</p>
+<hr>
+<h2 id="1-tag-category-与-tags-categories-的区别"><a href="#1-tag-category-与-tags-categories-的区别" class="headerlink" title="1. tag &#x2F; category 与 tags &#x2F; categories 的区别"></a>1. <code>tag</code> &#x2F; <code>category</code> 与 <code>tags</code> &#x2F; <code>categories</code> 的区别</h2><p>在 Hexo 中，**<code>tag.ejs</code> &#x2F; <code>category.ejs</code>** 是主题默认模板，但 <strong><code>tags.ejs</code> &#x2F; <code>categories.ejs</code></strong> 页面并未自动生成。<br>因此需要你在路径：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">themes/hexo-theme-Chic/layout<br></code></pre></td></tr></table></figure>
+
+<p>手动创建：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">tags<span class="hljs-selector-class">.ejs</span><br>categories.ejs<br></code></pre></td></tr></table></figure>
+
+<p>示例截图：</p>
+<p><img src="/images/20250325/image-20250325102648405.png" alt="image-20250325102648405"></p>
+<hr>
+<h2 id="2-Categories-分类设置"><a href="#2-Categories-分类设置" class="headerlink" title="2. Categories 分类设置"></a>2. Categories 分类设置</h2><p>每篇文章建议仅设置一个主分类，格式如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">categories:</span> <span class="hljs-string">Blog</span> <span class="hljs-string">Building</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-标签与分类页面优化建议"><a href="#3-标签与分类页面优化建议" class="headerlink" title="3. 标签与分类页面优化建议"></a>3. 标签与分类页面优化建议</h2><p>建议参照 ChatGPT 的卡片式美化方案，或自行探索更多主题模板：<br>👉 <a target="_blank" rel="noopener" href="https://hexo.io/themes/">Hexo Themes 官方主题市场</a></p>
+<hr>
+<h2 id="Hexo-常用部署命令"><a href="#Hexo-常用部署命令" class="headerlink" title="Hexo 常用部署命令"></a>Hexo 常用部署命令</h2><p>确保本地修改及时同步至 GitHub，可按以下顺序操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo clean<br>hexo g<br>hexo d<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Atom-One-Dark-代码高亮配置"><a href="#4-Atom-One-Dark-代码高亮配置" class="headerlink" title="4. Atom One Dark 代码高亮配置"></a>4. Atom One Dark 代码高亮配置</h2><p>原始的 <code>.css</code> 文件可能无法通过 <code>@import</code> 导入 Stylus。<br>因此，建议直接在 HTML 中通过 CDN 引入：</p>
+<p> 修改路径：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">themes<span class="hljs-regexp">/hexo-theme-Chic/</span>layout<span class="hljs-regexp">/_partial/</span>head.ejs<br></code></pre></td></tr></table></figure>
+
+<p>添加以下内容到 <code>&lt;head&gt;</code> 标签中：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- Highlight.js style: Atom One Dark --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>同时，请确保主配置文件 <code>_config.yml</code> 包含如下设置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">syntax_highlighter:</span> <span class="hljs-string">highlight.js</span><br><br><span class="hljs-attr">highlight:</span><br>  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">line_number:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">auto_detect:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">tab_replace:</span><br>  <span class="hljs-attr">wrap:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">hljs:</span> <span class="hljs-literal">true</span>  <span class="hljs-comment"># ✅ 重要！必须启用才能让 &lt;pre&gt;&lt;code&gt; 使用 hljs 样式</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-Giscus-评论系统集成"><a href="#5-Giscus-评论系统集成" class="headerlink" title="5. Giscus 评论系统集成"></a>5. Giscus 评论系统集成</h2><p>Giscus 是一个基于 GitHub Discussions 的评论系统。使用前请确认仓库为 <code>public</code>，并确保：</p>
+<ol>
+<li>已正确安装 Giscus 应用至你的 GitHub 账户；</li>
+<li>已启用对应仓库的 Discussions 功能；</li>
+<li>仓库地址配置正确；</li>
+</ol>
+<p>🔗 Giscus 官网：<a target="_blank" rel="noopener" href="https://giscus.app/zh-CN">https://giscus.app/zh-CN</a></p>
+<p>📸 设置示例：</p>
+<p><img src="/images/20250325/image-20250325104429047.png" alt="image-20250325104429047"></p>
+<p><img src="/images/20250325/image-20250325104459223.png" alt="image-20250325104459223"></p>
+<hr>
+<p>📬 如果你在配置中遇到任何问题，欢迎通过邮箱联系我：<br><code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>Permalink:</span>
+            <span><a href="https://yangchen461.github.io/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">https://yangchen461.github.io/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/</a></span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>Slogan:</span>
+            <span>Do you believe in <strong>DESTINY</strong>?</span>
+          </p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Blog/"># Blog</a>
+            
+              <a href="/tags/Study/"># Study</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/03/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（1）</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Yang Chen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
