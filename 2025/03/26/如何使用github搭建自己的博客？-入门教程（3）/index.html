@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>如何使用 GitHub 搭建自己的博客？- 入门教程（3） | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">如何使用 GitHub 搭建自己的博客？- 入门教程（3）</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">March 26, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/Blog-Building/">Blog Building</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h2 id="✅-本文优化内容概览："><a href="#✅-本文优化内容概览：" class="headerlink" title="✅ 本文优化内容概览："></a>✅ 本文优化内容概览：</h2><ol>
+<li>增加进度条功能，进度条显示从左到右，宽度与文章内容大小保持一致；</li>
+<li>增加搜索Search功能，放在右上角，搜索界面放在网页的中间位置，仿照google.com的界面，进行美化优化；</li>
+<li>增加网页访客浏览量统计功能；</li>
+<li>进度条功能与网页统计功能冲突；</li>
+</ol>
+<p>编辑工具推荐：<strong>Typora</strong>（Markdown 编辑）</p>
+<hr>
+<h2 id="1️⃣-添加阅读进度条"><a href="#1️⃣-添加阅读进度条" class="headerlink" title="1️⃣ 添加阅读进度条"></a>1️⃣ 添加阅读进度条</h2><p>为了提升用户体验，我们在页面顶部加入阅读进度条，随滚动条同步增加，且宽度与文章区域保持一致。</p>
+<h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><p>原设置如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-id">#reading-progress-bar</span> &#123;<br>  <span class="hljs-attribute">max-width</span>: <span class="hljs-number">900px</span>;<br>  <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span> auto;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>进度条宽度未生效，原因是其父容器使用了 <code>position: fixed</code>，导致 <code>margin: auto</code> 无效。</p>
+<h3 id="正确实现方式"><a href="#正确实现方式" class="headerlink" title="正确实现方式"></a>正确实现方式</h3><p>需新增一个居中容器 <code>.reading-progress-wrapper</code> 包裹进度条：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;reading-progress-container&quot;</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;reading-progress-wrapper&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;reading-progress-bar&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>并使用如下样式：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.reading-progress-wrapper</span> &#123;<br>  <span class="hljs-attribute">max-width</span>: <span class="hljs-number">900px</span>;<br>  <span class="hljs-attribute">margin</span>: <span class="hljs-number">0</span> auto;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>&#125;<br><br><span class="hljs-selector-id">#reading-progress-bar</span> &#123;<br>  <span class="hljs-attribute">height</span>: <span class="hljs-number">100%</span>;<br>  <span class="hljs-attribute">width</span>: <span class="hljs-number">0%</span>;<br>  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#3498db</span>;<br>  <span class="hljs-attribute">transition</span>: width <span class="hljs-number">0.2s</span> ease-out;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>添加滚动脚本即可实现动态增长。</p>
+<hr>
+<h2 id="2️⃣-优化站内搜索功能"><a href="#2️⃣-优化站内搜索功能" class="headerlink" title="2️⃣ 优化站内搜索功能"></a>2️⃣ 优化站内搜索功能</h2><h3 id="修改导航菜单"><a href="#修改导航菜单" class="headerlink" title="修改导航菜单"></a>修改导航菜单</h3><p>打开主题配置文件 <code>themes/hexo-theme-Chic/_config.yml</code>，添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">menu:</span><br>  <span class="hljs-attr">Search:</span> <span class="hljs-string">/search</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="美化搜索页面"><a href="#美化搜索页面" class="headerlink" title="美化搜索页面"></a>美化搜索页面</h3><p>修改 <code>themes/hexo-theme-Chic/layout/search.ejs</code>，应用居中 + 搜索框样式，仿照 Google 首页风格（略）。</p>
+<h3 id="启用本地搜索插件"><a href="#启用本地搜索插件" class="headerlink" title="启用本地搜索插件"></a>启用本地搜索插件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-generator-search --save<br></code></pre></td></tr></table></figure>
+
+<p>配置 <code>_config.yml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">search:</span><br>  <span class="hljs-attr">path:</span> <span class="hljs-string">search.xml</span><br>  <span class="hljs-attr">field:</span> <span class="hljs-string">post</span><br>  <span class="hljs-attr">format:</span> <span class="hljs-string">html</span><br>  <span class="hljs-attr">limit:</span> <span class="hljs-number">100</span><br></code></pre></td></tr></table></figure>
+
+<p>然后执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yam">hexo clean &amp;&amp; hexo g<br></code></pre></td></tr></table></figure>
+
+<p>示例图片如下：</p>
+<p><img src="/images/20250326/image-20250326142618040.png" alt="image-20250326142618040"></p>
+<hr>
+<h2 id="3️⃣-集成访问量统计功能"><a href="#3️⃣-集成访问量统计功能" class="headerlink" title="3️⃣ 集成访问量统计功能"></a>3️⃣ 集成访问量统计功能</h2><h3 id="方案一：Busuanzi（不蒜子）"><a href="#方案一：Busuanzi（不蒜子）" class="headerlink" title="方案一：Busuanzi（不蒜子）"></a>方案一：Busuanzi（不蒜子）</h3><p>适合展示全站访问量 &#x2F; 访客量。</p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><ol>
+<li>在 <code>layout/_partial/footer.ejs</code> 中添加：</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_site_pv&quot;</span>&gt;</span><br>  本站总访问量 <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> 次<br><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> |<br><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_site_uv&quot;</span>&gt;</span><br>  本站访客数 <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> 人<br><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">async</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>推荐样式：</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-id">#busuanzi_container_site_pv</span>,<br><span class="hljs-selector-id">#busuanzi_container_site_uv</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">0.9rem</span>;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-number">#999</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="示例效果："><a href="#示例效果：" class="headerlink" title="示例效果："></a>示例效果：</h3><blockquote>
+<p>本站总访问量 12345 次 | 本站访客数 6789 人</p>
+</blockquote>
+<hr>
+<h3 id="方案二：Google-Analytics（GA4）"><a href="#方案二：Google-Analytics（GA4）" class="headerlink" title="方案二：Google Analytics（GA4）"></a>方案二：Google Analytics（GA4）</h3><h4 id="创建账户"><a href="#创建账户" class="headerlink" title="创建账户"></a>创建账户</h4><p>访问 <a target="_blank" rel="noopener" href="https://analytics.google.com/">analytics.google.com</a>，并创建 GA4 数据流，获取你的 GA ID，格式为 <code>G-XXXXXXXXXX</code>。</p>
+<h4 id="插入代码"><a href="#插入代码" class="headerlink" title="插入代码"></a>插入代码</h4><p>在 <code>layout/_partial/head.ejs</code> 的 <code>&lt;head&gt;</code> 结尾前加入：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">&lt;script</span> <span class="hljs-string">async</span> <span class="hljs-string">src=&quot;https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX&quot;&gt;&lt;/script&gt;</span><br><span class="hljs-string">&lt;script&gt;</span><br>  <span class="hljs-string">window.dataLayer</span> <span class="hljs-string">=</span> <span class="hljs-string">window.dataLayer</span> <span class="hljs-string">||</span> []<span class="hljs-string">;</span><br>  <span class="hljs-string">function</span> <span class="hljs-string">gtag()&#123;</span> <span class="hljs-string">dataLayer.push(arguments);</span> <span class="hljs-string">&#125;</span><br>  <span class="hljs-string">gtag(&#x27;js&#x27;,</span> <span class="hljs-string">new</span> <span class="hljs-string">Date());</span><br>  <span class="hljs-string">gtag(&#x27;config&#x27;,</span> <span class="hljs-string">&#x27;G-XXXXXXXXXX&#x27;</span><span class="hljs-string">);</span><br><span class="hljs-string">&lt;/script&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>示例图片如下：</p>
+<p><img src="/images/20250326/image-20250326142013325.png" alt="image-20250326142013325"></p>
+<hr>
+<h3 id="4-进度条功能与网页统计功能冲突"><a href="#4-进度条功能与网页统计功能冲突" class="headerlink" title="4. 进度条功能与网页统计功能冲突"></a>4. 进度条功能与网页统计功能冲突</h3><p>在网页功能修改完毕之后，发现进度条功能又出现错误，具体表现为，进度条不会随着阅读进度的变化而发生变化。</p>
+<p>经过还原之前的备份文件与当前文件进行对比，确定问题出在了路径D:\Cloud\myBlog\myBlog\themes\hexo-theme-Chic\layout_partial下的文件footer.ejs下。</p>
+<p>这很可能是因为：</p>
+<blockquote>
+<p>你将 <code>#reading-progress-bar</code> 放在 <code>.progress-wrapper</code> 内，但其样式设定了 <code>max-width</code> 限制或 <code>margin auto</code>，与 <code>position: fixed</code> 父元素结构不兼容，导致无法正确拉伸。</p>
+</blockquote>
+<h3 id="✅-解决方案：结构-样式一起修正"><a href="#✅-解决方案：结构-样式一起修正" class="headerlink" title="✅ 解决方案：结构 + 样式一起修正"></a>✅ 解决方案：结构 + 样式一起修正</h3><p>请将你当前的 <code>footer.ejs</code> 文件<strong>替换为以下内容</strong>，该版本确保：</p>
+<ol>
+<li>阅读进度条跨屏显示（支持整屏宽度、内容居中）；</li>
+<li>Busuanzi 正常显示；</li>
+<li>样式逻辑清晰、模块分明。.</li>
+</ol>
+<p>具体代码为：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">&lt;!--</span> <span class="hljs-string">阅读进度条容器：铺满屏幕顶部</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;div</span> <span class="hljs-string">id=&quot;reading-progress-container&quot;&gt;</span><br>  <span class="hljs-string">&lt;div</span> <span class="hljs-string">id=&quot;reading-progress-bar&quot;&gt;&lt;/div&gt;</span><br><span class="hljs-string">&lt;/div&gt;</span><br><br><span class="hljs-string">&lt;footer</span> <span class="hljs-string">id=&quot;footer&quot;</span> <span class="hljs-string">class=&quot;footer&quot;&gt;</span><br>  <span class="hljs-string">&lt;div</span> <span class="hljs-string">class=&quot;copyright&quot;&gt;</span><br>    <span class="hljs-string">&lt;div&gt;</span><br>      <span class="hljs-string">©</span> &lt;%=<span class="language-ruby"> config.author </span>%&gt; <span class="hljs-string">|</span> <span class="hljs-string">Powered</span> <span class="hljs-string">by</span> <br>      <span class="hljs-string">&lt;a</span> <span class="hljs-string">href=&quot;https://hexo.io&quot;</span> <span class="hljs-string">target=&quot;_blank&quot;&gt;Hexo&lt;/a&gt;</span> <span class="hljs-string">&amp;</span> <br>      <span class="hljs-string">&lt;a</span> <span class="hljs-string">href=&quot;https://github.com/Siricee/hexo-theme-Chic&quot;</span> <span class="hljs-string">target=&quot;_blank&quot;&gt;Chic&lt;/a&gt;</span><br>    <span class="hljs-string">&lt;/div&gt;</span><br>    <span class="hljs-string">&lt;div</span> <span class="hljs-string">class=&quot;busuanzi-box&quot;&gt;</span><br>      <span class="hljs-string">&lt;span</span> <span class="hljs-string">id=&quot;busuanzi_container_site_pv&quot;</span> <span class="hljs-string">style=&quot;display:none&quot;&gt;</span><br>        <span class="hljs-string">本站总访问量</span> <span class="hljs-string">&lt;span</span> <span class="hljs-string">id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;/span&gt;</span> <span class="hljs-string">次</span><br>      <span class="hljs-string">&lt;/span&gt;</span><br>      <span class="hljs-string">|</span><br><span class="hljs-string">      &lt;span id=&quot;busuanzi_container_site_uv&quot; style=&quot;display:none&quot;&gt;</span><br><span class="hljs-string">        本站访客数 &lt;span id=&quot;busuanzi_value_site_uv&quot;&gt;&lt;/span&gt; 人</span><br><span class="hljs-string">      &lt;/span&gt;</span><br><span class="hljs-string"></span>    <span class="hljs-string">&lt;/div&gt;</span><br>  <span class="hljs-string">&lt;/div&gt;</span><br><span class="hljs-string">&lt;/footer&gt;</span><br><br><span class="hljs-string">&lt;!--</span> <span class="hljs-string">样式</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;style&gt;</span><br>  <span class="hljs-string">/*</span> <span class="hljs-string">阅读进度条样式</span> <span class="hljs-string">*/</span><br>  <span class="hljs-comment">#reading-progress-container &#123;</span><br>    <span class="hljs-attr">position:</span> <span class="hljs-string">fixed;</span><br>    <span class="hljs-attr">top:</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>    <span class="hljs-attr">left:</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>    <span class="hljs-attr">width:</span> <span class="hljs-number">100</span><span class="hljs-string">%;</span><br>    <span class="hljs-attr">height:</span> <span class="hljs-string">4px;</span><br>    <span class="hljs-attr">background:</span> <span class="hljs-string">transparent;</span><br>    <span class="hljs-attr">z-index:</span> <span class="hljs-number">9999</span><span class="hljs-string">;</span><br>    <span class="hljs-attr">pointer-events:</span> <span class="hljs-string">none;</span><br>  <span class="hljs-string">&#125;</span><br><br>  <span class="hljs-comment">#reading-progress-bar &#123;</span><br>    <span class="hljs-attr">height:</span> <span class="hljs-number">100</span><span class="hljs-string">%;</span><br>    <span class="hljs-attr">width:</span> <span class="hljs-number">0</span><span class="hljs-string">%;</span><br>    <span class="hljs-attr">background-color:</span> <span class="hljs-comment">#3498db;</span><br>    <span class="hljs-attr">transition:</span> <span class="hljs-string">width</span> <span class="hljs-number">0.</span><span class="hljs-string">2s</span> <span class="hljs-string">ease-out;</span><br>  <span class="hljs-string">&#125;</span><br><br>  <span class="hljs-string">/*</span> <span class="hljs-string">不蒜子样式</span> <span class="hljs-string">*/</span><br>  <span class="hljs-string">.busuanzi-box</span> &#123;<br>    <span class="hljs-attr">font-size:</span> <span class="hljs-number">0.</span><span class="hljs-string">9rem;</span><br>    <span class="hljs-attr">color:</span> <span class="hljs-comment">#999;</span><br>    <span class="hljs-attr">margin-top:</span> <span class="hljs-string">5px;</span><br>  &#125;<br><span class="hljs-string">&lt;/style&gt;</span><br><br><span class="hljs-string">&lt;!--</span> <span class="hljs-string">阅读进度条脚本</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;script&gt;</span><br>  <span class="hljs-string">window.addEventListener(&#x27;scroll&#x27;,</span> <span class="hljs-string">()</span> <span class="hljs-string">=&gt;</span> &#123;<br>    <span class="hljs-string">const</span> <span class="hljs-string">scrollTop</span> <span class="hljs-string">=</span> <span class="hljs-string">window.scrollY</span> <span class="hljs-string">||</span> <span class="hljs-string">document.documentElement.scrollTop;</span><br>    <span class="hljs-string">const</span> <span class="hljs-string">scrollHeight</span> <span class="hljs-string">=</span> <span class="hljs-string">document.documentElement.scrollHeight</span> <span class="hljs-bullet">-</span> <span class="hljs-string">document.documentElement.clientHeight;</span><br>    <span class="hljs-string">const</span> <span class="hljs-string">progress</span> <span class="hljs-string">=</span> <span class="hljs-string">(scrollTop</span> <span class="hljs-string">/</span> <span class="hljs-string">scrollHeight)</span> <span class="hljs-string">*</span> <span class="hljs-number">100</span><span class="hljs-string">;</span><br>    <span class="hljs-string">document.getElementById(&#x27;reading-progress-bar&#x27;).style.width</span> <span class="hljs-string">=</span> <span class="hljs-string">progress</span> <span class="hljs-string">+</span> <span class="hljs-string">&#x27;%&#x27;</span><span class="hljs-string">;</span><br>  &#125;<span class="hljs-string">);</span><br><span class="hljs-string">&lt;/script&gt;</span><br><br><span class="hljs-string">&lt;!--</span> <span class="hljs-string">不蒜子统计脚本</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;script</span> <span class="hljs-string">async</span> <span class="hljs-string">src=&quot;https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;&lt;/script&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="常用部署命令"><a href="#常用部署命令" class="headerlink" title="常用部署命令"></a>常用部署命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo clean     <span class="hljs-comment"># 清除缓存</span><br>hexo g         <span class="hljs-comment"># 生成静态文件</span><br>hexo d         <span class="hljs-comment"># 部署到 GitHub</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>📬 如有问题，欢迎联系我：<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>Permalink:</span>
+            <span><a href="https://yangchen461.github.io/2025/03/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89/">https://yangchen461.github.io/2025/03/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89/</a></span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>Slogan:</span>
+            <span>Do you believe in <strong>DESTINY</strong>?</span>
+          </p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Blog/"># Blog</a>
+            
+              <a href="/tags/Study/"># Study</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+        <a class="prev" rel="prev" href="/2025/03/26/hello-world/">Hello World</a>
+      
+      
+        <a class="next" rel="next" href="/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    </div>
+</body>
+
+</html>

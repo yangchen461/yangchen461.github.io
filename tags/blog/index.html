@@ -2,7 +2,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -81,6 +91,8 @@
                 
                     <a class="menu-item" href="/tags">Tags</a>
                 
+                    <a class="menu-item" href="/search">Search</a>
+                
                     <a class="menu-item" href="/about">About</a>
                 
                 <input id="switch_default" type="checkbox" class="switch_default">
@@ -105,6 +117,8 @@
                     <a class="menu-item" href="/categories">Categories</a>
                 
                     <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
                 
                     <a class="menu-item" href="/about">About</a>
                 
@@ -189,6 +203,18 @@
   <div class="card-list">
     
       <div class="card">
+        <div class="card-date">2025-03-26</div>
+        <div class="card-title">
+          <a href="/2025/03/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（3）</a>
+        </div>
+        <div class="card-excerpt">
+          <hr>
+<h2 id="✅-本文优化内容概览："><a href="#✅-本文优化内容概览：" class="headerlink" title="✅ 本文优化内容概览："></a>✅ 本文优化内容概览：</h2><ol>
+<li>增加进...
+        </div>
+      </div>
+    
+      <div class="card">
         <div class="card-date">2025-03-25</div>
         <div class="card-title">
           <a href="/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</a>
@@ -218,11 +244,71 @@
 </div>
 
             </div>
-            <footer id="footer" class="footer">
-    <div class="copyright">
-        <span>© Yang Chen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
     </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
 </footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     </div>
 </body>

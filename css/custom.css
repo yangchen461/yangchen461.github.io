@@ -4,3 +4,13 @@
   display: inline-block;
   max-width: 100%;
 }
+.reading-meta-box {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: #888;
+  background: #f9f9f9;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+  line-height: 1.6;
+}

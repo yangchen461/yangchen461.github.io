@@ -2,7 +2,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -81,6 +91,8 @@
                 
                     <a class="menu-item" href="/tags">Tags</a>
                 
+                    <a class="menu-item" href="/search">Search</a>
+                
                     <a class="menu-item" href="/about">About</a>
                 
                 <input id="switch_default" type="checkbox" class="switch_default">
@@ -106,6 +118,8 @@
                 
                     <a class="menu-item" href="/tags">Tags</a>
                 
+                    <a class="menu-item" href="/search">Search</a>
+                
                     <a class="menu-item" href="/about">About</a>
                 
             </div>
@@ -127,70 +141,98 @@
     }
 </script>
             <div class="main">
-                <div class="container">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+<div class="container">
   
   
     <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
 </div>
 
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
 <script>
-    document.ready(
-        function () {
-            tocbot.init({
-                tocSelector: '.tocbot-list',
-                contentSelector: '.post-content',
-                headingSelector: 'h1, h2, h3, h4, h5',
-                collapseDepth: 1,
-                orderedList: false,
-                scrollSmooth: true,
-            })
-        }
-    )
-
-    function expand_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 6,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "collapse_toc()");
-        b.innerHTML = "Collapse all"
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
     }
+  )
 
-    function collapse_toc() {
-        var b = document.querySelector(".tocbot-toc-expand");
-        tocbot.init({
-            tocSelector: '.tocbot-list',
-            contentSelector: '.post-content',
-            headingSelector: 'h1, h2, h3, h4, h5',
-            collapseDepth: 1,
-            orderedList: false,
-            scrollSmooth: true,
-        });
-        b.setAttribute("onclick", "expand_toc()");
-        b.innerHTML = "Expand all"
-    }
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
 
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
 
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
 
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
 </script>
+
   
 
   
@@ -204,7 +246,7 @@
           
           
             <span class="post-time">
-              Date: <a href="#">March 21, 2025&nbsp;&nbsp;9:53:15</a>
+              Date: <a href="#">March 26, 2025&nbsp;&nbsp;15:03:17</a>
             </span>
           
           
@@ -247,7 +289,7 @@
         
           <p class="copyright-item">
             <span>Permalink:</span>
-            <span><a href="https://yangchen461.github.io/2025/03/21/hello-world/">https://yangchen461.github.io/2025/03/21/hello-world/</a></span>
+            <span><a href="https://yangchen461.github.io/2025/03/26/hello-world/">https://yangchen461.github.io/2025/03/26/hello-world/</a></span>
           </p>
         
         
@@ -281,8 +323,8 @@
 
     <section class="post-nav">
       
-        <a class="prev" rel="prev" href="/2025/03/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（1）</a>
       
+        <a class="next" rel="next" href="/2025/03/26/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（3）</a>
       
     </section>
 
@@ -314,12 +356,136 @@
   </article> <!-- ✅ 正确关闭 article -->
 </div> <!-- ✅ 正确关闭 container -->
 
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
             </div>
-            <footer id="footer" class="footer">
-    <div class="copyright">
-        <span>© Yang Chen | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
     </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
 </footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
     </div>
 </body>

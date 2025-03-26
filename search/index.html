@@ -23,7 +23,7 @@
 
 
 
-<title>Hexo</title>
+<title>search | Hexo</title>
 
 
 
@@ -141,44 +141,145 @@
     }
 </script>
             <div class="main">
-                
-    <div class="container">
-    <div class="intro">
-        <div class="avatar">
-            <a href="/archives"><img src="/image/avatar.jpg"></a>
-        </div>
-        <div class="nickname">Yang Chen</div>
-        <div class="description"><p><strong>Passion makes every day different.</strong><br><br><em>Aerospace and programming enthusiasts, welcome to communicate.</em></p>
-</div>
-        <div class="links">
-            
-                
-                    <a class="link-item" title="Blog" href="/archives">
-                        
-                        
-                            <i class="iconfont icon-blog"></i>
-                        
-                    </a>
-                
-                    <a class="link-item" title="ZhiHu" target="_blank" rel="noopener" href="https://www.zhihu.com/people/chen261159">
-                        
-                        
-                            <i class="iconfont icon-zhihu"></i>
-                        
-                    </a>
-                
-                    <a class="link-item" title="Github" target="_blank" rel="noopener" href="https://github.com/yangchen461">
-                        
-                        
-                            <i class="iconfont icon-github"></i>
-                        
-                    </a>
-                
-            
-        </div>
-    </div>
+                <style>
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 75vh;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .search-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  #search-input {
+    width: 50%;
+    max-width: 500px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  #search-input:focus {
+    border-color: #4285f4;
+    box-shadow: 0 0 3px rgba(66, 133, 244, 0.4);
+  }
+
+  .search-result {
+    margin-top: 2rem;
+    text-align: left;
+    max-width: 700px;
+  }
+
+  .search-result ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .search-result li {
+    margin: 1rem 0;
+  }
+
+  .search-result a {
+    font-size: 1.1rem;
+    color: #1a0dab;
+    text-decoration: none;
+  }
+
+  .search-result a:hover {
+    text-decoration: underline;
+  }
+
+  .search-result p {
+    color: #545454;
+    font-size: 0.9rem;
+  }
+</style>
+
+<div class="search-container">
+  <div class="search-title">🔍 Search</div>
+  <input type="text" id="search-input" placeholder="请输入关键词搜索..." />
+  <div class="search-result">
+    <ul id="search-result"></ul>
+  </div>
 </div>
 
+<!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/js/search.js"></script>
 
             </div>
             <!-- 阅读进度条容器：铺满屏幕顶部 -->
