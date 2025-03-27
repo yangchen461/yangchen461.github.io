@@ -149,16 +149,21 @@
     <h2 class="post-title">- Tag Cloud -</h2>
 
     
-      <div class="tags-grid">
+      <div class="tag-card-wrapper">
         
           <div class="tag-card">
-            <a href="/tags/Blog/">
-              <h3 class="tag-name">
+            <a class="tag-header" href="/tags/Blog/">
+              <span class="tag-name">
                 <i class="iconfont icon-tag" style="margin-right:6px;"></i>
-                Blog (3)
-              </h3>
+                Blog
+              </span>
+              <small>(4)</small>
             </a>
             <ul class="tag-posts">
+              
+                <li>
+                  <a href="/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</a>
+                </li>
               
                 <li>
                   <a href="/2025/03/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（1）</a>
@@ -169,7 +174,7 @@
                 </li>
               
                 <li>
-                  <a href="/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</a>
+                  <a href="/2025/03/27/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（4）</a>
                 </li>
               
             </ul>
@@ -177,13 +182,18 @@
           </div>
         
           <div class="tag-card">
-            <a href="/tags/Study/">
-              <h3 class="tag-name">
+            <a class="tag-header" href="/tags/Study/">
+              <span class="tag-name">
                 <i class="iconfont icon-tag" style="margin-right:6px;"></i>
-                Study (3)
-              </h3>
+                Study
+              </span>
+              <small>(4)</small>
             </a>
             <ul class="tag-posts">
+              
+                <li>
+                  <a href="/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</a>
+                </li>
               
                 <li>
                   <a href="/2025/03/21/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（1）</a>
@@ -194,7 +204,7 @@
                 </li>
               
                 <li>
-                  <a href="/2025/03/25/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（2）</a>
+                  <a href="/2025/03/27/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89/">如何使用 GitHub 搭建自己的博客？- 入门教程（4）</a>
                 </li>
               
             </ul>
@@ -205,6 +215,79 @@
     
   </div>
 </div>
+
+<!-- 样式 -->
+<style>
+  .tag-card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+
+  .tag-card {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    width: 100%;
+    max-width: 320px;
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease;
+  }
+
+  .tag-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .tag-header {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .tag-posts {
+    padding-left: 1rem;
+    list-style-type: disc;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .tag-posts li {
+    margin: 0.25rem 0;
+  }
+
+  .tag-posts a {
+    text-decoration: none;
+    color: #3498db;
+  }
+
+  .tag-posts a:hover {
+    text-decoration: underline;
+  }
+
+  .more-link {
+    margin-top: 0.5rem;
+    align-self: flex-end;
+    color: #555;
+    font-size: 0.88rem;
+    text-decoration: none;
+  }
+
+  .more-link:hover {
+    color: #3498db;
+  }
+</style>
 
             </div>
             <!-- 阅读进度条容器：铺满屏幕顶部 -->

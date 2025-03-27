@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>如何使用 GitHub 搭建自己的博客？- 入门教程（4） | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">如何使用 GitHub 搭建自己的博客？- 入门教程（4）</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">March 27, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/Blog-Building/">Blog Building</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h2 id="✅-本文优化内容概览："><a href="#✅-本文优化内容概览：" class="headerlink" title="✅ 本文优化内容概览："></a>✅ 本文优化内容概览：</h2><ol>
+<li>增加代码一键复制功能；</li>
+<li>为了在 Hexo 首页添加「<strong>雪花特效</strong>」，并且只作用于首页 <code>http://localhost:4000/</code>;</li>
+</ol>
+<p>编辑工具推荐：<strong>Typora</strong>（Markdown 编辑）</p>
+<hr>
+<h2 id="1️⃣-代码一键复制"><a href="#1️⃣-代码一键复制" class="headerlink" title="1️⃣ 代码一键复制"></a>1️⃣ 代码一键复制</h2><p>在每个代码块的右上角显示一个“复制”按钮，点击即可复制内容，支持多种语言块如 <code>yaml</code>, <code>js</code>, <code>python</code> 等。在每个代码块的右上角显示文字 **<code>copy</code>**，而不是图标（如 <code>fa-copy</code>）。</p>
+<h3 id="✅-修改步骤"><a href="#✅-修改步骤" class="headerlink" title="✅ 修改步骤"></a>✅ 修改步骤</h3><h4 id="第-1-步：更新-copy-button-js（脚本）"><a href="#第-1-步：更新-copy-button-js（脚本）" class="headerlink" title="第 1 步：更新 copy-button.js（脚本）"></a>第 1 步：更新 <code>copy-button.js</code>（脚本）</h4><p>在 <code>themes/hexo-theme-Chic/scripts/</code> 目录下（没有可新建），创建文件：<code>copy-button.js</code>，内容如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs javascript"><span class="hljs-meta">&#x27;use strict&#x27;</span>;<br><br>hexo.<span class="hljs-property">extend</span>.<span class="hljs-property">filter</span>.<span class="hljs-title function_">register</span>(<span class="hljs-string">&#x27;after_post_render&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) &#123;<br>  <span class="hljs-comment">// 给每个 &lt;pre&gt;&lt;code&gt; 块加上复制按钮（文字版）</span><br>  <span class="hljs-keyword">const</span> copyButton = <span class="hljs-string">&#x27;&lt;button class=&quot;copy-btn&quot; data-clipboard-snippet&gt;copy&lt;/button&gt;&#x27;</span>;<br>  data.<span class="hljs-property">content</span> = data.<span class="hljs-property">content</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&lt;pre&gt;&lt;code([^&gt;]*)&gt;/g</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">match, lang</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&lt;div class=&quot;code-wrapper&quot;&gt;&#x27;</span> + copyButton + <span class="hljs-string">&#x27;&lt;pre&gt;&lt;code&#x27;</span> + lang + <span class="hljs-string">&#x27;&gt;&#x27;</span>;<br>  &#125;).<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&lt;\/code&gt;&lt;\/pre&gt;/g</span>, <span class="hljs-string">&#x27;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#x27;</span>);<br>  <span class="hljs-keyword">return</span> data;<br>&#125;);<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="第-2-步：更新-CSS-样式"><a href="#第-2-步：更新-CSS-样式" class="headerlink" title="第 2 步：更新 CSS 样式"></a>第 2 步：更新 CSS 样式</h4><p>修改 <code>themes/hexo-theme-Chic/source/css/custom.css</code> 添加&#x2F;更新：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs css"><span class="hljs-selector-class">.code-wrapper</span> &#123;<br>  <span class="hljs-attribute">position</span>: relative;<br>&#125;<br><br><span class="hljs-selector-class">.copy-btn</span> &#123;<br>  <span class="hljs-attribute">position</span>: absolute;<br>  <span class="hljs-attribute">top</span>: <span class="hljs-number">6px</span>;<br>  <span class="hljs-attribute">right</span>: <span class="hljs-number">8px</span>;<br>  <span class="hljs-attribute">background</span>: <span class="hljs-number">#3498db</span>;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-number">#fff</span>;<br>  <span class="hljs-attribute">border</span>: none;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">0.75rem</span>;<br>  <span class="hljs-attribute">padding</span>: <span class="hljs-number">2px</span> <span class="hljs-number">8px</span>;<br>  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">4px</span>;<br>  <span class="hljs-attribute">cursor</span>: pointer;<br>  <span class="hljs-attribute">z-index</span>: <span class="hljs-number">10</span>;<br>  <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0.7</span>;<br>  <span class="hljs-attribute">transition</span>: opacity <span class="hljs-number">0.2s</span> ease;<br>&#125;<br><br><span class="hljs-selector-class">.copy-btn</span><span class="hljs-selector-pseudo">:hover</span> &#123;<br>  <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<h4 id="第-3-步：更新复制功能脚本"><a href="#第-3-步：更新复制功能脚本" class="headerlink" title="第 3 步：更新复制功能脚本"></a>第 3 步：更新复制功能脚本</h4><p>在 <code>footer.ejs</code> 中末尾 <code>&lt;script&gt;</code> 里加入或替换：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;DOMContentLoaded&#x27;</span>, <span class="hljs-function">() =&gt;</span> &#123;</span><br><span class="language-javascript">    <span class="hljs-keyword">const</span> clipboard = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClipboardJS</span>(<span class="hljs-string">&#x27;.copy-btn&#x27;</span>, &#123;</span><br><span class="language-javascript">      <span class="hljs-attr">target</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">trigger</span>) &#123;</span><br><span class="language-javascript">        <span class="hljs-keyword">return</span> trigger.<span class="hljs-property">nextElementSibling</span>;</span><br><span class="language-javascript">      &#125;</span><br><span class="language-javascript">    &#125;);</span><br><span class="language-javascript"></span><br><span class="language-javascript">    clipboard.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;success&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">      <span class="hljs-keyword">const</span> originalText = e.<span class="hljs-property">trigger</span>.<span class="hljs-property">innerText</span>;</span><br><span class="language-javascript">      e.<span class="hljs-property">trigger</span>.<span class="hljs-property">innerText</span> = <span class="hljs-string">&#x27;已复制&#x27;</span>;</span><br><span class="language-javascript">      <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;</span><br><span class="language-javascript">        e.<span class="hljs-property">trigger</span>.<span class="hljs-property">innerText</span> = originalText;</span><br><span class="language-javascript">      &#125;, <span class="hljs-number">1500</span>);</span><br><span class="language-javascript">    &#125;);</span><br><span class="language-javascript"></span><br><span class="language-javascript">    clipboard.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;error&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) &#123;</span><br><span class="language-javascript">      e.<span class="hljs-property">trigger</span>.<span class="hljs-property">innerText</span> = <span class="hljs-string">&#x27;复制失败&#x27;</span>;</span><br><span class="language-javascript">    &#125;);</span><br><span class="language-javascript">  &#125;);</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<h3 id="预期效果"><a href="#预期效果" class="headerlink" title="预期效果"></a>预期效果</h3><p>每段代码右上角会出现小巧的 <code>copy</code> 按钮，点击后变为 <code>已复制</code>，过 1.5 秒自动恢复。</p>
+<p><img src="/images/20250327/image-20250327103638843.png" alt="image-20250327103638843"></p>
+<hr>
+<h2 id="2️⃣-增加首页雪花特效"><a href="#2️⃣-增加首页雪花特效" class="headerlink" title="2️⃣ 增加首页雪花特效"></a>2️⃣ 增加首页雪花特效</h2><p>为了在 Hexo 首页添加「<strong>雪花特效</strong>」，并且只作用于首页 <code>http://localhost:4000/</code>。</p>
+<hr>
+<h3 id="✅-第一步：创建雪花效果脚本-snow-js"><a href="#✅-第一步：创建雪花效果脚本-snow-js" class="headerlink" title="✅ 第一步：创建雪花效果脚本 snow.js"></a>✅ 第一步：创建雪花效果脚本 <code>snow.js</code></h3><p>在路径：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs gradle">themes<span class="hljs-regexp">/hexo-theme-chic/</span><span class="hljs-keyword">source</span><span class="hljs-regexp">/js/</span><br></code></pre></div></td></tr></table></figure>
+
+<p>下新建一个文件：<code>snow.js</code>，写入以下内容（雪花核心效果）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">//</span> <span class="hljs-string">雪花特效（亮银色</span> <span class="hljs-string">+</span> <span class="hljs-string">放大）</span><br><span class="hljs-string">$(function</span> <span class="hljs-string">()</span> &#123;<br>  <span class="hljs-string">var</span> <span class="hljs-string">$flake</span> <span class="hljs-string">=</span> <span class="hljs-string">$(&#x27;&lt;div</span> <span class="hljs-string">class=&quot;snow-flake&quot;&gt;❄&lt;/div&gt;&#x27;).css(</span>&#123;<br>    <span class="hljs-attr">&#x27;position&#x27;:</span> <span class="hljs-string">&#x27;absolute&#x27;</span>,<br>    <span class="hljs-attr">&#x27;top&#x27;:</span> <span class="hljs-string">&#x27;-50px&#x27;</span>,<br>    <span class="hljs-attr">&#x27;color&#x27;:</span> <span class="hljs-string">&#x27;#C0C0C0&#x27;</span>, <span class="hljs-string">//</span> <span class="hljs-string">✅</span> <span class="hljs-string">亮银色</span><br>    <span class="hljs-attr">&#x27;user-select&#x27;:</span> <span class="hljs-string">&#x27;none&#x27;</span>,<br>    <span class="hljs-attr">&#x27;z-index&#x27;:</span> <span class="hljs-string">&#x27;9999&#x27;</span>,<br>    <span class="hljs-attr">&#x27;pointer-events&#x27;:</span> <span class="hljs-string">&#x27;none&#x27;</span><br>  &#125;<span class="hljs-string">);</span><br><br>  <span class="hljs-string">setInterval(function</span> <span class="hljs-string">()</span> &#123;<br>    <span class="hljs-string">var</span> <span class="hljs-string">startLeft</span> <span class="hljs-string">=</span> <span class="hljs-string">Math.random()</span> <span class="hljs-string">*</span> <span class="hljs-string">$(window).width();</span><br>    <span class="hljs-string">var</span> <span class="hljs-string">endLeft</span> <span class="hljs-string">=</span> <span class="hljs-string">Math.random()</span> <span class="hljs-string">*</span> <span class="hljs-string">$(window).width();</span><br>    <span class="hljs-string">var</span> <span class="hljs-string">duration</span> <span class="hljs-string">=</span> <span class="hljs-number">10000</span> <span class="hljs-string">+</span> <span class="hljs-string">Math.random()</span> <span class="hljs-string">*</span> <span class="hljs-number">5000</span><span class="hljs-string">;</span><br><br>    <span class="hljs-string">var</span> <span class="hljs-string">$clone</span> <span class="hljs-string">=</span> <span class="hljs-string">$flake.clone();</span><br>    <span class="hljs-string">$clone.css(</span>&#123;<br>      <span class="hljs-attr">&#x27;left&#x27;:</span> <span class="hljs-string">startLeft</span>,<br>      <span class="hljs-attr">&#x27;opacity&#x27;:</span> <span class="hljs-number">0.8</span> <span class="hljs-string">+</span> <span class="hljs-string">Math.random()</span> <span class="hljs-string">*</span> <span class="hljs-number">0.2</span>,<br>      <span class="hljs-attr">&#x27;font-size&#x27;:</span> <span class="hljs-number">24</span> <span class="hljs-string">+</span> <span class="hljs-string">Math.random()</span> <span class="hljs-string">*</span> <span class="hljs-number">16</span> <span class="hljs-string">//</span> <span class="hljs-string">✅</span> <span class="hljs-string">放大字号：24px</span> <span class="hljs-string">~</span> <span class="hljs-string">40px</span><br>    &#125;<span class="hljs-string">);</span><br><br>    <span class="hljs-string">$(&#x27;body&#x27;).append($clone);</span><br>    <span class="hljs-string">$clone.animate(</span>&#123;<br>      <span class="hljs-attr">&#x27;top&#x27;:</span> <span class="hljs-string">&#x27;100%&#x27;</span>,<br>      <span class="hljs-attr">&#x27;left&#x27;:</span> <span class="hljs-string">endLeft</span>,<br>      <span class="hljs-attr">&#x27;opacity&#x27;:</span> <span class="hljs-number">0.1</span><br>    &#125;, <span class="hljs-string">duration</span>, <span class="hljs-string">function</span> <span class="hljs-string">()</span> &#123;<br>      <span class="hljs-string">$(this).remove();</span><br>    &#125;<span class="hljs-string">);</span><br>  &#125;, <span class="hljs-number">300</span><span class="hljs-string">);</span> <span class="hljs-string">//</span> <span class="hljs-string">❄</span> <span class="hljs-string">密度适中</span><br>&#125;<span class="hljs-string">);</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<h3 id="✅-第二步：修改-themes-hexo-theme-chic-layout-index-ejs"><a href="#✅-第二步：修改-themes-hexo-theme-chic-layout-index-ejs" class="headerlink" title="✅ 第二步：修改 themes/hexo-theme-chic/layout/index.ejs"></a>✅ 第二步：修改 <code>themes/hexo-theme-chic/layout/index.ejs</code></h3><p>请在该文件中最下方 <code>&lt;/body&gt;</code> 之前加上以下内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs xml">html复制编辑<span class="hljs-comment">&lt;!-- 雪花特效 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://libs.baidu.com/jquery/1.8.3/jquery.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/js/snow.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<p>⚠️ 建议只引入一次 <code>jquery.min.js</code>（避免重复），你可以删掉 <code>.js</code> 的版本。</p>
+<hr>
+<h3 id="✅-第三步：执行-Hexo-重新构建"><a href="#✅-第三步：执行-Hexo-重新构建" class="headerlink" title="✅ 第三步：执行 Hexo 重新构建"></a>✅ 第三步：执行 Hexo 重新构建</h3><figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs sas">hexo clean <span class="hljs-variable">&amp;&amp;</span> hexo g <span class="hljs-variable">&amp;&amp;</span> hexo s<br></code></pre></div></td></tr></table></figure>
+
+<p>然后打开：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs dts"><span class="hljs-symbol">http:</span><span class="hljs-comment">//localhost:4000/</span><br></code></pre></div></td></tr></table></figure>
+
+<p>将在首页看到 ❄ 雪花飘落特效 🎉。</p>
+<p><img src="/images/20250327/image-20250327104914467.png" alt="image-20250327104914467"></p>
+<hr>
+<h2 id="3️⃣-集成访问量统计功能"><a href="#3️⃣-集成访问量统计功能" class="headerlink" title="3️⃣ 集成访问量统计功能"></a>3️⃣ 集成访问量统计功能</h2><h3 id="方案一：Busuanzi（不蒜子）"><a href="#方案一：Busuanzi（不蒜子）" class="headerlink" title="方案一：Busuanzi（不蒜子）"></a>方案一：Busuanzi（不蒜子）</h3><p>适合展示全站访问量 &#x2F; 访客量。</p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><ol>
+<li>在 <code>layout/_partial/footer.ejs</code> 中添加：</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_site_pv&quot;</span>&gt;</span><br>  本站总访问量 <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_site_pv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> 次<br><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> |<br><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_container_site_uv&quot;</span>&gt;</span><br>  本站访客数 <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;busuanzi_value_site_uv&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> 人<br><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">async</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="2">
+<li>推荐样式：</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs css"><span class="hljs-selector-id">#busuanzi_container_site_pv</span>,<br><span class="hljs-selector-id">#busuanzi_container_site_uv</span> &#123;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">0.9rem</span>;<br>  <span class="hljs-attribute">color</span>: <span class="hljs-number">#999</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="示例效果："><a href="#示例效果：" class="headerlink" title="示例效果："></a>示例效果：</h3><blockquote>
+<p>本站总访问量 12345 次 | 本站访客数 6789 人</p>
+</blockquote>
+<hr>
+<h3 id="方案二：Google-Analytics（GA4）"><a href="#方案二：Google-Analytics（GA4）" class="headerlink" title="方案二：Google Analytics（GA4）"></a>方案二：Google Analytics（GA4）</h3><h4 id="创建账户"><a href="#创建账户" class="headerlink" title="创建账户"></a>创建账户</h4><p>访问 <a target="_blank" rel="noopener" href="https://analytics.google.com/">analytics.google.com</a>，并创建 GA4 数据流，获取你的 GA ID，格式为 <code>G-XXXXXXXXXX</code>。</p>
+<h4 id="插入代码"><a href="#插入代码" class="headerlink" title="插入代码"></a>插入代码</h4><p>在 <code>layout/_partial/head.ejs</code> 的 <code>&lt;head&gt;</code> 结尾前加入：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">&lt;script</span> <span class="hljs-string">async</span> <span class="hljs-string">src=&quot;https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX&quot;&gt;&lt;/script&gt;</span><br><span class="hljs-string">&lt;script&gt;</span><br>  <span class="hljs-string">window.dataLayer</span> <span class="hljs-string">=</span> <span class="hljs-string">window.dataLayer</span> <span class="hljs-string">||</span> []<span class="hljs-string">;</span><br>  <span class="hljs-string">function</span> <span class="hljs-string">gtag()&#123;</span> <span class="hljs-string">dataLayer.push(arguments);</span> <span class="hljs-string">&#125;</span><br>  <span class="hljs-string">gtag(&#x27;js&#x27;,</span> <span class="hljs-string">new</span> <span class="hljs-string">Date());</span><br>  <span class="hljs-string">gtag(&#x27;config&#x27;,</span> <span class="hljs-string">&#x27;G-XXXXXXXXXX&#x27;</span><span class="hljs-string">);</span><br><span class="hljs-string">&lt;/script&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<p>示例图片如下：</p>
+<p><img src="/images/20250326/image-20250326142013325.png" alt="image-20250326142013325"></p>
+<hr>
+<h3 id="4-进度条功能与网页统计功能冲突"><a href="#4-进度条功能与网页统计功能冲突" class="headerlink" title="4. 进度条功能与网页统计功能冲突"></a>4. 进度条功能与网页统计功能冲突</h3><p>在网页功能修改完毕之后，发现进度条功能又出现错误，具体表现为，进度条不会随着阅读进度的变化而发生变化。</p>
+<p>经过还原之前的备份文件与当前文件进行对比，确定问题出在了路径D:\Cloud\myBlog\myBlog\themes\hexo-theme-Chic\layout_partial下的文件footer.ejs下。</p>
+<p>这很可能是因为：</p>
+<blockquote>
+<p>你将 <code>#reading-progress-bar</code> 放在 <code>.progress-wrapper</code> 内，但其样式设定了 <code>max-width</code> 限制或 <code>margin auto</code>，与 <code>position: fixed</code> 父元素结构不兼容，导致无法正确拉伸。</p>
+</blockquote>
+<h3 id="✅-解决方案：结构-样式一起修正"><a href="#✅-解决方案：结构-样式一起修正" class="headerlink" title="✅ 解决方案：结构 + 样式一起修正"></a>✅ 解决方案：结构 + 样式一起修正</h3><p>请将你当前的 <code>footer.ejs</code> 文件<strong>替换为以下内容</strong>，该版本确保：</p>
+<ol>
+<li>阅读进度条跨屏显示（支持整屏宽度、内容居中）；</li>
+<li>Busuanzi 正常显示；</li>
+<li>样式逻辑清晰、模块分明。.</li>
+</ol>
+<p>具体代码为：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">&lt;!--</span> <span class="hljs-string">阅读进度条容器：铺满屏幕顶部</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;div</span> <span class="hljs-string">id=&quot;reading-progress-container&quot;&gt;</span><br>  <span class="hljs-string">&lt;div</span> <span class="hljs-string">id=&quot;reading-progress-bar&quot;&gt;&lt;/div&gt;</span><br><span class="hljs-string">&lt;/div&gt;</span><br><br><span class="hljs-string">&lt;footer</span> <span class="hljs-string">id=&quot;footer&quot;</span> <span class="hljs-string">class=&quot;footer&quot;&gt;</span><br>  <span class="hljs-string">&lt;div</span> <span class="hljs-string">class=&quot;copyright&quot;&gt;</span><br>    <span class="hljs-string">&lt;div&gt;</span><br>      <span class="hljs-string">©</span> &lt;%=<span class="language-ruby"> config.author </span>%&gt; <span class="hljs-string">|</span> <span class="hljs-string">Powered</span> <span class="hljs-string">by</span> <br>      <span class="hljs-string">&lt;a</span> <span class="hljs-string">href=&quot;https://hexo.io&quot;</span> <span class="hljs-string">target=&quot;_blank&quot;&gt;Hexo&lt;/a&gt;</span> <span class="hljs-string">&amp;</span> <br>      <span class="hljs-string">&lt;a</span> <span class="hljs-string">href=&quot;https://github.com/Siricee/hexo-theme-Chic&quot;</span> <span class="hljs-string">target=&quot;_blank&quot;&gt;Chic&lt;/a&gt;</span><br>    <span class="hljs-string">&lt;/div&gt;</span><br>    <span class="hljs-string">&lt;div</span> <span class="hljs-string">class=&quot;busuanzi-box&quot;&gt;</span><br>      <span class="hljs-string">&lt;span</span> <span class="hljs-string">id=&quot;busuanzi_container_site_pv&quot;</span> <span class="hljs-string">style=&quot;display:none&quot;&gt;</span><br>        <span class="hljs-string">本站总访问量</span> <span class="hljs-string">&lt;span</span> <span class="hljs-string">id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;/span&gt;</span> <span class="hljs-string">次</span><br>      <span class="hljs-string">&lt;/span&gt;</span><br>      <span class="hljs-string">|</span><br><span class="hljs-string">      &lt;span id=&quot;busuanzi_container_site_uv&quot; style=&quot;display:none&quot;&gt;</span><br><span class="hljs-string">        本站访客数 &lt;span id=&quot;busuanzi_value_site_uv&quot;&gt;&lt;/span&gt; 人</span><br><span class="hljs-string">      &lt;/span&gt;</span><br><span class="hljs-string"></span>    <span class="hljs-string">&lt;/div&gt;</span><br>  <span class="hljs-string">&lt;/div&gt;</span><br><span class="hljs-string">&lt;/footer&gt;</span><br><br><span class="hljs-string">&lt;!--</span> <span class="hljs-string">样式</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;style&gt;</span><br>  <span class="hljs-string">/*</span> <span class="hljs-string">阅读进度条样式</span> <span class="hljs-string">*/</span><br>  <span class="hljs-comment">#reading-progress-container &#123;</span><br>    <span class="hljs-attr">position:</span> <span class="hljs-string">fixed;</span><br>    <span class="hljs-attr">top:</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>    <span class="hljs-attr">left:</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>    <span class="hljs-attr">width:</span> <span class="hljs-number">100</span><span class="hljs-string">%;</span><br>    <span class="hljs-attr">height:</span> <span class="hljs-string">4px;</span><br>    <span class="hljs-attr">background:</span> <span class="hljs-string">transparent;</span><br>    <span class="hljs-attr">z-index:</span> <span class="hljs-number">9999</span><span class="hljs-string">;</span><br>    <span class="hljs-attr">pointer-events:</span> <span class="hljs-string">none;</span><br>  <span class="hljs-string">&#125;</span><br><br>  <span class="hljs-comment">#reading-progress-bar &#123;</span><br>    <span class="hljs-attr">height:</span> <span class="hljs-number">100</span><span class="hljs-string">%;</span><br>    <span class="hljs-attr">width:</span> <span class="hljs-number">0</span><span class="hljs-string">%;</span><br>    <span class="hljs-attr">background-color:</span> <span class="hljs-comment">#3498db;</span><br>    <span class="hljs-attr">transition:</span> <span class="hljs-string">width</span> <span class="hljs-number">0.</span><span class="hljs-string">2s</span> <span class="hljs-string">ease-out;</span><br>  <span class="hljs-string">&#125;</span><br><br>  <span class="hljs-string">/*</span> <span class="hljs-string">不蒜子样式</span> <span class="hljs-string">*/</span><br>  <span class="hljs-string">.busuanzi-box</span> &#123;<br>    <span class="hljs-attr">font-size:</span> <span class="hljs-number">0.</span><span class="hljs-string">9rem;</span><br>    <span class="hljs-attr">color:</span> <span class="hljs-comment">#999;</span><br>    <span class="hljs-attr">margin-top:</span> <span class="hljs-string">5px;</span><br>  &#125;<br><span class="hljs-string">&lt;/style&gt;</span><br><br><span class="hljs-string">&lt;!--</span> <span class="hljs-string">阅读进度条脚本</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;script&gt;</span><br>  <span class="hljs-string">window.addEventListener(&#x27;scroll&#x27;,</span> <span class="hljs-string">()</span> <span class="hljs-string">=&gt;</span> &#123;<br>    <span class="hljs-string">const</span> <span class="hljs-string">scrollTop</span> <span class="hljs-string">=</span> <span class="hljs-string">window.scrollY</span> <span class="hljs-string">||</span> <span class="hljs-string">document.documentElement.scrollTop;</span><br>    <span class="hljs-string">const</span> <span class="hljs-string">scrollHeight</span> <span class="hljs-string">=</span> <span class="hljs-string">document.documentElement.scrollHeight</span> <span class="hljs-bullet">-</span> <span class="hljs-string">document.documentElement.clientHeight;</span><br>    <span class="hljs-string">const</span> <span class="hljs-string">progress</span> <span class="hljs-string">=</span> <span class="hljs-string">(scrollTop</span> <span class="hljs-string">/</span> <span class="hljs-string">scrollHeight)</span> <span class="hljs-string">*</span> <span class="hljs-number">100</span><span class="hljs-string">;</span><br>    <span class="hljs-string">document.getElementById(&#x27;reading-progress-bar&#x27;).style.width</span> <span class="hljs-string">=</span> <span class="hljs-string">progress</span> <span class="hljs-string">+</span> <span class="hljs-string">&#x27;%&#x27;</span><span class="hljs-string">;</span><br>  &#125;<span class="hljs-string">);</span><br><span class="hljs-string">&lt;/script&gt;</span><br><br><span class="hljs-string">&lt;!--</span> <span class="hljs-string">不蒜子统计脚本</span> <span class="hljs-string">--&gt;</span><br><span class="hljs-string">&lt;script</span> <span class="hljs-string">async</span> <span class="hljs-string">src=&quot;https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;&lt;/script&gt;</span><br></code></pre></div></td></tr></table></figure>
+
+<h2 id="常用部署命令"><a href="#常用部署命令" class="headerlink" title="常用部署命令"></a>常用部署命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean     <span class="hljs-comment"># 清除缓存</span><br>hexo g         <span class="hljs-comment"># 生成静态文件</span><br>hexo d         <span class="hljs-comment"># 部署到 GitHub</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>📬 如有问题，欢迎联系我：<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>Permalink:</span>
+            <span><a href="https://yangchen461.github.io/2025/03/27/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89/">https://yangchen461.github.io/2025/03/27/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8github%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%9F-%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89/</a></span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>Slogan:</span>
+            <span>Do you believe in <strong>DESTINY</strong>?</span>
+          </p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Blog/"># Blog</a>
+            
+              <a href="/tags/Study/"># Study</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/03/26/hello-world/">Hello World</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>
