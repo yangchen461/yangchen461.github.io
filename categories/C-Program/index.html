@@ -152,22 +152,91 @@
     <div class="post-wrap categories">
         <h2 class="post-title">-&nbsp;Categories&nbsp;·&nbsp;C++ Program-</h2>
     </div>
-    <div class="post-wrap archive">
-    
-    
-        
-
-        
-            <h3>2025</h3>
-        
-
-        <article class="archive-item">
-            <a class="archive-item-link" href="/2025/03/26/hello-world/">Hello World</a>
-            <span class="archive-item-date">March 26, 2025</span>
-        </article>
-    
-    
+    <div class="sort-options">
+  <button onclick="sortPosts('name')">标题排序</button>
+  <button onclick="sortPosts('date')">时间排序</button>
 </div>
+
+<div class="post-wrap archive">
+  <ul class="archive-list" id="archiveList">
+    
+      <li class="archive-item" data-title="Hello World" data-date="2025-03-24T07:24:11.349Z">
+        <a class="archive-item-link" href="/2025/03/26/hello-world/">Hello World</a>
+        <span class="archive-item-date">March 24, 2025</span>
+      </li>
+    
+  </ul>
+
+  
+</div>
+
+<script>
+  function sortPosts(type) {
+    const list = document.getElementById("archiveList");
+    const items = Array.from(list.getElementsByTagName("li"));
+
+    items.sort((a, b) => {
+      if (type === 'name') {
+        return a.dataset.title.localeCompare(b.dataset.title, 'zh');
+      } else if (type === 'date') {
+        return new Date(b.dataset.date) - new Date(a.dataset.date);
+      }
+    });
+
+    items.forEach(item => list.appendChild(item));
+  }
+</script>
+
+<style>
+  .sort-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+  }
+
+  .sort-options button {
+    width: 130px;
+    height: 40px;
+    margin-bottom: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .sort-options button:hover {
+    background-color: #eee;
+  }
+
+  .archive-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .archive-item {
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 0.3rem;
+  }
+
+  .archive-item-link {
+    text-decoration: none;
+    color: #333;
+  }
+
+  .archive-item-date {
+    color: #888;
+    font-size: 0.85rem;
+  }
+</style>
+
 </div>
 
             </div>

@@ -1,67 +1,40 @@
-.post-copyright a {
-  word-break: break-all;
-  white-space: normal;
-  display: inline-block;
-  max-width: 100%;
+/* 自定义分类对齐优化 */
+.category-card-wrapper {
+  align-items: flex-start;
 }
-.reading-meta-box {
-  margin-top: 1rem;
-  font-size: 0.88rem;
-  color: #888;
-  background: #f9f9f9;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.05);
-  line-height: 1.6;
-}
-.code-wrapper {
-  position: relative;
-}
-.copy-btn {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  background: #3498db;
-  color: #fff;
-  border: none;
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 10;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-.copy-btn:hover {
-  opacity: 1;
-}
-.tag-card-wrapper {
+.categories-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  padding: 1rem 0;
+}
+.category-card {
+  flex: 1 1 300px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+/* === 分类卡片布局优化 === */
+.categories-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.category-card {
+  flex: 1 1 300px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.tag-card {
-  display: inline-block;
-  padding: 0.6rem 1rem;
-  background: #f5f5f5;
-  border-radius: 8px;
-  color: #333;
-  text-decoration: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: all 0.3s;
+.category-name {
+  margin-bottom: 0.75rem;
 }
-.tag-card:hover {
-  background: #3498db;
-  color: #fff;
-  transform: translateY(-2px);
-}
-.tag-card span {
-  font-size: 1rem;
-  font-weight: bold;
-}
-.tag-card small {
-  margin-left: 0.5rem;
-  color: #888;
+.category-posts {
+  margin-top: 0;
+  flex-grow: 1;
 }
