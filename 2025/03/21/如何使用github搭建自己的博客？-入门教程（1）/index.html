@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -271,13 +274,13 @@
 <p>编辑工具：泗洪 Typora（用于编辑 Markdown 格式）</p>
 <hr>
 <h3 id="1-注意-Git-与-cmd-的区别"><a href="#1-注意-Git-与-cmd-的区别" class="headerlink" title="1. 注意 Git 与 cmd 的区别"></a>1. 注意 Git 与 cmd 的区别</h3><p>在文档《Hexo + GitHub 搭建自己的专属博客》的第一部分，安装完毕之后查看是否成功，可以在 Windows 下按 <code>Win + R</code> 输入 <code>cmd</code> 打开命令提示符，然后输入以下指令：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">git</span> <span class="hljs-string">version</span><br><span class="hljs-string">node</span> <span class="hljs-string">-v</span><br><span class="hljs-string">npm</span> <span class="hljs-string">-v</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">git</span> <span class="hljs-string">version</span><br><span class="hljs-string">node</span> <span class="hljs-string">-v</span><br><span class="hljs-string">npm</span> <span class="hljs-string">-v</span><br></code></pre></div></td></tr></table></figure>
 
 <p>这些命令<strong>应在 cmd 命令行中执行</strong>，而不是 Git Bash。执行结果如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">C:\Users\11360&gt;git</span> <span class="hljs-string">version</span><br><span class="hljs-string">git</span> <span class="hljs-string">version</span> <span class="hljs-number">2.49</span><span class="hljs-number">.0</span><span class="hljs-string">.windows.1</span><br><br><span class="hljs-string">C:\Users\11360&gt;node</span> <span class="hljs-string">-v</span><br><span class="hljs-string">v22.14.0</span><br><br><span class="hljs-string">C:\Users\11360&gt;npm</span> <span class="hljs-string">-v</span><br><span class="hljs-number">10.9</span><span class="hljs-number">.2</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">C:\Users\11360&gt;git</span> <span class="hljs-string">version</span><br><span class="hljs-string">git</span> <span class="hljs-string">version</span> <span class="hljs-number">2.49</span><span class="hljs-number">.0</span><span class="hljs-string">.windows.1</span><br><br><span class="hljs-string">C:\Users\11360&gt;node</span> <span class="hljs-string">-v</span><br><span class="hljs-string">v22.14.0</span><br><br><span class="hljs-string">C:\Users\11360&gt;npm</span> <span class="hljs-string">-v</span><br><span class="hljs-number">10.9</span><span class="hljs-number">.2</span><br></code></pre></div></td></tr></table></figure>
 
 <h3 id="2-部署主题"><a href="#2-部署主题" class="headerlink" title="2. 部署主题"></a>2. 部署主题</h3><p>在配置 Hexo 主题时，我曾遇到一个报错。路径如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">D:\Cloud\myBlog\themes\hexo-theme-Chic</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">D:\Cloud\myBlog\themes\hexo-theme-Chic</span><br></code></pre></div></td></tr></table></figure>
 
 <p>该主题目录中有一个 <code>*_config.yml*</code> 文件。需要注意的是：<strong>Hexo 项目中存在两个 <code>_config.yml</code> 文件</strong>：</p>
 <ul>
@@ -285,14 +288,14 @@
 <li>主题文件夹下的 <code>_config.yml</code>：控制主题样式和内容</li>
 </ul>
 <p>报错内容如下：</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">description: |<br>  <span class="hljs-strong">**Passion makes every day different.**</span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span></span><br>  <span class="hljs-emphasis">*Aerospace and programming enthusiasts, welcome to communicate.*</span><br>avatar: /image/avatar.jpg<br></code></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs markdown">description: |<br>  <span class="hljs-strong">**Passion makes every day different.**</span><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">br</span>&gt;</span></span><br>  <span class="hljs-emphasis">*Aerospace and programming enthusiasts, welcome to communicate.*</span><br>avatar: /image/avatar.jpg<br></code></pre></div></td></tr></table></figure>
 
 <p><strong>说明：</strong><br> 第一种写法在 YAML 中可能会导致解析错误，因为 <code>&quot;</code> 引号中混入了 <code>&lt;br&gt;</code> HTML 标签，YAML 会难以正确处理。使用 <code>|</code> 多行文本格式可避免解析问题。</p>
 <h3 id="3-GitHub-新建库"><a href="#3-GitHub-新建库" class="headerlink" title="3. GitHub 新建库"></a>3. GitHub 新建库</h3><p>这方面尤其需要注意 <strong>仓库命名规则</strong>。本次搭建过程中，GitHub 仓库名称<strong>必须严格按照以下格式命名</strong>：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">用户名.github.io</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">用户名.github.io</span><br></code></pre></div></td></tr></table></figure>
 
 <p>例如：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">yangchen461.github.io</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">yangchen461.github.io</span><br></code></pre></div></td></tr></table></figure>
 
 <p>命名要点如下：</p>
 <ul>
@@ -301,32 +304,32 @@
 </ul>
 <hr>
 <p>GitHub 仓库命名与 Hexo 部署配置紧密相关，需要在博客根目录的 <code>_config.yml</code> 中指定正确的仓库地址和分支：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">deploy:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">git</span><br>  <span class="hljs-attr">repo:</span> <span class="hljs-string">git@github.com:yangchen461/yangchen461.github.io.git</span><br>  <span class="hljs-attr">branch:</span> <span class="hljs-string">master</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-attr">deploy:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">git</span><br>  <span class="hljs-attr">repo:</span> <span class="hljs-string">git@github.com:yangchen461/yangchen461.github.io.git</span><br>  <span class="hljs-attr">branch:</span> <span class="hljs-string">master</span><br></code></pre></div></td></tr></table></figure>
 
 <hr>
 <p>✅ 小贴士：每次部署前可以执行以下命令，确保更新生效：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">hexo</span> <span class="hljs-string">clean</span><br><span class="hljs-string">hexo</span> <span class="hljs-string">g</span><br><span class="hljs-string">hexo</span> <span class="hljs-string">d</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">hexo</span> <span class="hljs-string">clean</span><br><span class="hljs-string">hexo</span> <span class="hljs-string">g</span><br><span class="hljs-string">hexo</span> <span class="hljs-string">d</span><br></code></pre></div></td></tr></table></figure>
 
 <h3 id="4-配置-SSH-与部署注意事项（重点）"><a href="#4-配置-SSH-与部署注意事项（重点）" class="headerlink" title="4. 配置 SSH 与部署注意事项（重点）"></a>4. 配置 SSH 与部署注意事项（重点）</h3><p>这一部分是我认为最麻烦的一步，特别是 SSH 配置和 GitHub Pages 设置，建议重点关注。</p>
 <hr>
-<h3 id="1-查看自己的-SSH-Key"><a href="#1-查看自己的-SSH-Key" class="headerlink" title="1. 查看自己的 SSH Key"></a>1. 查看自己的 SSH Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> ~/.ssh/id_rsa.pub<br></code></pre></td></tr></table></figure>
+<h3 id="1-查看自己的-SSH-Key"><a href="#1-查看自己的-SSH-Key" class="headerlink" title="1. 查看自己的 SSH Key"></a>1. 查看自己的 SSH Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> ~/.ssh/id_rsa.pub<br></code></pre></div></td></tr></table></figure>
 
 <p>如果没有生成过 SSH Key，可以使用以下命令创建：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">ssh-keygen</span> <span class="hljs-string">-t</span> <span class="hljs-string">rsa</span> <span class="hljs-string">-C</span> <span class="hljs-string">&quot;你的邮箱&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">ssh-keygen</span> <span class="hljs-string">-t</span> <span class="hljs-string">rsa</span> <span class="hljs-string">-C</span> <span class="hljs-string">&quot;你的邮箱&quot;</span><br></code></pre></div></td></tr></table></figure>
 
-<h3 id="2-验证-SSH-是否添加成功"><a href="#2-验证-SSH-是否添加成功" class="headerlink" title="2. 验证 SSH 是否添加成功"></a>2. 验证 SSH 是否添加成功</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">ssh</span> <span class="hljs-string">-T</span> <span class="hljs-string">git@github.com</span><br></code></pre></td></tr></table></figure>
+<h3 id="2-验证-SSH-是否添加成功"><a href="#2-验证-SSH-是否添加成功" class="headerlink" title="2. 验证 SSH 是否添加成功"></a>2. 验证 SSH 是否添加成功</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">ssh</span> <span class="hljs-string">-T</span> <span class="hljs-string">git@github.com</span><br></code></pre></div></td></tr></table></figure>
 
 <p>如果终端返回以下内容：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">Hi</span> <span class="hljs-string">xxx!</span> <span class="hljs-string">You&#x27;ve</span> <span class="hljs-string">successfully</span> <span class="hljs-string">authenticated,</span> <span class="hljs-string">but</span> <span class="hljs-string">GitHub</span> <span class="hljs-string">does</span> <span class="hljs-string">not</span> <span class="hljs-string">provide</span> <span class="hljs-string">shell</span> <span class="hljs-string">access.</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">Hi</span> <span class="hljs-string">xxx!</span> <span class="hljs-string">You&#x27;ve</span> <span class="hljs-string">successfully</span> <span class="hljs-string">authenticated,</span> <span class="hljs-string">but</span> <span class="hljs-string">GitHub</span> <span class="hljs-string">does</span> <span class="hljs-string">not</span> <span class="hljs-string">provide</span> <span class="hljs-string">shell</span> <span class="hljs-string">access.</span><br></code></pre></div></td></tr></table></figure>
 
 <p>说明 SSH 配置成功。</p>
 <p>⚠️ 注意：这一步必须在 GitHub 中添加 SSH Key 后再进行验证。</p>
 <hr>
 <h3 id="3-关于-GitHub-仓库分支（main-与-master）"><a href="#3-关于-GitHub-仓库分支（main-与-master）" class="headerlink" title="3. 关于 GitHub 仓库分支（main 与 master）"></a>3. 关于 GitHub 仓库分支（main 与 master）</h3><p>GitHub 默认分支通常为 <code>main</code>，而 Hexo 默认使用 <code>master</code> 分支部署。需要手动在 <code>_config.yml</code> 文件中指定部署分支为 <code>master</code>：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">deploy:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">git</span><br>  <span class="hljs-attr">repo:</span> <span class="hljs-string">git@github.com:yangchen461/yangchen461.github.io.git</span><br>  <span class="hljs-attr">branch:</span> <span class="hljs-string">master</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-attr">deploy:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">git</span><br>  <span class="hljs-attr">repo:</span> <span class="hljs-string">git@github.com:yangchen461/yangchen461.github.io.git</span><br>  <span class="hljs-attr">branch:</span> <span class="hljs-string">master</span><br></code></pre></div></td></tr></table></figure>
 
 <p>然后运行以下命令：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">hexo</span> <span class="hljs-string">g</span>   <span class="hljs-comment"># 生成静态文件</span><br><span class="hljs-string">hexo</span> <span class="hljs-string">d</span>   <span class="hljs-comment"># 部署到 GitHub</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">hexo</span> <span class="hljs-string">g</span>   <span class="hljs-comment"># 生成静态文件</span><br><span class="hljs-string">hexo</span> <span class="hljs-string">d</span>   <span class="hljs-comment"># 部署到 GitHub</span><br></code></pre></div></td></tr></table></figure>
 
 <p>此时会将本地生成的博客内容上传到 GitHub，但注意仓库的 <code>main</code> 分支仍可能是空的。</p>
 <h3 id="4-检查-GitHub-Pages-设置"><a href="#4-检查-GitHub-Pages-设置" class="headerlink" title="4. 检查 GitHub Pages 设置"></a>4. 检查 GitHub Pages 设置</h3><ol>
@@ -335,7 +338,7 @@
 <li><p>点击右上角 <code>Settings</code> → 左侧选择 <code>Pages</code></p>
 </li>
 <li><p>找到 </p>
-<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">Branch</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs ebnf"><span class="hljs-attribute">Branch</span><br></code></pre></div></td></tr></table></figure>
 
 <p> 设置部分：</p>
 <ul>
@@ -572,6 +575,51 @@
 
 <!-- 不蒜子统计脚本 -->
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
 
     </div>
 </body>

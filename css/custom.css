@@ -14,3 +14,24 @@
   box-shadow: 0 0 6px rgba(0,0,0,0.05);
   line-height: 1.6;
 }
+.code-wrapper {
+  position: relative;
+}
+.copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: #3498db;
+  color: #fff;
+  border: none;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.copy-btn:hover {
+  opacity: 1;
+}

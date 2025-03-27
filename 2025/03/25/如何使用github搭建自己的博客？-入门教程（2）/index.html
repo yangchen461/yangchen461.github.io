@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -286,33 +289,33 @@
 <p>编辑工具推荐：<strong>Typora</strong>（Markdown 编辑）</p>
 <hr>
 <h2 id="1-tag-category-与-tags-categories-的区别"><a href="#1-tag-category-与-tags-categories-的区别" class="headerlink" title="1. tag &#x2F; category 与 tags &#x2F; categories 的区别"></a>1. <code>tag</code> &#x2F; <code>category</code> 与 <code>tags</code> &#x2F; <code>categories</code> 的区别</h2><p>在 Hexo 中，**<code>tag.ejs</code> &#x2F; <code>category.ejs</code>** 是主题默认模板，但 <strong><code>tags.ejs</code> &#x2F; <code>categories.ejs</code></strong> 页面并未自动生成。<br>因此需要你在路径：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">themes/hexo-theme-Chic/layout<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">themes/hexo-theme-Chic/layout<br></code></pre></div></td></tr></table></figure>
 
 <p>手动创建：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">tags<span class="hljs-selector-class">.ejs</span><br>categories.ejs<br></code></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs stylus">tags<span class="hljs-selector-class">.ejs</span><br>categories.ejs<br></code></pre></div></td></tr></table></figure>
 
 <p>示例截图：</p>
 <p><img src="/images/20250325/image-20250325102648405.png" alt="image-20250325102648405"></p>
 <hr>
 <h2 id="2-Categories-分类设置"><a href="#2-Categories-分类设置" class="headerlink" title="2. Categories 分类设置"></a>2. Categories 分类设置</h2><p>每篇文章建议仅设置一个主分类，格式如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">categories:</span> <span class="hljs-string">Blog</span> <span class="hljs-string">Building</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-attr">categories:</span> <span class="hljs-string">Blog</span> <span class="hljs-string">Building</span><br></code></pre></div></td></tr></table></figure>
 
 <hr>
 <h2 id="3-标签与分类页面优化建议"><a href="#3-标签与分类页面优化建议" class="headerlink" title="3. 标签与分类页面优化建议"></a>3. 标签与分类页面优化建议</h2><p>建议参照 ChatGPT 的卡片式美化方案，或自行探索更多主题模板：<br>👉 <a target="_blank" rel="noopener" href="https://hexo.io/themes/">Hexo Themes 官方主题市场</a></p>
 <hr>
 <h2 id="Hexo-常用部署命令"><a href="#Hexo-常用部署命令" class="headerlink" title="Hexo 常用部署命令"></a>Hexo 常用部署命令</h2><p>确保本地修改及时同步至 GitHub，可按以下顺序操作：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo clean<br>hexo g<br>hexo d<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean<br>hexo g<br>hexo d<br></code></pre></div></td></tr></table></figure>
 
 <hr>
 <h2 id="4-Atom-One-Dark-代码高亮配置"><a href="#4-Atom-One-Dark-代码高亮配置" class="headerlink" title="4. Atom One Dark 代码高亮配置"></a>4. Atom One Dark 代码高亮配置</h2><p>原始的 <code>.css</code> 文件可能无法通过 <code>@import</code> 导入 Stylus。<br>因此，建议直接在 HTML 中通过 CDN 引入：</p>
 <p> 修改路径：</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">themes<span class="hljs-regexp">/hexo-theme-Chic/</span>layout<span class="hljs-regexp">/_partial/</span>head.ejs<br></code></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs awk">themes<span class="hljs-regexp">/hexo-theme-Chic/</span>layout<span class="hljs-regexp">/_partial/</span>head.ejs<br></code></pre></div></td></tr></table></figure>
 
 <p>添加以下内容到 <code>&lt;head&gt;</code> 标签中：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- Highlight.js style: Atom One Dark --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs html"><span class="hljs-comment">&lt;!-- Highlight.js style: Atom One Dark --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css&quot;</span>&gt;</span><br></code></pre></div></td></tr></table></figure>
 
 <p>同时，请确保主配置文件 <code>_config.yml</code> 包含如下设置：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">syntax_highlighter:</span> <span class="hljs-string">highlight.js</span><br><br><span class="hljs-attr">highlight:</span><br>  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">line_number:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">auto_detect:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">tab_replace:</span><br>  <span class="hljs-attr">wrap:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">hljs:</span> <span class="hljs-literal">true</span>  <span class="hljs-comment"># ✅ 重要！必须启用才能让 &lt;pre&gt;&lt;code&gt; 使用 hljs 样式</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-attr">syntax_highlighter:</span> <span class="hljs-string">highlight.js</span><br><br><span class="hljs-attr">highlight:</span><br>  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">line_number:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">auto_detect:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">tab_replace:</span><br>  <span class="hljs-attr">wrap:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">hljs:</span> <span class="hljs-literal">true</span>  <span class="hljs-comment"># ✅ 重要！必须启用才能让 &lt;pre&gt;&lt;code&gt; 使用 hljs 样式</span><br></code></pre></div></td></tr></table></figure>
 
 <hr>
 <h2 id="5-Giscus-评论系统集成"><a href="#5-Giscus-评论系统集成" class="headerlink" title="5. Giscus 评论系统集成"></a>5. Giscus 评论系统集成</h2><p>Giscus 是一个基于 GitHub Discussions 的评论系统。使用前请确认仓库为 <code>public</code>，并确保：</p>
@@ -546,6 +549,51 @@
 
 <!-- 不蒜子统计脚本 -->
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
 
     </div>
 </body>

@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -250,6 +253,51 @@
 
 <!-- 不蒜子统计脚本 -->
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
 
     </div>
 </body>
