@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>Dynamic Programming(1) | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">Dynamic Programming(1)</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">April 11, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/C-Programming/">C++ Programming</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h1 id="✨-Overview-of-the-Programming-Content"><a href="#✨-Overview-of-the-Programming-Content" class="headerlink" title="✨ Overview of the Programming Content"></a>✨ Overview of the Programming Content</h1><ol>
+<li>Climb stairs;</li>
+<li>Fibonacci number;</li>
+<li>Nth Tibonacci number;</li>
+<li>Climb stairs with minimum cost;</li>
+<li>Robbery;</li>
+<li>Delete and gain points;</li>
+</ol>
+<p>Recommended editing tool: **Typora **(Markdown editing) </p>
+<hr>
+<h1 id="1-Climb-Stairs"><a href="#1-Climb-Stairs" class="headerlink" title="1. Climb Stairs"></a>1. Climb Stairs</h1><h2 id="Question-Description"><a href="#Question-Description" class="headerlink" title="Question Description:"></a>Question Description:</h2><p>Suppose you are climbing a staircase. It takes $n$ steps to reach the top. Each time you can climb 1 or 2 steps. How many different ways can you climb to the top?</p>
+<h2 id="Analyse"><a href="#Analyse" class="headerlink" title="Analyse"></a>Analyse</h2><p>We can use $f(x)$ to represent the ‘$x$’ step, consider the last step maybe 1 or 2 steps, we can list the following formula:<br>$$<br>\begin{equation}<br>f(x) &#x3D; f(x-1) + f(x-2)<br>\end{equation}<br>$$<br>It means that the number of solutions to climb the $x$th step is the sum of the number of solutions to climb the $(x-1)$th step and the number of solutions to climb the $(x-2)$th step. It is easy to understand, because we can only climb 1 or 2 steps at a time, so $f(x)$ can only be transferred from $f(x-1)$ and $f(x-2)$. To count the total number of solutions here, we need to sum the contributions of these two items.</p>
+<p>In other words, in my opinion, there are two usual ways to solve basic dynamic questions: finding patterns or solving general formulas. Then, it is easy to transfer the idea into C++ codes.</p>
+<p>There are two methods to deal with this problem.</p>
+<h2 id="Iteration"><a href="#Iteration" class="headerlink" title="Iteration"></a>Iteration</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">climbStairs(int</span> <span class="hljs-string">n)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-string">Handle</span> <span class="hljs-string">base</span> <span class="hljs-string">cases</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">stairs</span> <span class="hljs-string">is</span> <span class="hljs-number">0</span>, <span class="hljs-string">there</span> <span class="hljs-string">are</span> <span class="hljs-number">0</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">climb</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">1</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">there&#x27;s</span> <span class="hljs-number">1</span> <span class="hljs-string">stair</span>, <span class="hljs-string">there&#x27;s</span> <span class="hljs-string">only</span> <span class="hljs-number">1</span> <span class="hljs-string">way</span> <span class="hljs-string">to</span> <span class="hljs-string">climb</span> <span class="hljs-string">(one</span> <span class="hljs-string">step)</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">2</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">2</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">there</span> <span class="hljs-string">are</span> <span class="hljs-number">2</span> <span class="hljs-string">stairs</span>, <span class="hljs-string">there</span> <span class="hljs-string">are</span> <span class="hljs-number">2</span> <span class="hljs-string">ways</span> <span class="hljs-string">(1+1</span> <span class="hljs-string">or</span> <span class="hljs-number">2</span> <span class="hljs-string">steps</span> <span class="hljs-string">at</span> <span class="hljs-string">once)</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">dynamic</span> <span class="hljs-string">programming</span> <span class="hljs-string">variables</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">(n-2)th</span> <span class="hljs-string">stair</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">(n-1)th</span> <span class="hljs-string">stair</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">sum</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">//</span> <span class="hljs-string">Used</span> <span class="hljs-string">to</span> <span class="hljs-string">store</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">step</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-string">Start</span> <span class="hljs-string">computing</span> <span class="hljs-string">from</span> <span class="hljs-string">the</span> <span class="hljs-string">3rd</span> <span class="hljs-string">stair</span> <span class="hljs-string">up</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">nth</span> <span class="hljs-string">stair</span><br>        <span class="hljs-string">for(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">3</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span>&#123;<br>            <span class="hljs-string">sum</span> <span class="hljs-string">=</span> <span class="hljs-string">a</span> <span class="hljs-string">+</span> <span class="hljs-string">b;</span>  <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">the</span> <span class="hljs-string">ith</span> <span class="hljs-string">stair</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">sum</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">(i-1)th</span> <span class="hljs-string">and</span> <span class="hljs-string">(i-2)th</span> <span class="hljs-string">stairs</span><br>            <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-string">b;</span>        <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">a</span> <span class="hljs-string">to</span> <span class="hljs-string">be</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">b</span> <span class="hljs-string">(ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">(i-1)th</span> <span class="hljs-string">stair)</span><br>            <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-string">sum;</span>      <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">b</span> <span class="hljs-string">to</span> <span class="hljs-string">be</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span><br>        &#125;<br>        <br>        <span class="hljs-string">return</span> <span class="hljs-string">sum;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">the</span> <span class="hljs-string">nth</span> <span class="hljs-string">stair</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis"><a href="#Complexity-Analysis" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<h2 id="Recursion"><a href="#Recursion" class="headerlink" title="Recursion"></a>Recursion</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">//</span> <span class="hljs-attr">Main function:</span> <span class="hljs-string">calculates</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">ways</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">the</span> <span class="hljs-string">n-th</span> <span class="hljs-string">stair</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">climbStairs(int</span> <span class="hljs-string">n)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-string">Call</span> <span class="hljs-string">the</span> <span class="hljs-string">helper</span> <span class="hljs-string">function</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">to</span> <span class="hljs-string">perform</span> <span class="hljs-string">recursive</span> <span class="hljs-string">computation</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">Initially</span> <span class="hljs-string">pass</span> <span class="hljs-string">in</span> <span class="hljs-number">1</span> <span class="hljs-string">and</span> <span class="hljs-number">1</span>, <span class="hljs-string">representing</span> <span class="hljs-string">the</span> <span class="hljs-string">1st</span> <span class="hljs-string">and</span> <span class="hljs-string">2nd</span> <span class="hljs-string">terms</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">sequence</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">Fibonacci(n</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span><span class="hljs-string">);</span><br>    &#125;<br><br>    <span class="hljs-string">//</span> <span class="hljs-attr">Helper function:</span> <span class="hljs-string">recursively</span> <span class="hljs-string">computes</span> <span class="hljs-string">the</span> <span class="hljs-string">n-th</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">number</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">Fibonacci(int</span> <span class="hljs-string">n</span>, <span class="hljs-string">int</span> <span class="hljs-string">a</span>, <span class="hljs-string">int</span> <span class="hljs-string">b)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-attr">Base case:</span> <span class="hljs-string">when</span> <span class="hljs-string">n</span> <span class="hljs-string">reaches</span> <span class="hljs-number">1</span>, <span class="hljs-string">return</span> <span class="hljs-string">a</span> <span class="hljs-string">(which</span> <span class="hljs-string">holds</span> <span class="hljs-string">the</span> <span class="hljs-string">final</span> <span class="hljs-string">result)</span><br>        <span class="hljs-string">if</span> <span class="hljs-string">(n</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-string">a;</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-attr">Recursive call:</span> <span class="hljs-string">move</span> <span class="hljs-string">one</span> <span class="hljs-string">step</span> <span class="hljs-string">down</span> <span class="hljs-string">(n</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span><span class="hljs-string">)</span>,<br>        <span class="hljs-string">//</span> <span class="hljs-string">a</span> <span class="hljs-string">becomes</span> <span class="hljs-string">the</span> <span class="hljs-string">new</span> <span class="hljs-string">b</span>, <span class="hljs-string">and</span> <span class="hljs-string">b</span> <span class="hljs-string">becomes</span> <span class="hljs-string">a</span> <span class="hljs-string">+</span> <span class="hljs-string">b</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">Fibonacci(n</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span>, <span class="hljs-string">b</span>, <span class="hljs-string">a</span> <span class="hljs-string">+</span> <span class="hljs-string">b);</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<h1 id="2-Fibonacci-Number"><a href="#2-Fibonacci-Number" class="headerlink" title="2. Fibonacci Number"></a>2. Fibonacci Number</h1><h2 id="Question-Description-1"><a href="#Question-Description-1" class="headerlink" title="Question Description"></a>Question Description</h2><p>The sequence of Fibonacci numbers (usually denoted by $F(n)$) is called the Fibonacci sequence. The sequence starts with 0 and 1. and each subsequent number is the sum of the previous two numbers. That is:<br>$$<br>F(0) &#x3D; 0, \quad F(1) &#x3D; 1<br>$$</p>
+<p>$$<br>F(n) &#x3D; F(n - 1) + F(n - 2), \quad \text{其中 } n &gt; 1<br>$$</p>
+<p>Given the number $n$, please calculate $F(n)$. </p>
+<h2 id="Analyse-1"><a href="#Analyse-1" class="headerlink" title="Analyse"></a>Analyse</h2><p>This question is similar with the first one - ‘Climb Stairs’. </p>
+<p>The boundary conditions of Fibonacci Number are $F(0) &#x3D; 0$ and $F(1) &#x3D; 1$. When $n &gt; 1$, the sum of each term is equal to the sum of the previous two terms, so there is the following recursive relationship:<br>$$<br>F(n) &#x3D; F(n-1) + F(n-2)<br>$$<br>Since the Fibonacci numbers have a recursive relationship, dynamic programming  can be used to solve them. The state transition equation of dynamic programming is the above recursive relationship, and the boundary conditions are $F(0)$ and $F(1)$.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">fib(int</span> <span class="hljs-string">n)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">n</span> <span class="hljs-string">is</span> <span class="hljs-number">0</span>, <span class="hljs-string">return</span> <span class="hljs-number">0</span> <span class="hljs-string">since</span> <span class="hljs-string">the</span> <span class="hljs-string">0th</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">is</span> <span class="hljs-number">0</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">n</span> <span class="hljs-string">is</span> <span class="hljs-number">1</span>, <span class="hljs-string">return</span> <span class="hljs-number">1</span> <span class="hljs-string">since</span> <span class="hljs-string">the</span> <span class="hljs-string">1st</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">is</span> <span class="hljs-number">1</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">1</span><span class="hljs-string">;</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-attr">Initialize the first two Fibonacci numbers:</span> <span class="hljs-string">a</span> <span class="hljs-string">represents</span> <span class="hljs-string">F(0)</span>, <span class="hljs-string">b</span> <span class="hljs-string">represents</span> <span class="hljs-string">F(1)</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">sum</span> <span class="hljs-string">is</span> <span class="hljs-string">used</span> <span class="hljs-string">to</span> <span class="hljs-string">store</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">being</span> <span class="hljs-string">calculated</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">sum</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-string">Iterate</span> <span class="hljs-string">from</span> <span class="hljs-string">the</span> <span class="hljs-string">2nd</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">up</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">nth</span><br>        <span class="hljs-string">for(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span>&#123;<br>            <span class="hljs-string">//</span> <span class="hljs-attr">Calculate the current Fibonacci number:</span> <span class="hljs-string">F(i)</span> <span class="hljs-string">=</span> <span class="hljs-string">F(i</span> <span class="hljs-bullet">-</span> <span class="hljs-number">2</span><span class="hljs-string">)</span> <span class="hljs-string">+</span> <span class="hljs-string">F(i</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span><span class="hljs-string">)</span><br>            <span class="hljs-string">sum</span> <span class="hljs-string">=</span> <span class="hljs-string">a</span> <span class="hljs-string">+</span> <span class="hljs-string">b;</span><br>            <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">a</span> <span class="hljs-string">to</span> <span class="hljs-string">be</span> <span class="hljs-string">F(i</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span><span class="hljs-string">)</span>, <span class="hljs-string">which</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">value</span> <span class="hljs-string">of</span> <span class="hljs-string">b</span><br>            <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-string">b;</span><br>            <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">b</span> <span class="hljs-string">to</span> <span class="hljs-string">be</span> <span class="hljs-string">F(i)</span>, <span class="hljs-string">which</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">value</span> <span class="hljs-string">stored</span> <span class="hljs-string">in</span> <span class="hljs-string">sum</span><br>            <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-string">sum;</span><br>        &#125;<br>        <br>        <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">nth</span> <span class="hljs-string">Fibonacci</span> <span class="hljs-string">number</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">sum;</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-1"><a href="#Complexity-Analysis-1" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-Nth-Tibonacci-number"><a href="#3-Nth-Tibonacci-number" class="headerlink" title="3. Nth Tibonacci number"></a>3. Nth Tibonacci number</h1><h2 id="Question-Description-2"><a href="#Question-Description-2" class="headerlink" title="Question Description"></a>Question Description</h2><p>The Tibonacci sequence $(T_n)$ is defined as follows:</p>
+<p>$$<br>T_0 &#x3D; 0,\quad T_1 &#x3D; 1,\quad T_2 &#x3D; 1<br>$$</p>
+<p>and:</p>
+<p>$$<br>T_{n+3} &#x3D; T_n + T_{n+1} + T_{n+2}<br>$$</p>
+<p>Given an integer $(n)$, return the value of the $(n)$-th Tibonacci number $(T_n)$.</p>
+<h2 id="Analyse-2"><a href="#Analyse-2" class="headerlink" title="Analyse"></a>Analyse</h2><p>This questions is also similar with th above two. The only difference is that the previous formula is the first two decision values, while this one is the first three decision values.</p>
+<p>We can use dynamic programming to solve this question. The boundary conditions of Tibonacci number is $T(0) &#x3D; 0$, $T(1) &#x3D; 1$, $T(2) &#x3D; 1$. If $n &gt; 2$, the sum of each term is equal to the sum of the previous three terms, so there is the following recursive relationship:<br>$$<br>T(n) &#x3D; T(n-1) + T(n-2) + T(n - 3)<br>$$</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">tribonacci(int</span> <span class="hljs-string">n)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-string">Handle</span> <span class="hljs-string">base</span> <span class="hljs-string">cases</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">0th</span> <span class="hljs-string">Tribonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">is</span> <span class="hljs-number">0</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">1</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">1st</span> <span class="hljs-string">Tribonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">is</span> <span class="hljs-number">1</span><br>        <span class="hljs-string">if(n</span> <span class="hljs-string">==</span> <span class="hljs-number">2</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">1</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">2nd</span> <span class="hljs-string">Tribonacci</span> <span class="hljs-string">number</span> <span class="hljs-string">is</span> <span class="hljs-number">1</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">dynamic</span> <span class="hljs-string">programming</span> <span class="hljs-string">variables</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">T(n-3)</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">T(n-2)</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">c</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">T(n-1)</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">sum</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">//</span> <span class="hljs-string">Used</span> <span class="hljs-string">to</span> <span class="hljs-string">store</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">Tribonacci</span> <span class="hljs-string">number</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Compute</span> <span class="hljs-string">from</span> <span class="hljs-string">the</span> <span class="hljs-string">3rd</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">n-th</span> <span class="hljs-string">term</span><br>        <span class="hljs-string">for(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">3</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span>&#123;<br>            <span class="hljs-string">sum</span> <span class="hljs-string">=</span> <span class="hljs-string">a</span> <span class="hljs-string">+</span> <span class="hljs-string">b</span> <span class="hljs-string">+</span> <span class="hljs-string">c;</span>  <span class="hljs-string">//</span> <span class="hljs-attr">According to the Tribonacci definition:</span> <span class="hljs-string">T(n)</span> <span class="hljs-string">=</span> <span class="hljs-string">T(n-1)</span> <span class="hljs-string">+</span> <span class="hljs-string">T(n-2)</span> <span class="hljs-string">+</span> <span class="hljs-string">T(n-3)</span><br>            <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-string">b;</span>            <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">a</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">value</span> <span class="hljs-string">of</span> <span class="hljs-string">b</span> <span class="hljs-string">(i.e.</span>, <span class="hljs-string">T(n-2))</span><br>            <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-string">c;</span>            <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">b</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">value</span> <span class="hljs-string">of</span> <span class="hljs-string">c</span> <span class="hljs-string">(i.e.</span>, <span class="hljs-string">T(n-1))</span><br>            <span class="hljs-string">c</span> <span class="hljs-string">=</span> <span class="hljs-string">sum;</span>          <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">c</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">value</span> <span class="hljs-string">(i.e.</span>, <span class="hljs-string">T(n))</span><br>        &#125;<br><br>        <span class="hljs-string">return</span> <span class="hljs-string">sum;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">n-th</span> <span class="hljs-string">Tribonacci</span> <span class="hljs-string">number</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-2"><a href="#Complexity-Analysis-2" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="4-Climb-Stairs-Using-Minimum-Cost"><a href="#4-Climb-Stairs-Using-Minimum-Cost" class="headerlink" title="4. Climb Stairs Using Minimum Cost"></a>4. Climb Stairs Using Minimum Cost</h1><h2 id="Question-Description-3"><a href="#Question-Description-3" class="headerlink" title="Question Description"></a>Question Description</h2><p>Now you are given an integer array cost, where cost$[i]$ is the cost to climb up to step $i$. Once you pay this cost, you can choose to climb up 1 or 2 steps. </p>
+<p>Please calculate and return the minimum cost to reach the top of the stairs.</p>
+<h2 id="Analyse-3"><a href="#Analyse-3" class="headerlink" title="Analyse"></a>Analyse</h2><p>The most important issue of this question is the recursion formula which can show the relationship between $dp[i]$, $dp[i-1]$ and $dp[i-2]$.</p>
+<p>Create an array $dp$ of length $n + 1$, where $dp[i]$ represents the minimum cost to reach index $i$.</p>
+<p>If you want to reach to the step $i$, you have two choices. </p>
+<ol>
+<li>1 Step: From step $i - 1$, so the cost is $dp[i-1] + cost[i-1]$;</li>
+<li>2 Steps: From step $i - 2$, so the cost is $dp[i-2] + cost[i -2]$;</li>
+</ol>
+<p>When $2≤ i ≤ n$, we can reach index $i$ from index $i-1$ using the cost of cost$[i - 1]$, or from index $i - 2$ using the cost of cost$[i - 2]$ to reach index $i$. In order to minimize the total cost, $dp[i]$ should take the minimum of the above two items, so the state transition equation is as follows:<br>$$<br>dp[i] &#x3D; min(dp[i-1]+cost[i-1],dp[i-2] + cost[i-2])<br>$$</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">minCostClimbingStairs(vector&lt;int&gt;&amp;</span> <span class="hljs-string">cost)</span> &#123;<br>        <span class="hljs-string">int</span> <span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">cost.size();</span>  <span class="hljs-string">//</span> <span class="hljs-string">Get</span> <span class="hljs-string">the</span> <span class="hljs-string">total</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">steps</span> <span class="hljs-string">(length</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">cost</span> <span class="hljs-string">array)</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-attr">Method 1: Using a DP array (Space Complexity:</span> <span class="hljs-string">O(n))</span><br>        <span class="hljs-string">/*</span><br>        <span class="hljs-string">vector&lt;int&gt;</span> <span class="hljs-string">dp(n</span> <span class="hljs-string">+</span> <span class="hljs-number">1</span><span class="hljs-string">);</span>  <span class="hljs-string">//</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">represents</span> <span class="hljs-string">the</span> <span class="hljs-string">minimum</span> <span class="hljs-string">cost</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">the</span> <span class="hljs-string">i-th</span> <span class="hljs-string">step</span><br>        <span class="hljs-string">dp</span>[<span class="hljs-number">0</span>] <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Starting</span> <span class="hljs-string">from</span> <span class="hljs-string">the</span> <span class="hljs-string">ground</span> <span class="hljs-string">(step</span> <span class="hljs-number">0</span><span class="hljs-string">)</span> <span class="hljs-string">costs</span> <span class="hljs-string">nothing</span><br>        <span class="hljs-string">dp</span>[<span class="hljs-number">1</span>] <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">You</span> <span class="hljs-string">can</span> <span class="hljs-string">step</span> <span class="hljs-string">onto</span> <span class="hljs-string">step</span> <span class="hljs-number">1</span> <span class="hljs-string">directly</span> <span class="hljs-string">with</span> <span class="hljs-literal">no</span> <span class="hljs-string">initial</span> <span class="hljs-string">cost</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">=</span> <span class="hljs-string">min(dp</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">+</span> <span class="hljs-string">cost</span>[<span class="hljs-string">i-1</span>],  <span class="hljs-string">//</span> <span class="hljs-string">Step</span> <span class="hljs-string">from</span> <span class="hljs-string">i-1</span> <span class="hljs-string">with</span> <span class="hljs-string">cost</span><br>                        <span class="hljs-string">dp</span>[<span class="hljs-string">i-2</span>] <span class="hljs-string">+</span> <span class="hljs-string">cost</span>[<span class="hljs-string">i-2</span>]<span class="hljs-string">);</span> <span class="hljs-string">//</span> <span class="hljs-string">Or</span> <span class="hljs-string">step</span> <span class="hljs-string">from</span> <span class="hljs-string">i-2</span> <span class="hljs-string">with</span> <span class="hljs-string">cost</span><br>        &#125;<br>        <span class="hljs-string">return</span> <span class="hljs-string">dp</span>[<span class="hljs-string">n</span>]<span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">minimum</span> <span class="hljs-string">cost</span> <span class="hljs-string">to</span> <span class="hljs-string">reach</span> <span class="hljs-string">the</span> <span class="hljs-string">top</span> <span class="hljs-string">(step</span> <span class="hljs-string">n)</span><br>        <span class="hljs-string">*/</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-attr">Method 2: Space-optimized version (Space Complexity:</span> <span class="hljs-string">O(1))</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-2</span>], <span class="hljs-string">initially</span> <span class="hljs-string">corresponds</span> <span class="hljs-string">to</span> <span class="hljs-string">dp</span>[<span class="hljs-number">0</span>]<br>        <span class="hljs-string">int</span> <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-string">Represents</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>], <span class="hljs-string">initially</span> <span class="hljs-string">corresponds</span> <span class="hljs-string">to</span> <span class="hljs-string">dp</span>[<span class="hljs-number">1</span>]<br><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">//</span> <span class="hljs-attr">Compute the minimum cost to reach the current step i:</span><br>            <span class="hljs-string">//</span> <span class="hljs-attr">1. From step i-2 with cost:</span> <span class="hljs-string">a</span> <span class="hljs-string">+</span> <span class="hljs-string">cost</span>[<span class="hljs-string">i-2</span>]<br>            <span class="hljs-string">//</span> <span class="hljs-attr">2. From step i-1 with cost:</span> <span class="hljs-string">b</span> <span class="hljs-string">+</span> <span class="hljs-string">cost</span>[<span class="hljs-string">i-1</span>]<br>            <span class="hljs-string">int</span> <span class="hljs-string">c</span> <span class="hljs-string">=</span> <span class="hljs-string">min(a</span> <span class="hljs-string">+</span> <span class="hljs-string">cost</span>[<span class="hljs-string">i-2</span>], <span class="hljs-string">b</span> <span class="hljs-string">+</span> <span class="hljs-string">cost</span>[<span class="hljs-string">i-1</span>]<span class="hljs-string">);</span><br><br>            <span class="hljs-string">//</span> <span class="hljs-attr">Update the rolling variables:</span><br>            <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-string">b;</span>  <span class="hljs-string">//</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">becomes</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-2</span>] <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">next</span> <span class="hljs-string">iteration</span><br>            <span class="hljs-string">b</span> <span class="hljs-string">=</span> <span class="hljs-string">c;</span>  <span class="hljs-string">//</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">becomes</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">next</span> <span class="hljs-string">iteration</span><br>        &#125;<br><br>        <span class="hljs-string">return</span> <span class="hljs-string">b;</span>  <span class="hljs-string">//</span> <span class="hljs-string">b</span> <span class="hljs-string">now</span> <span class="hljs-string">holds</span> <span class="hljs-string">the</span> <span class="hljs-string">final</span> <span class="hljs-string">result</span> <span class="hljs-string">dp</span>[<span class="hljs-string">n</span>]<br>    &#125;<br>&#125;<span class="hljs-string">;</span><br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-3"><a href="#Complexity-Analysis-3" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="5-Robbery"><a href="#5-Robbery" class="headerlink" title="5. Robbery"></a>5. Robbery</h1><h2 id="Question-Description-4"><a href="#Question-Description-4" class="headerlink" title="Question Description"></a>Question Description</h2><p>You are a professional thief, planning to steal from houses along the street. There is a certain amount of cash hidden in each house. The only limiting factor affecting your theft is that the adjacent houses are equipped with interconnected anti-theft systems. If two adjacent houses are broken into by thieves on the same night, the system will automatically alarm.</p>
+<h2 id="Analyse-4"><a href="#Analyse-4" class="headerlink" title="Analyse"></a>Analyse</h2><p>The most important issue of this question is “to steal or not to steak” when facing the ith house.</p>
+<p>There are two choices:</p>
+<ol>
+<li>To steal the $i$th house, so that you can not steal the ‘$i-1$’th house. The total stealing amount is the sum of the maximum total amount of the first $i-2$ houses and the amount of the $i$th house;</li>
+<li>Do not steal the $i$th house, and the total amount of the theft is the maximum total amount of the first $i-1$ houses.</li>
+</ol>
+<p>Choose the option with the larger total theft amount between the two options. The total theft amount corresponding to this option is the maximum total theft amount that can be stolen from the first $i$ houses.</p>
+<p>Use $dp[i]$ to represent the maximum total theft amount that can be stolen from the first $i$ houses, then there is the following state transition equation:<br>$$<br>dp[i] &#x3D; max(dp[i-2] + nums[i],dp[i-1])<br>$$<br>The boundary conditions is：</p>
+<p>$$<br>\begin{cases}<br>\text{dp}[0] &#x3D; \text{nums}[0], &amp; \text{if there is only one house, rob it} \\<br>\text{dp}[1] &#x3D; \max(\text{nums}[0], \text{nums}[1]), &amp; \text{if there are two houses,rob the one with the higher amount}<br>\end{cases}<br>$$</p>
+<p>The final answer is $dp[n - 1]$, where  $n$ is the length of the array.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">rob(vector&lt;int&gt;&amp;</span> <span class="hljs-string">nums)</span> &#123;<br>        <span class="hljs-string">int</span> <span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">nums.size();</span>  <span class="hljs-string">//</span> <span class="hljs-string">Get</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">houses</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Handle</span> <span class="hljs-string">special</span> <span class="hljs-string">cases</span><br>        <span class="hljs-string">if</span> <span class="hljs-string">(n</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>            <span class="hljs-string">//</span> <span class="hljs-literal">No</span> <span class="hljs-string">houses</span> <span class="hljs-string">to</span> <span class="hljs-string">rob</span>, <span class="hljs-string">return</span> <span class="hljs-number">0</span><br>        <span class="hljs-string">if</span> <span class="hljs-string">(n</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-string">nums</span>[<span class="hljs-number">0</span>]<span class="hljs-string">;</span>      <span class="hljs-string">//</span> <span class="hljs-string">Only</span> <span class="hljs-string">one</span> <span class="hljs-string">house</span>, <span class="hljs-string">rob</span> <span class="hljs-string">it</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Create</span> <span class="hljs-string">a</span> <span class="hljs-string">DP</span> <span class="hljs-string">array</span> <span class="hljs-string">where</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">represents</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">amount</span> <span class="hljs-string">that</span> <span class="hljs-string">can</span> <span class="hljs-string">be</span> <span class="hljs-string">robbed</span> <span class="hljs-string">up</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">i-th</span> <span class="hljs-string">house</span><br>        <span class="hljs-string">vector&lt;int&gt;</span> <span class="hljs-string">dp(n);</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">the</span> <span class="hljs-string">first</span> <span class="hljs-string">two</span> <span class="hljs-string">states</span><br>        <span class="hljs-string">dp</span>[<span class="hljs-number">0</span>] <span class="hljs-string">=</span> <span class="hljs-string">nums</span>[<span class="hljs-number">0</span>]<span class="hljs-string">;</span>                      <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">only</span> <span class="hljs-string">the</span> <span class="hljs-number">0</span><span class="hljs-string">-th</span> <span class="hljs-string">house</span> <span class="hljs-string">is</span> <span class="hljs-string">available</span>, <span class="hljs-string">rob</span> <span class="hljs-string">it</span><br>        <span class="hljs-string">dp</span>[<span class="hljs-number">1</span>] <span class="hljs-string">=</span> <span class="hljs-string">max(nums</span>[<span class="hljs-number">0</span>], <span class="hljs-string">nums</span>[<span class="hljs-number">1</span>]<span class="hljs-string">);</span>        <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">two</span> <span class="hljs-string">houses</span> <span class="hljs-string">are</span> <span class="hljs-string">available</span>, <span class="hljs-string">rob</span> <span class="hljs-string">the</span> <span class="hljs-string">one</span> <span class="hljs-string">with</span> <span class="hljs-string">the</span> <span class="hljs-string">higher</span> <span class="hljs-string">amount</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Start</span> <span class="hljs-string">computing</span> <span class="hljs-string">from</span> <span class="hljs-string">the</span> <span class="hljs-string">2nd</span> <span class="hljs-string">house</span> <span class="hljs-string">onward</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">/*</span><br>              <span class="hljs-attr">DP recurrence relation:</span><br>              <span class="hljs-string">For</span> <span class="hljs-string">the</span> <span class="hljs-string">i-th</span> <span class="hljs-string">house</span>, <span class="hljs-attr">there are two options:</span><br>              <span class="hljs-attr">1. Rob it:</span> <span class="hljs-string">in</span> <span class="hljs-string">this</span> <span class="hljs-string">case</span>, <span class="hljs-string">you</span> <span class="hljs-string">cannot</span> <span class="hljs-string">rob</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">one</span>,<br>                 <span class="hljs-string">so</span> <span class="hljs-string">the</span> <span class="hljs-string">total</span> <span class="hljs-string">is</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-2</span>] <span class="hljs-string">+</span> <span class="hljs-string">nums</span>[<span class="hljs-string">i</span>]<br>              <span class="hljs-attr">2. Skip it:</span> <span class="hljs-string">keep</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">amount</span> <span class="hljs-string">from</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>]<br>              <span class="hljs-string">Take</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">two</span> <span class="hljs-string">options</span><br>            <span class="hljs-string">*/</span><br>            <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">=</span> <span class="hljs-string">max(dp</span>[<span class="hljs-string">i-2</span>] <span class="hljs-string">+</span> <span class="hljs-string">nums</span>[<span class="hljs-string">i</span>], <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>]<span class="hljs-string">);</span><br>        &#125;<br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">amount</span> <span class="hljs-string">that</span> <span class="hljs-string">can</span> <span class="hljs-string">be</span> <span class="hljs-string">robbed</span> <span class="hljs-string">up</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">last</span> <span class="hljs-string">house</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">dp</span>[<span class="hljs-string">n-1</span>]<span class="hljs-string">;</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-4"><a href="#Complexity-Analysis-4" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="6-Delete-and-Get-Points"><a href="#6-Delete-and-Get-Points" class="headerlink" title="6. Delete and Get Points"></a>6. Delete and Get Points</h1><h2 id="Question-Description-5"><a href="#Question-Description-5" class="headerlink" title="Question Description"></a>Question Description</h2><p>You are given an array of integers $nums$ and you can perform some operations on it. </p>
+<p>In each operations, pick any $nums[i]$, delete it and get the number of points of $nums[i]$. After that, you must delete all elements equal to $nums[i]$ - 1 and $nums[i]$+ 1.</p>
+<p>You start with o points. Return th maximum number of points you can get by these operations.</p>
+<h2 id="Analyse-5"><a href="#Analyse-5" class="headerlink" title="Analyse"></a>Analyse</h2><p>This question is similar to the fifth one “robbery”.</p>
+<h3 id="Storyline"><a href="#Storyline" class="headerlink" title="Storyline"></a>Storyline</h3><p>After robbing three villages, the thief arrived at the fourth village to continue his heist. He noticed that the villagers here had become smarter—the houses were shuffled, and the alarm system was more sensitive. When he tried to steal from houses with <strong>5 coins</strong>, <strong>6 coins</strong>, or <strong>4 coins</strong>, the alarm would trigger. However, due to a performance issue (a “bug”), if he stole from <strong>5-coin</strong> houses, the alarm <strong>would not be triggered</strong>.</p>
+<p>Aha! The thief was a programmer! So he came up with the following idea:</p>
+<h3 id="Robbery-Strategy"><a href="#Robbery-Strategy" class="headerlink" title="Robbery Strategy"></a>Robbery Strategy</h3><ol>
+<li>He cleverly sorted the list of house amounts and wrote it down in his notebook.  Since he discovered the alarm system’s “bug”, he only recorded <strong>one 5-coin</strong> house, even if there were multiple.  He also noted how many such houses there were so he wouldn’t miss them during the robbery.</li>
+</ol>
+<p>​	So his notebook contained two key things:</p>
+<ul>
+<li>A sorted list of house amounts <strong>(no duplicates!)</strong></li>
+<li>A mapping from each amount to the <strong>number of houses</strong> with that amount  (he used a hash map for quick lookup)</li>
+</ul>
+<ol start="2">
+<li>After preparing the list, he began robbing.<br>Each time he robbed a house, he kept track of the maximum amount he could steal up to that point.</li>
+</ol>
+<ul>
+<li>When stealing the next house, if he finds that the amount of money stolen this time is <strong>exactly equal</strong> to the amount stolen <strong>last time + 1</strong>, he will see whether the amount of money stolen from the current house plus the amount of money stolen from the previous house is greater, or the amount of money stolen from the previous house is greater.</li>
+</ul>
+<p>$$<br>dp[i] &#x3D; max(dp[i - 1], dp[i - 2] + dp[i] * m[dp[i]]);<br>$$</p>
+<ul>
+<li>If the amount of money stolen from this house is <strong>greater than 1</strong> compared to the amount stolen last time, he knows that the alarm will not be triggered, so he brings the money from last time as well.</li>
+</ul>
+<p>$$<br>dp[i] &#x3D; dp[i - 1] + dp[i] * m[dp[i]]);<br>$$</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">deleteAndEarn(vector&lt;int&gt;&amp;</span> <span class="hljs-string">nums)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-number">1</span><span class="hljs-string">.</span> <span class="hljs-string">First</span>, <span class="hljs-string">sort</span> <span class="hljs-string">the</span> <span class="hljs-string">input</span> <span class="hljs-string">array</span><br>        <span class="hljs-string">sort(nums.begin()</span>, <span class="hljs-string">nums.end());</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">nums.size();</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">2</span><span class="hljs-string">.</span> <span class="hljs-string">Handle</span> <span class="hljs-string">edge</span> <span class="hljs-string">cases</span><br>        <span class="hljs-string">if</span> <span class="hljs-string">(nums.empty())</span> <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>        <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">array</span> <span class="hljs-string">is</span> <span class="hljs-string">empty</span>, <span class="hljs-string">return</span> <span class="hljs-number">0</span><br>        <span class="hljs-string">if</span> <span class="hljs-string">(n</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-string">nums</span>[<span class="hljs-number">0</span>]<span class="hljs-string">;</span>        <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">there&#x27;s</span> <span class="hljs-string">only</span> <span class="hljs-string">one</span> <span class="hljs-string">element</span>, <span class="hljs-string">return</span> <span class="hljs-string">it</span> <span class="hljs-string">directly</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">3</span><span class="hljs-string">.</span> <span class="hljs-string">Count</span> <span class="hljs-string">the</span> <span class="hljs-string">frequency</span> <span class="hljs-string">of</span> <span class="hljs-string">each</span> <span class="hljs-string">number</span><br>        <span class="hljs-string">unordered_map&lt;int</span>, <span class="hljs-string">int&gt;</span> <span class="hljs-string">countMap;</span><br>        <span class="hljs-attr">for (int num :</span> <span class="hljs-string">nums)</span> &#123;<br>            <span class="hljs-string">countMap</span>[<span class="hljs-string">num</span>]<span class="hljs-string">++;</span><br>        &#125;<br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">4</span><span class="hljs-string">.</span> <span class="hljs-string">Extract</span> <span class="hljs-string">unique</span> <span class="hljs-string">numbers</span> <span class="hljs-string">and</span> <span class="hljs-string">sort</span> <span class="hljs-string">them</span><br>        <span class="hljs-string">unordered_set&lt;int&gt;</span> <span class="hljs-string">unique_set(nums.begin()</span>, <span class="hljs-string">nums.end());</span>     <span class="hljs-string">//</span> <span class="hljs-string">Remove</span> <span class="hljs-string">duplicates</span><br>        <span class="hljs-string">vector&lt;int&gt;</span> <span class="hljs-string">unique_nums(unique_set.begin()</span>, <span class="hljs-string">unique_set.end());</span><br>        <span class="hljs-string">sort(unique_nums.begin()</span>, <span class="hljs-string">unique_nums.end());</span>                <span class="hljs-string">//</span> <span class="hljs-string">Sort</span> <span class="hljs-string">the</span> <span class="hljs-string">unique</span> <span class="hljs-string">numbers</span><br>        <br>        <span class="hljs-string">int</span> <span class="hljs-string">m</span> <span class="hljs-string">=</span> <span class="hljs-string">unique_nums.size();</span>  <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">unique</span> <span class="hljs-string">elements</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">5</span><span class="hljs-string">.</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">the</span> <span class="hljs-string">DP</span> <span class="hljs-string">array</span><br>        <span class="hljs-string">vector&lt;int&gt;</span> <span class="hljs-string">dp(m</span>, <span class="hljs-number">0</span><span class="hljs-string">);</span>        <span class="hljs-string">//</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">represents</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">points</span> <span class="hljs-string">when</span> <span class="hljs-string">considering</span> <span class="hljs-string">up</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">i-th</span> <span class="hljs-string">unique</span> <span class="hljs-string">number</span><br>        <span class="hljs-string">dp</span>[<span class="hljs-number">0</span>] <span class="hljs-string">=</span> <span class="hljs-string">unique_nums</span>[<span class="hljs-number">0</span>] <span class="hljs-string">*</span> <span class="hljs-string">countMap</span>[<span class="hljs-string">unique_nums</span>[<span class="hljs-number">0</span>]]<span class="hljs-string">;</span>  <span class="hljs-string">//</span> <span class="hljs-attr">Base case:</span> <span class="hljs-string">only</span> <span class="hljs-string">the</span> <span class="hljs-string">first</span> <span class="hljs-string">number</span><br>        <br>        <span class="hljs-string">if</span> <span class="hljs-string">(m</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">return</span> <span class="hljs-string">dp</span>[<span class="hljs-number">0</span>]<span class="hljs-string">;</span>    <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">only</span> <span class="hljs-string">one</span> <span class="hljs-string">unique</span> <span class="hljs-string">number</span> <span class="hljs-string">exists</span>, <span class="hljs-string">return</span> <span class="hljs-string">its</span> <span class="hljs-string">result</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">6</span><span class="hljs-string">.</span> <span class="hljs-string">Handle</span> <span class="hljs-string">the</span> <span class="hljs-string">second</span> <span class="hljs-string">number</span><br>        <span class="hljs-string">if</span> <span class="hljs-string">((unique_nums</span>[<span class="hljs-number">1</span>] <span class="hljs-bullet">-</span> <span class="hljs-string">unique_nums</span>[<span class="hljs-number">0</span>]<span class="hljs-string">)</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> &#123;<br>            <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">two</span> <span class="hljs-string">numbers</span> <span class="hljs-string">are</span> <span class="hljs-string">consecutive</span>, <span class="hljs-string">you</span> <span class="hljs-string">can&#x27;t</span> <span class="hljs-string">take</span> <span class="hljs-string">both</span><br>            <span class="hljs-string">dp</span>[<span class="hljs-number">1</span>] <span class="hljs-string">=</span> <span class="hljs-string">max(unique_nums</span>[<span class="hljs-number">0</span>] <span class="hljs-string">*</span> <span class="hljs-string">countMap</span>[<span class="hljs-string">unique_nums</span>[<span class="hljs-number">0</span>]], <br>                        <span class="hljs-string">unique_nums</span>[<span class="hljs-number">1</span>] <span class="hljs-string">*</span> <span class="hljs-string">countMap</span>[<span class="hljs-string">unique_nums</span>[<span class="hljs-number">1</span>]]<span class="hljs-string">);</span><br>        &#125; <span class="hljs-string">else</span> &#123;<br>            <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">not</span> <span class="hljs-string">adjacent</span>, <span class="hljs-string">you</span> <span class="hljs-string">can</span> <span class="hljs-string">safely</span> <span class="hljs-string">add</span> <span class="hljs-string">them</span><br>            <span class="hljs-string">dp</span>[<span class="hljs-number">1</span>] <span class="hljs-string">=</span> <span class="hljs-string">dp</span>[<span class="hljs-number">0</span>] <span class="hljs-string">+</span> <span class="hljs-string">unique_nums</span>[<span class="hljs-number">1</span>] <span class="hljs-string">*</span> <span class="hljs-string">countMap</span>[<span class="hljs-string">unique_nums</span>[<span class="hljs-number">1</span>]]<span class="hljs-string">;</span><br>        &#125;<br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">7</span><span class="hljs-string">.</span> <span class="hljs-string">DP</span> <span class="hljs-string">transition</span> <span class="hljs-string">for</span> <span class="hljs-string">the</span> <span class="hljs-string">rest</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">numbers</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">m;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">if</span> <span class="hljs-string">((unique_nums</span>[<span class="hljs-string">i</span>] <span class="hljs-bullet">-</span> <span class="hljs-string">unique_nums</span>[<span class="hljs-string">i-1</span>]<span class="hljs-string">)</span> <span class="hljs-string">==</span> <span class="hljs-number">1</span><span class="hljs-string">)</span> &#123;<br>                <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">number</span> <span class="hljs-string">is</span> <span class="hljs-string">adjacent</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">one</span>,<br>                <span class="hljs-string">//</span> <span class="hljs-attr">you must choose between:</span><br>                <span class="hljs-string">//</span> <span class="hljs-bullet">-</span> <span class="hljs-string">Taking</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">number</span> <span class="hljs-string">and</span> <span class="hljs-string">combining</span> <span class="hljs-string">with</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-2</span>]<br>                <span class="hljs-string">//</span> <span class="hljs-bullet">-</span> <span class="hljs-string">Skipping</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">number</span> <span class="hljs-string">and</span> <span class="hljs-string">inheriting</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>]<br>                <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">=</span> <span class="hljs-string">max(unique_nums</span>[<span class="hljs-string">i</span>] <span class="hljs-string">*</span> <span class="hljs-string">countMap</span>[<span class="hljs-string">unique_nums</span>[<span class="hljs-string">i</span>]] <span class="hljs-string">+</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-2</span>], <br>                           <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>]<span class="hljs-string">);</span><br>            &#125; <span class="hljs-string">else</span> &#123;<br>                <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">not</span> <span class="hljs-string">adjacent</span>, <span class="hljs-string">you</span> <span class="hljs-string">can</span> <span class="hljs-string">safely</span> <span class="hljs-string">add</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">previous</span> <span class="hljs-string">result</span><br>                <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">=</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">+</span> <span class="hljs-string">unique_nums</span>[<span class="hljs-string">i</span>] <span class="hljs-string">*</span> <span class="hljs-string">countMap</span>[<span class="hljs-string">unique_nums</span>[<span class="hljs-string">i</span>]]<span class="hljs-string">;</span><br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-string">//</span> <span class="hljs-number">8</span><span class="hljs-string">.</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">final</span> <span class="hljs-string">result</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">dp</span>[<span class="hljs-string">m-1</span>]<span class="hljs-string">;</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-5"><a href="#Complexity-Analysis-5" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(nlog(n))$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<h1 id="Common-Deployment-Commands"><a href="#Common-Deployment-Commands" class="headerlink" title="Common Deployment Commands"></a>Common Deployment Commands</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean <span class="hljs-comment"># Clear cache</span><br>hexo g <span class="hljs-comment"># Generate static files</span><br>hexo d <span class="hljs-comment"># Deploy to GitHub</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>📬If you have any questions, please contact me:<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+		<p class="copyright-item">
+  		     <span>Permalink:</span>
+  		     <span class="permalink-text"><a href="https://yangchen461.github.io/2025/04/11/Dynamic_Programming_fixed%20(1)/">https://yangchen461.github.io/2025/04/11/Dynamic_Programming_fixed%20(1)/</a></span>
+		</p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Study/"># Study</a>
+            
+              <a href="/tags/C/"># C++</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/03/28/hello-world/">Hello World</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+<style>
+  .permalink-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+  .post-copyright .copyright-item {
+    margin-bottom: 0.5rem;
+  }
+  .post-copyright .copyright-item span.permalink-text {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+  }
+
+</style>
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+
+  .permalink-container {
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>
