@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>Dynamic Programming(2)---Matrix Types | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">Dynamic Programming(2)---Matrix Types</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">April 16, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/C-Programming/">C++ Programming</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h1 id="✨-Overview-of-the-Programming-Content"><a href="#✨-Overview-of-the-Programming-Content" class="headerlink" title="✨ Overview of the Programming Content"></a>✨ Overview of the Programming Content</h1><ol>
+<li>Different paths;</li>
+<li>Minimum path sum;</li>
+<li>Different path II;</li>
+<li>Minimum path sum of triangle;</li>
+<li>Minimum sum of descending path;</li>
+<li>Maximum square;</li>
+</ol>
+<p>Recommended editing tool: **Typora **(Markdown editing) </p>
+<hr>
+<h1 id="1-Different-Paths"><a href="#1-Different-Paths" class="headerlink" title="1. Different Paths"></a>1. Different Paths</h1><h2 id="Question-Description"><a href="#Question-Description" class="headerlink" title="Question Description:"></a>Question Description:</h2><p>A robot is located at the top left corner of an $m \times n$ grid(the starting point is marked as “Start” in the figure below);</p>
+<p>The robot can only move one step down or one step to the right at a time. The robot tires to reach the bottom right corner of the grid(marked as “Finish” in the figure below).</p>
+<p>How many different paths are there in total?</p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Different paths” question is:<br>$$<br>f(i,j) &#x3D; f(i-1,j) + f(i,j-1)<br>$$<br>We can use $f(i,j)$ to represent the number of different paths from the top left corner to the end, while the range of $i$ is $[0,m)$ and $j$ is $[0,n)$.</p>
+<p>While we can  only move one step downward go or to the right, if you want to reach location $(i,j)$, you can move one step downward from $(i-1,j)$ or move one step to the right from $(i,j-1)$.</p>
+<p>Therefore, the number of paths to reach position $(i,j)$ is the sum of the number of paths above.</p>
+<p>In programming, we should consider the conditions including $i &#x3D; 0$ as $f(i-1,j)$ and $f(i,j-1)$.</p>
+<p>Initial condition is $f(0,0) &#x3D; 1$, which means move from top left corner to top left corner.</p>
+<p>The final answer is $f(m-1,n-1)$.</p>
+<h4 id="Details"><a href="#Details" class="headerlink" title="Details"></a>Details</h4><p>To facilitate code writing, we can set all $f(0,j)$ and $f(i,0)$ as boundary conditions, and their values are all 1.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-comment">// Dynamic Programming</span><br><span class="hljs-comment">// Core formula: f[i][j] = f[i-1][j] + f[i][j-1]</span><br><span class="hljs-comment">// Meaning of the formula: to reach position (i, j), you can only come from the left f[i][j-1] or from above f[i-1][j]</span><br><span class="hljs-comment">// So the number of paths to (i, j) is the sum of the number of paths from the left and from above</span><br><span class="hljs-comment">// Purpose of std:: </span><br><span class="hljs-comment">// All classes, functions, and objects in the C++ Standard Library (like vector, string, cout, endl, etc.) </span><br><span class="hljs-comment">// are in the std namespace to:</span><br><span class="hljs-comment">// Avoid naming conflicts with user-defined names.</span><br><span class="hljs-comment">// Make it clear that these features come from the standard library.</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> </span>&#123;<br>        <span class="hljs-comment">// Create an m x n matrix f, with all initial values set to 1</span><br>        <span class="hljs-comment">// f[i][j] represents the number of unique paths from the start (0, 0) to position (i, j)</span><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">f</span>(m, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(n, <span class="hljs-number">1</span>));<br><br>        <span class="hljs-comment">// Use dynamic programming to calculate the number of paths</span><br>        <span class="hljs-comment">// Start from (1,1) because for (i,0) and (0,j), there is only one path (either always go right or always go down)</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++)&#123;<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++)&#123;<br>                <span class="hljs-comment">// State transition equation:</span><br>                <span class="hljs-comment">// Number of paths to (i, j) = paths from above (i-1, j) + paths from the left (i, j-1)</span><br>                f[i][j] = f[i - <span class="hljs-number">1</span>][j] + f[i][j<span class="hljs-number">-1</span>];<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the number of paths to the destination (m-1, n-1)</span><br>        <span class="hljs-keyword">return</span> f[m<span class="hljs-number">-1</span>][n<span class="hljs-number">-1</span>];<br>    &#125;<br>&#125;;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">// Combinatorial solution</span><br><span class="hljs-comment">class Solution &#123;</span><br><span class="hljs-comment">public:</span><br><span class="hljs-comment">    int uniquePaths(int m, int n) &#123;</span><br><span class="hljs-comment">        long long ans = 1;</span><br><span class="hljs-comment">        for(int x = n, y = 1; y &lt; m; x++, y++)&#123;</span><br><span class="hljs-comment">            ans = ans * x / y;</span><br><span class="hljs-comment">        &#125;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">        return ans;</span><br><span class="hljs-comment">    &#125;</span><br><span class="hljs-comment">&#125;;</span><br><span class="hljs-comment">*/</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis"><a href="#Complexity-Analysis" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(m \times n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(m \times n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-Minimum-Path-Sum"><a href="#2-Minimum-Path-Sum" class="headerlink" title="2. Minimum Path Sum"></a>2. Minimum Path Sum</h1><h2 id="Question-Description-1"><a href="#Question-Description-1" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an $m \times n$ grid containing non-negative integers, find a path from the upper left corner to the lower right corner so that the sum of the numbers on the path is the smallest.</p>
+<p>Note: You can only move down or right one step at a time.</p>
+<h2 id="Analysis-1"><a href="#Analysis-1" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Minimum Path Sum” question is:<br>$$<br>f(i,j) &#x3D; grid(i,j) + min(f(i-1,j),f(i,j-1))<br>$$<br>We use $f(i,j)$ to represent the minimum path sum at location $(i,j)$. The above equation means the minimum path sum of position $(i,j)$ is equal to the minimum path sum of the previous position plus the value of position $(i,j)$.</p>
+<p>However, we should consider the boundary conditions including the first row and the first column.</p>
+<p>For this question, we should divide it into three different conditions:</p>
+<ol>
+<li>If $i &gt; 0$ and $j &#x3D; 0$, $f(i,0) &#x3D; f(i-1,0) + grid(i,0)$;</li>
+<li>If $i &#x3D; 0$ and $j &gt; 0$, $f(0,j) &#x3D; f(0,j-1) + grid(0,j)$;</li>
+<li>If $i &gt; 0$ and $j &gt; 0$, $f(i,j) &#x3D; grid(i,j) + min(f(i-1,j),f(i,j-1))$;</li>
+</ol>
+<h2 id="Code-1"><a href="#Code-1" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">minPathSum</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; grid)</span> </span>&#123;<br>        <span class="hljs-type">int</span> m = grid.<span class="hljs-built_in">size</span>(); <span class="hljs-comment">// Number of rows</span><br>        <span class="hljs-type">int</span> n = grid[<span class="hljs-number">0</span>].<span class="hljs-built_in">size</span>(); <span class="hljs-comment">// Number of columns</span><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">f</span>(m, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(n, <span class="hljs-number">0</span>));<br><br>        <span class="hljs-comment">// Initialize the starting point</span><br>        f[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = grid[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>];<br><br>        <span class="hljs-comment">// Initialize the first column</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            f[i][<span class="hljs-number">0</span>] = grid[i][<span class="hljs-number">0</span>] + f[i - <span class="hljs-number">1</span>][<span class="hljs-number">0</span>]; <br>        &#125;<br><br>        <span class="hljs-comment">// Initialize the first row</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>            f[<span class="hljs-number">0</span>][j] = grid[<span class="hljs-number">0</span>][j] + f[<span class="hljs-number">0</span>][j - <span class="hljs-number">1</span>];<br>        &#125;<br><br>        <span class="hljs-comment">// Core DP formula for the remaining cells: </span><br>        <span class="hljs-comment">// f(i, j) = grid(i, j) + min(f(i - 1, j), f(i, j - 1))</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                f[i][j] = grid[i][j] + <span class="hljs-built_in">min</span>(f[i - <span class="hljs-number">1</span>][j], f[i][j - <span class="hljs-number">1</span>]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> f[m - <span class="hljs-number">1</span>][n - <span class="hljs-number">1</span>];<br>    &#125;<br>&#125;;<br><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-1"><a href="#Complexity-Analysis-1" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(m \times n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(m \times n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-Different-Path-II"><a href="#3-Different-Path-II" class="headerlink" title="3. Different Path II;"></a>3. Different Path II;</h1><h2 id="Question-Description-2"><a href="#Question-Description-2" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an “$m \times n$” integer array $grid$. A robot is initially located at the upper left corner(i.e. $grid[0][0]$). The robot attempts to move to the lower right corner(i.e. $grid[m-1][n-1]$). The robot can only move one step down or one step to the right at a time.</p>
+<p>Obstacles and empty positions in the $grid$ are represented by 1 and 0 respectively. The robot’s movement path cannot contain any squares with obstacles.</p>
+<p>Return the number of different paths that the robot can take to reach the lower right corner.</p>
+<h2 id="Analysis-2"><a href="#Analysis-2" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Different Paths II” is<br>$$<br>f(i,j)&#x3D;<br>\begin{cases}<br>0,&amp; \text{if obstacleGrid[i][j] &#x3D; 1}\\<br>f(i-1,j) + f(i,j-1),&amp;\text{if obstacleGrid[i][j] &#x3D; 0}<br>\end{cases}<br>$$<br>We use $f(i,j)$ to represent the total number of paths from coordinate $(0,0)$ to coordinate $(i,j)$.</p>
+<p>The above equation means: if there is an obstacle, there is no path that can get to this location.</p>
+<p>However, if there is no obstacle, the total number of paths in location $(i,j)$ is equal to the sum of location $(i-1,j)$ and $(i,j-1)$.</p>
+<p>What’s more, we should consider two special conditions: the first rows and the first columns.</p>
+<p>All in all, we can summary three equations as follows:</p>
+<ol>
+<li><p>if $i&gt;0$ and $j &#x3D; 0$ , we can get<br>$$<br>f(i,0)&#x3D;<br>\begin{cases}<br>break, &amp; \text{if obstacleGrid[i][0] &#x3D; 1}\\<br>1,&amp;\text{if obstacleGrid[i][0] &#x3D; 0}<br>\end{cases}<br>$$</p>
+</li>
+<li><p>if $i &#x3D; 0$ and $j &gt; 0$, we can get<br>$$<br>f(0,j)&#x3D;<br>\begin{cases}<br>break, &amp; \text{if obstacleGrid[0][j] &#x3D; 1}\\<br>1,&amp;\text{if obstacleGrid[0][j] &#x3D; 0}<br>\end{cases}<br>$$</p>
+</li>
+<li><p>if $i &gt; 0$ and $j &gt; 0$, we can get<br>$$<br>f(i,j)&#x3D;<br>\begin{cases}<br>0,&amp; \text{if obstacleGrid[i][j] &#x3D; 1}\\<br>f(i-1,j) + f(i,j-1),&amp;\text{if obstacleGrid[i][j] &#x3D; 0}<br>\end{cases}<br>$$</p>
+</li>
+</ol>
+<h4 id="Boundary-Conditions"><a href="#Boundary-Conditions" class="headerlink" title="Boundary Conditions"></a>Boundary Conditions</h4><p>$$<br>f(0,0)&#x3D;<br>\begin{cases}<br>0, &amp; \text{if obstacleGrid[0][0] &#x3D; 1}\\<br>1,&amp;\text{if obstacleGrid[0][0] &#x3D; 0}<br>\end{cases}<br>$$</p>
+<h2 id="Code-2"><a href="#Code-2" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">uniquePathsWithObstacles</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; obstacleGrid)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span>(obstacleGrid.<span class="hljs-built_in">empty</span>())&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-type">int</span> m = obstacleGrid.<span class="hljs-built_in">size</span>();<br>        <span class="hljs-type">int</span> n = obstacleGrid[<span class="hljs-number">0</span>].<span class="hljs-built_in">size</span>();<br><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">f</span>(m, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(n, <span class="hljs-number">0</span>));<br>        <br>        <span class="hljs-comment">// If the starting cell has an obstacle, there&#x27;s no path</span><br>        <span class="hljs-keyword">if</span>(obstacleGrid[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] == <span class="hljs-number">1</span>)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span>&#123;<br>            f[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;<br>        &#125;<br>        <br>        <span class="hljs-comment">// Initialize the first column</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++)&#123;<br>            <span class="hljs-keyword">if</span>(obstacleGrid[i][<span class="hljs-number">0</span>] == <span class="hljs-number">1</span>)&#123;<br>                <span class="hljs-keyword">break</span>; <span class="hljs-comment">// Stop initializing further if an obstacle is encountered</span><br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                f[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Initialize the first row</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++)&#123;<br>            <span class="hljs-keyword">if</span>(obstacleGrid[<span class="hljs-number">0</span>][j] == <span class="hljs-number">1</span>)&#123;<br>                <span class="hljs-keyword">break</span>; <span class="hljs-comment">// Stop initializing further if an obstacle is encountered</span><br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                f[<span class="hljs-number">0</span>][j] = <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Fill the rest of the DP table</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++)&#123;<br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++)&#123;<br>                <span class="hljs-keyword">if</span>(obstacleGrid[i][j] == <span class="hljs-number">1</span>)&#123;<br>                    f[i][j] = <span class="hljs-number">0</span>; <span class="hljs-comment">// If there&#x27;s an obstacle, no path to this cell</span><br>                &#125;<br>                <span class="hljs-keyword">else</span>&#123;<br>                    f[i][j] = f[i - <span class="hljs-number">1</span>][j] + f[i][j - <span class="hljs-number">1</span>]; <span class="hljs-comment">// Sum of paths from the top and left</span><br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> f[m - <span class="hljs-number">1</span>][n - <span class="hljs-number">1</span>]; <span class="hljs-comment">// Return the number of unique paths to the bottom-right cell</span><br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-2"><a href="#Complexity-Analysis-2" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(m \times n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(m \times n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="4-Minimum-Path-Sum-of-Triangle"><a href="#4-Minimum-Path-Sum-of-Triangle" class="headerlink" title="4. Minimum Path Sum of Triangle"></a>4. Minimum Path Sum of Triangle</h1><h2 id="Question-Description-3"><a href="#Question-Description-3" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given a triangle matrix, find the minimum path sum from top to bottom.</p>
+<p>Each step can only move to adjacent nodes in the next row. Adjacent node means the two nodes which have the same subscripts as the previous node or equal to the subscript of the previous node +1. That is if you are at subscript $i$ in the current row, then the next step can move to subscript $i$ or $i-1$ in the next row.</p>
+<h2 id="Analysis-3"><a href="#Analysis-3" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core idea of “Minimum Path” problem is “from the bottom to the top”.</p>
+<p>The core equation of “The Minimum Path of the Triangle” is:<br>$$<br>dp(i,j) &#x3D; triangle(i,j) + min(dp(j),dp(j+1))<br>$$<br>Calculate the path sum from the second to last line, and make sure the data of each iteration is not polluted.</p>
+<h2 id="Code-3"><a href="#Code-3" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-comment">// Bottom-up dynamic programming to solve the triangle minimum path sum problem</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">minimumTotal</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; triangle)</span> </span>&#123;<br>        <span class="hljs-type">int</span> m = triangle.<span class="hljs-built_in">size</span>();  <span class="hljs-comment">// Get the total number of rows in the triangle</span><br><br>        <span class="hljs-comment">// Initialize the dp array with the last row of the triangle</span><br>        <span class="hljs-comment">// dp[j] represents the minimum path sum from index j to the bottom</span><br>        vector&lt;<span class="hljs-type">int</span>&gt; dp = triangle.<span class="hljs-built_in">back</span>();<br><br>        <span class="hljs-comment">// Traverse from the second last row upward</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = m - <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            <span class="hljs-comment">// Traverse each element in the current row</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; triangle[i].<span class="hljs-built_in">size</span>(); j++) &#123;<br>                <span class="hljs-comment">// Minimum path sum at current point = current value + min of two adjacent paths in the row below</span><br>                dp[j] = triangle[i][j] + <span class="hljs-built_in">min</span>(dp[j], dp[j + <span class="hljs-number">1</span>]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// dp[0] contains the minimum path sum from the top to the bottom</span><br>        <span class="hljs-keyword">return</span> dp[<span class="hljs-number">0</span>];<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-3"><a href="#Complexity-Analysis-3" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="5-Minimum-Sum-of-Descending-Path"><a href="#5-Minimum-Sum-of-Descending-Path" class="headerlink" title="5. Minimum Sum of Descending Path;"></a>5. Minimum Sum of Descending Path;</h1><h2 id="Question-Description-4"><a href="#Question-Description-4" class="headerlink" title="Question Description"></a>Question Description</h2><p>Give you an $n \times n$ square array of integers matrix, find and return the minimum sum of a descending path through the matrix.</p>
+<p>The descending path can start from any element in the first row and select an element from each row. The element selected int the next row is at most one column away from the element selected in the current row(i.e. the first element directly below or diagonally to the left or right). Specifically, the next element at position $(row, col)$ should be $(row+1,col-1)$,$(row + 1, col)$, or $(row + 1, col + 1)$.</p>
+<h2 id="Analysis-4"><a href="#Analysis-4" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “The Minimum Sum of Descending Paths” is<br>$$<br>dp(i,j) &#x3D; matrix(i,j) + min(dp(j-1),dp(j),dp(j+1))<br>$$<br>However, $j-1$ and $j + 1$ must stay within the matrix boundaries.</p>
+<p>From the above words, we should divide this problem into three different conditions:</p>
+<ol>
+<li>If $j &#x3D; 0$, we get $dp(i,j) &#x3D; matrix(i,j) + min(dp(j),dp(j+1))$;</li>
+<li>If $j &#x3D; n-1$, we get $dp(i,j) &#x3D; matrix(i,j) + min(dp(j-1),dp(j))$;</li>
+<li>If $0 &lt; j &lt; n-1$, we get $dp(i,j) &#x3D; matrix(i,j) + min(dp(j-1),dp(j),dp(j+1))$;</li>
+</ol>
+<p>We solve the problem using a bottom-up approach.</p>
+<p>Then the final answer $res &#x3D; min(dp)$ .</p>
+<h2 id="Code-4"><a href="#Code-4" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">minFallingPathSum</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; matrix)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = matrix.<span class="hljs-built_in">size</span>();  <span class="hljs-comment">// Get the number of rows in the matrix (same as number of columns, since it&#x27;s n x n)</span><br><br>        <span class="hljs-comment">// Initialize the dp array with the last row of the matrix</span><br>        <span class="hljs-comment">// dp[j] represents the minimum path sum from position j to the bottom</span><br>        vector&lt;<span class="hljs-type">int</span>&gt; dp = matrix.<span class="hljs-built_in">back</span>();<br><br>        <span class="hljs-comment">// Process from the second-last row upwards</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = n - <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">new_dp</span><span class="hljs-params">(n)</span></span>;  <span class="hljs-comment">// Used to store the minimum path sum for the current row</span><br><br>            <span class="hljs-comment">// Traverse each column in the current row</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-keyword">if</span> (j == <span class="hljs-number">0</span>) &#123;<br>                    <span class="hljs-comment">// First column: can only move down or down-right</span><br>                    new_dp[j] = matrix[i][j] + <span class="hljs-built_in">min</span>(dp[j], dp[j + <span class="hljs-number">1</span>]);<br>                &#125;<br>                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (j == n - <span class="hljs-number">1</span>) &#123;<br>                    <span class="hljs-comment">// Last column: can only move down or down-left</span><br>                    new_dp[j] = matrix[i][j] + <span class="hljs-built_in">min</span>(dp[j], dp[j - <span class="hljs-number">1</span>]);<br>                &#125;<br>                <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-comment">// Middle columns: can move down-left, straight down, or down-right</span><br>                    new_dp[j] = matrix[i][j] + <span class="hljs-built_in">min</span>(dp[j - <span class="hljs-number">1</span>], <span class="hljs-built_in">min</span>(dp[j], dp[j + <span class="hljs-number">1</span>]));<br>                &#125;<br>            &#125;<br><br>            <span class="hljs-comment">// Update dp for the next iteration</span><br>            dp = new_dp;<br>        &#125;<br><br>        <span class="hljs-comment">// The final answer is the minimum value in the top row (i.e., dp after processing all rows)</span><br>        <span class="hljs-type">int</span> res = dp[<span class="hljs-number">0</span>];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>            res = <span class="hljs-built_in">min</span>(res, dp[j]);<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-4"><a href="#Complexity-Analysis-4" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="6-Maximum-Square"><a href="#6-Maximum-Square" class="headerlink" title="6. Maximum Square"></a>6. Maximum Square</h1><h2 id="Question-Description-5"><a href="#Question-Description-5" class="headerlink" title="Question Description"></a>Question Description</h2><p>In a 2D matrix of ‘0’ and ‘1’, find the largest square containing only ‘1’ and return its area.</p>
+<h2 id="Analysis-5"><a href="#Analysis-5" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Maximum Square” question is:<br>$$<br>dp(i,j) &#x3D; min(dp(i-1,j),dp(i-1,j-1),dp(i,j-1)) + 1<br>$$<br>In this question, there are three different conditions.</p>
+<ol>
+<li><p>If $i &gt; 0$ and $j &#x3D; 0$ , we can get<br>$$<br>dp(i,0)&#x3D;<br>\begin{cases}<br>0, &amp; \text{if obstacleGrid[i][0] &#x3D; 0}\\<br>1,&amp;\text{if obstacleGrid[i][0] &#x3D; 1}<br>\end{cases}<br>$$</p>
+</li>
+<li><p>If $i &#x3D; 0$ and $j &gt; 0$, we can get<br>$$<br>dp(0,j)&#x3D;<br>\begin{cases}<br>0, &amp; \text{if obstacleGrid[0][j] &#x3D; 0}\\<br>1,&amp;\text{if obstacleGrid[0][j] &#x3D; 1}<br>\end{cases}<br>$$</p>
+</li>
+<li><p>If $i &gt; 0$ and $j &gt; 0$, we can get<br>$$<br>dp(i,j) &#x3D; min(dp(i-1,j),dp(i-1,j-1),dp(i,j-1)) + 1<br>$$</p>
+</li>
+</ol>
+<h2 id="Code-5"><a href="#Code-5" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-comment">// Helper function: Find the maximum value (i.e., max square side length) in the 2D matrix dp</span><br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">findMaxInMatrix</span><span class="hljs-params">(<span class="hljs-type">const</span> vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; dp)</span> </span>&#123;<br>        <span class="hljs-type">int</span> maxVal = INT_MIN;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; row : dp) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> val : row) &#123;<br>                maxVal = <span class="hljs-built_in">max</span>(maxVal, val);<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> maxVal;<br>    &#125;<br><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">// Main function: Find the area of the largest square containing only &#x27;1&#x27;s in the matrix</span><br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maximalSquare</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">char</span>&gt;&gt;&amp; matrix)</span> </span>&#123;<br>        <span class="hljs-type">int</span> m = matrix.<span class="hljs-built_in">size</span>();      <span class="hljs-comment">// Number of rows</span><br>        <span class="hljs-type">int</span> n = matrix[<span class="hljs-number">0</span>].<span class="hljs-built_in">size</span>();   <span class="hljs-comment">// Number of columns</span><br><br>        <span class="hljs-comment">// Create a dp table where dp[i][j] represents the side length of the largest square ending at (i, j)</span><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">dp</span>(m, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(n, <span class="hljs-number">0</span>));<br><br>        <span class="hljs-comment">// Initialize the first column</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">if</span> (matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-string">&#x27;0&#x27;</span>) &#123;<br>                dp[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;  <span class="hljs-comment">// Cannot form a square if original cell is &#x27;0&#x27;</span><br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                dp[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;  <span class="hljs-comment">// Otherwise, side length is 1</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Initialize the first row</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">if</span> (matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-string">&#x27;0&#x27;</span>) &#123;<br>                dp[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                dp[<span class="hljs-number">0</span>][j] = <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// State transition</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-keyword">if</span> (matrix[i][j] == <span class="hljs-string">&#x27;0&#x27;</span>) &#123;<br>                    dp[i][j] = <span class="hljs-number">0</span>;  <span class="hljs-comment">// Cannot form a square</span><br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-comment">// Transition: take the minimum of top, top-left, and left + 1</span><br>                    dp[i][j] = <span class="hljs-built_in">min</span>(dp[i - <span class="hljs-number">1</span>][j], <span class="hljs-built_in">min</span>(dp[i - <span class="hljs-number">1</span>][j - <span class="hljs-number">1</span>], dp[i][j - <span class="hljs-number">1</span>])) + <span class="hljs-number">1</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Find the maximum square side length</span><br>        <span class="hljs-type">int</span> res = <span class="hljs-built_in">findMaxInMatrix</span>(dp);<br><br>        <span class="hljs-comment">// Return the area of the largest square (side length squared)</span><br>        <span class="hljs-keyword">return</span> res * res;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-5"><a href="#Complexity-Analysis-5" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(m \times n)$</li>
+<li><strong>Space Complexity:</strong> $O(m \times n)$</li>
+</ul>
+<hr>
+<h1 id="Common-Deployment-Commands"><a href="#Common-Deployment-Commands" class="headerlink" title="Common Deployment Commands"></a>Common Deployment Commands</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean <span class="hljs-comment"># Clear cache</span><br>hexo g <span class="hljs-comment"># Generate static files</span><br>hexo d <span class="hljs-comment"># Deploy to GitHub</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>📬If you have any questions, please contact me:<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+		<p class="copyright-item">
+  		     <span>Permalink:</span>
+  		     <span class="permalink-text"><a href="https://yangchen461.github.io/2025/04/16/Dynamic%20Programming(2)---Matrix%20Types/">https://yangchen461.github.io/2025/04/16/Dynamic%20Programming(2)---Matrix%20Types/</a></span>
+		</p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Study/"># Study</a>
+            
+              <a href="/tags/C/"># C++</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/04/11/Dynamic_Programming(1)---Fibonacci%20Types/">Dynamic Programming(1)---Fibonacci Types</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+<style>
+  .permalink-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+  .post-copyright .copyright-item {
+    margin-bottom: 0.5rem;
+  }
+  .post-copyright .copyright-item span.permalink-text {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+  }
+
+</style>
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+
+  .permalink-container {
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>
