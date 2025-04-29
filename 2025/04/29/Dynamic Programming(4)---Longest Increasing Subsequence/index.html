@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>Dynamic Programming(4)---Longest Increasing Subsequence | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">Dynamic Programming(4)---Longest Increasing Subsequence</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">April 29, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/C-Programming/">C++ Programming</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h1 id="✨-Overview-of-the-Programming-Content"><a href="#✨-Overview-of-the-Programming-Content" class="headerlink" title="✨ Overview of the Programming Content"></a>✨ Overview of the Programming Content</h1><ol>
+<li>Longest increasing subsequence;</li>
+<li>Number of longest increasing subsequences;</li>
+<li>Longest chain of pairs of numbers;</li>
+<li>Longest fixed difference subsequences;</li>
+<li>Longest arithmetic progression;</li>
+<li>Russian doll envelope problem;</li>
+<li>Find the longest valid obstacle race route to each position;</li>
+</ol>
+<p>Recommended editing tool: **Typora **(Markdown editing) </p>
+<hr>
+<h1 id="1-Longest-Increasing-Subsequence"><a href="#1-Longest-Increasing-Subsequence" class="headerlink" title="1. Longest Increasing Subsequence"></a>1. Longest Increasing Subsequence</h1><p>Given an array of integers $nums$, find the length of the longest strictly increasing subsequence in it.</p>
+<p>A subsequence is a sequence derived from an array by removing(or not removing) elements from the array without changing the order of the remaining elements. For example, $[3,6,2,7]$ is a subsequence of the array $[0,3,1,6,2,2,7]$.</p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Longest increasing subsequence” question is:<br>$$<br>dp[i] &#x3D; max(dp[j]) + 1, 0 ≤ j &lt; i,\text{and}, num[j] &lt; num[i]<br>$$<br>Define $dp[i]$ as the length of the longest ascending subsequence ending with the $i$th digit considering the first $i$ elements. Note that $nums[i]$ must be selected.</p>
+<p>Since $dp[j]$ represents the longest increasing subsequence ending with $nums[j]$ in $nums[0…j]$, if we can transfer from the state of $dp[j]$, then $nums[i]$ must be greater than $nums[j]$,so that $nums[i]$ can be placed after $nums[j]$ to form a longer increasing subsequence.</p>
+<p>Finally, the longest ascending subsequence of the entire array is the maximum value among all $dp[j]$.<br>$$<br>\text{LIS}_{\text{length}} &#x3D; \max(dp[i]),\quad \text{while} \quad 0 \leq i &lt; n<br>$$<br>The answer is $max(dp)$.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">lengthOfLIS</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = nums.<span class="hljs-built_in">size</span>();<br>        <br>        <span class="hljs-comment">// Initialize the dynamic programming array.</span><br>        <span class="hljs-comment">// dp[i] represents the length of the longest increasing subsequence ending at nums[i], initialized to 1 (each number itself forms a subsequence).</span><br>        <span class="hljs-function">std::vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">dp</span><span class="hljs-params">(n, <span class="hljs-number">1</span>)</span></span>;<br><br>        <span class="hljs-comment">// Traverse each element, treating it as the end of the current increasing subsequence.</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// For each i, check all previous nums[j] where j &lt; i.</span><br>            <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                <span class="hljs-comment">// If nums[j] &lt; nums[i], it can form an increasing subsequence.</span><br>                <span class="hljs-keyword">if</span>(nums[j] &lt; nums[i]) &#123;<br>                    <span class="hljs-comment">// Update the length of the longest increasing subsequence ending at nums[i].</span><br>                    dp[i] = <span class="hljs-built_in">max</span>(dp[i], dp[j] + <span class="hljs-number">1</span>);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the maximum value in the dp array, which is the length of the longest increasing subsequence in the array.</span><br>        <span class="hljs-keyword">return</span> *<span class="hljs-built_in">max_element</span>(dp.<span class="hljs-built_in">begin</span>(), dp.<span class="hljs-built_in">end</span>());<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis"><a href="#Complexity-Analysis" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-The-Number-of-the-Longest-Increasing-Subsequence"><a href="#2-The-Number-of-the-Longest-Increasing-Subsequence" class="headerlink" title="2. The Number of the Longest Increasing Subsequence"></a>2. The Number of the Longest Increasing Subsequence</h1><h2 id="Question-Description"><a href="#Question-Description" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an unsorted integer array $nums$, return the number of the longest increasing subsequence.</p>
+<p>Note that this sequence must be strictly increasing.</p>
+<h2 id="Analysis-1"><a href="#Analysis-1" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “The number of the longest increasing subsequence” question is:<br>$$<br>cnt(i)&#x3D;<br>\begin{cases}<br>cnt(j),&amp; \text{dp(i) &lt; dp(j) + 1}\\<br>cnt(i) + cnt(j),dp(i,j-1)),&amp;\text{dp(i) ≥ dp(j)}<br>\end{cases}<br>$$<br>For $cnt[i]$, it is equal to the sum of all $cnt[j]$ that satisfy $dp[j] + 1 &#x3D; dp[i]$. When implementing the code, we can count the value of $cnt[i]$ while calculating $dp[i]$.</p>
+<h4 id="Detail"><a href="#Detail" class="headerlink" title="Detail"></a>Detail</h4><p>When calculating the final answer $ans$, we should use $ans +&#x3D; cnt[i]$ not $ans &#x3D; cnt[i]$.</p>
+<p>Assuming that the first element that meets the condition is traversed, $ans &#x3D; cnt[i]$ is directly assigned a value. If another $i$ that meets the condition is encountered later, it will be overwritten and the previous count will be lost.</p>
+<h2 id="Code-1"><a href="#Code-1" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">findNumberOfLIS</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = nums.<span class="hljs-built_in">size</span>();<br>        <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;  <span class="hljs-comment">// Edge case: return 0 if the array is empty</span><br><br>        <span class="hljs-comment">// dp[i] represents the length of the longest increasing subsequence ending at nums[i], initialized to 1 (itself only)</span><br>        <span class="hljs-function">std::vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">dp</span><span class="hljs-params">(n, <span class="hljs-number">1</span>)</span></span>;<br>        <br>        <span class="hljs-comment">// cnt[i] represents the number of longest increasing subsequences ending at nums[i], initialized to 1 (itself only)</span><br>        <span class="hljs-function">std::vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">cnt</span><span class="hljs-params">(n, <span class="hljs-number">1</span>)</span></span>;<br><br>        <span class="hljs-comment">// Double loop to check all index pairs (j, i) where j &lt; i</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                <span class="hljs-comment">// If nums[i] can be appended after nums[j] to form an increasing subsequence</span><br>                <span class="hljs-keyword">if</span> (nums[i] &gt; nums[j]) &#123;<br>                    <span class="hljs-comment">// Case 1: Found a longer increasing subsequence</span><br>                    <span class="hljs-keyword">if</span> (dp[j] + <span class="hljs-number">1</span> &gt; dp[i]) &#123;<br>                        dp[i] = dp[j] + <span class="hljs-number">1</span>;    <span class="hljs-comment">// Update dp[i] to the new longer length</span><br>                        cnt[i] = cnt[j];      <span class="hljs-comment">// Inherit the number of paths from cnt[j]</span><br>                    &#125;<br>                    <span class="hljs-comment">// Case 2: Found another subsequence of the same maximum length</span><br>                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dp[j] + <span class="hljs-number">1</span> == dp[i]) &#123;<br>                        cnt[i] += cnt[j];     <span class="hljs-comment">// Add the number of new paths</span><br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Find the maximum length of increasing subsequences</span><br>        <span class="hljs-type">int</span> res = *<span class="hljs-built_in">max_element</span>(dp.<span class="hljs-built_in">begin</span>(), dp.<span class="hljs-built_in">end</span>());<br><br>        <span class="hljs-comment">// Sum up the counts of all subsequences having the maximum length</span><br>        <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; dp.<span class="hljs-built_in">size</span>(); i++) &#123;<br>            <span class="hljs-keyword">if</span> (dp[i] == res) &#123;<br>                count += cnt[i];  <span class="hljs-comment">// Accumulate the number of paths</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> count;  <span class="hljs-comment">// Return the total number of longest increasing subsequences</span><br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-1"><a href="#Complexity-Analysis-1" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-Longest-Pair-Chain"><a href="#3-Longest-Pair-Chain" class="headerlink" title="3. Longest Pair Chain"></a>3. Longest Pair Chain</h1><h2 id="Question-Description-1"><a href="#Question-Description-1" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an array pairs consisting of $n$ pairs, where $pairs[i] &#x3D; [left_i,right_i]$ and $left_i &lt; right_i$.</p>
+<p>Now, we define a following relation, that is, a pair $p_2 &#x3D; [c,d]$ can follow $p_1 &#x3D; [a,b]$ if and only if $b &lt; c$. </p>
+<p>We use this form to construct a <strong>pair chain</strong>.</p>
+<p>Find and return the length of the <strong>longest pair chain</strong> that can be formed.</p>
+<p>You do not need to use all the pairs. You can choose some of them in any order to construct.</p>
+<h2 id="Analysis-2"><a href="#Analysis-2" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Longest Pair Chain” is<br>$$<br>dp(i) &#x3D; max(dp(i),dp(j) + 1), \text{while}, pairs[i][0] &gt; pairs[j][1]<br>$$</p>
+<h4 id="Details"><a href="#Details" class="headerlink" title="Details"></a>Details</h4><p>Before the comparison, you should $sort$ the array while this question is not sorted in the order of the array.</p>
+<h2 id="Code-2"><a href="#Code-2" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">findLongestChain</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; pairs)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = pairs.<span class="hljs-built_in">size</span>();<br>        <br>        <span class="hljs-comment">// Sort all pairs based on the first element (pairs[i][0]) in ascending order</span><br>        <span class="hljs-built_in">sort</span>(pairs.<span class="hljs-built_in">begin</span>(), pairs.<span class="hljs-built_in">end</span>());<br><br>        <span class="hljs-comment">// dp[i] represents the length of the longest chain ending with the i-th pair, initialized to 1 (each pair itself forms a chain)</span><br>        <span class="hljs-function">std::vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">dp</span><span class="hljs-params">(n, <span class="hljs-number">1</span>)</span></span>;<br><br>        <span class="hljs-comment">// For each pair[i], try to extend it after previous pairs[j]</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                <span class="hljs-comment">// If the end of pairs[j] is less than the start of pairs[i], they can be chained</span><br>                <span class="hljs-keyword">if</span> (pairs[j][<span class="hljs-number">1</span>] &lt; pairs[i][<span class="hljs-number">0</span>]) &#123;<br>                    <span class="hljs-comment">// Update the longest chain length ending at pairs[i]</span><br>                    dp[i] = <span class="hljs-built_in">max</span>(dp[i], dp[j] + <span class="hljs-number">1</span>);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the maximum length among all chains ending with each pair</span><br>        <span class="hljs-keyword">return</span> *<span class="hljs-built_in">max_element</span>(dp.<span class="hljs-built_in">begin</span>(), dp.<span class="hljs-built_in">end</span>());<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-2"><a href="#Complexity-Analysis-2" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="4-Longest-Arithmetic-Subsequence"><a href="#4-Longest-Arithmetic-Subsequence" class="headerlink" title="4. Longest Arithmetic Subsequence"></a>4. Longest Arithmetic Subsequence</h1><h2 id="Question-Description-2"><a href="#Question-Description-2" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer array $arr$ and an integer difference, find and return the length of the longest arithmetic subsequence in $arr$ where the difference between adjacent elements is equal to difference.</p>
+<p>A subsequence is a sequence derived from $arr$ by deleting some elements or not deleting any elements without changing the order of the remaining elements.</p>
+<h2 id="Analysis-3"><a href="#Analysis-3" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Longest arithmetic subsequence” is:<br>$$<br>dp(i) &#x3D; max(dp(i),dp(j)+1), \text{ if },arr(i) - arr(j) &#x3D; difference<br>$$<br>We traverse $arr$ from left to right and calculate the length of the longest arithmetic subsequence ending with $arr[i]$, and take the maximum of all lengths to get the answer.</p>
+<p>Let $dp[i]$ represent the length of the longest arithmetic subsequence ending with $arr[i]$. We can find the element on the left side of $arr[i]$ that satisfies $arr[j] &#x3D; arr[i] - d$, and add $arr[i]$ to the end of the longest arithmetic subsequence ending with $arr[j]$.</p>
+<p>In this way, $dp[i]$ can be rescursively calculated from $dp[j]$.</p>
+<p>The final answer is $max(dp)$.</p>
+<h2 id="Code-3"><a href="#Code-3" class="headerlink" title="Code"></a>Code</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">longestSubsequence(vector&lt;int&gt;&amp;</span> <span class="hljs-string">arr</span>, <span class="hljs-string">int</span> <span class="hljs-string">difference)</span> &#123;<br>        <span class="hljs-string">int</span> <span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">arr.size();</span><br>        <br>        <span class="hljs-string">//</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">stores</span> <span class="hljs-string">the</span> <span class="hljs-string">length</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">longest</span> <span class="hljs-string">arithmetic</span> <span class="hljs-string">subsequence</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">ending</span> <span class="hljs-string">at</span> <span class="hljs-string">index</span> <span class="hljs-string">i</span> <span class="hljs-string">with</span> <span class="hljs-string">the</span> <span class="hljs-string">given</span> <span class="hljs-string">difference</span><br>        <span class="hljs-string">std::vector&lt;int&gt;</span> <span class="hljs-string">dp(n</span>, <span class="hljs-number">1</span><span class="hljs-string">);</span>  <span class="hljs-string">//</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">all</span> <span class="hljs-string">values</span> <span class="hljs-string">to</span> <span class="hljs-number">1</span> <span class="hljs-string">(each</span> <span class="hljs-string">element</span> <span class="hljs-string">is</span> <span class="hljs-string">a</span> <span class="hljs-string">subsequence</span> <span class="hljs-string">of</span> <span class="hljs-string">length</span> <span class="hljs-number">1</span><span class="hljs-string">)</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Iterate</span> <span class="hljs-string">through</span> <span class="hljs-string">each</span> <span class="hljs-string">element</span> <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">array</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">//</span> <span class="hljs-string">Check</span> <span class="hljs-string">all</span> <span class="hljs-string">previous</span> <span class="hljs-string">elements</span> <span class="hljs-string">before</span> <span class="hljs-string">i</span><br>            <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">j</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">j</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">i;</span> <span class="hljs-string">j++)</span> &#123;<br>                <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">difference</span> <span class="hljs-string">between</span> <span class="hljs-string">arr</span>[<span class="hljs-string">i</span>] <span class="hljs-string">and</span> <span class="hljs-string">arr</span>[<span class="hljs-string">j</span>] <span class="hljs-string">matches</span> <span class="hljs-string">the</span> <span class="hljs-string">target</span><br>                <span class="hljs-string">if</span> <span class="hljs-string">(arr</span>[<span class="hljs-string">i</span>] <span class="hljs-bullet">-</span> <span class="hljs-string">arr</span>[<span class="hljs-string">j</span>] <span class="hljs-string">==</span> <span class="hljs-string">difference)</span> &#123;<br>                    <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">to</span> <span class="hljs-string">include</span> <span class="hljs-string">this</span> <span class="hljs-string">element</span> <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">arithmetic</span> <span class="hljs-string">subsequence</span><br>                    <span class="hljs-string">dp</span>[<span class="hljs-string">i</span>] <span class="hljs-string">=</span> <span class="hljs-string">std::max(dp</span>[<span class="hljs-string">i</span>], <span class="hljs-string">dp</span>[<span class="hljs-string">j</span>] <span class="hljs-string">+</span> <span class="hljs-number">1</span><span class="hljs-string">);</span><br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">value</span> <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">dp</span> <span class="hljs-string">array</span>, <span class="hljs-string">which</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">length</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">longest</span> <span class="hljs-string">subsequence</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">*std::max_element(dp.begin()</span>, <span class="hljs-string">dp.end());</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-3"><a href="#Complexity-Analysis-3" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(n^2)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<p>The above code is still to complex, we can use “Hash table method” to simplify the process.</p>
+<p>The cores equation of the following method is :<br>$$<br>dp[num] &#x3D; dp[num - difference] + 1<br>$$</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">longestSubsequence</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; arr, <span class="hljs-type">int</span> difference)</span> </span>&#123;<br>        unordered_map&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; dp;  <span class="hljs-comment">// dp[val] represents the length of the longest subsequence ending with value &#x27;val&#x27;</span><br>        <span class="hljs-comment">// In this dp map, the key is the number itself, and the value is the length of the subsequence ending at that number</span><br>        <span class="hljs-type">int</span> res = <span class="hljs-number">0</span>;  <span class="hljs-comment">// Records the maximum length found</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : arr) &#123;<br>            <span class="hljs-comment">// The length of the longest subsequence ending with num </span><br>            <span class="hljs-comment">// is equal to the length of the subsequence ending with (num - difference) plus 1</span><br>            dp[num] = dp[num - difference] + <span class="hljs-number">1</span>;<br>            <span class="hljs-comment">// Update the maximum length</span><br>            res = <span class="hljs-built_in">max</span>(res, dp[num]);<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-4"><a href="#Complexity-Analysis-4" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="5-Longest-Arithmetic-Sequence"><a href="#5-Longest-Arithmetic-Sequence" class="headerlink" title="5. Longest Arithmetic Sequence"></a>5. Longest Arithmetic Sequence</h1><h2 id="Question-Description-3"><a href="#Question-Description-3" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer array $nums$, return the length of the longest arithmetic subsequence in $nums$.</p>
+<p>Recall that a subsequence of $nums$ is a list $nums[i_1],nums[i_2],…,nums[i_k]$, with $0 ≤ i_1 &lt; i_2 &lt; … &lt; i_k ≤ nums.length - 1$. And a sequence $seq$ is arithmetic if the values of $seq[i+1]-seq[i](0 ≤ i &lt; seq.length - 1)$ are all the same.</p>
+<h2 id="Analysis-4"><a href="#Analysis-4" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Longest Arithmetic Sequence” is:<br>$$<br>f[i][d] &#x3D; f[j].count[d] \text{ ? } f[j][d] + 1 : 2<br>$$<br>Note that $f[i][d][num]$ means using the elements in the array $nums$ with subscripts less than or equal to $i$ to construct an arithmetic sequence with a common difference of $d$, and the maximum length of the arithmetic sequence when the last element is $num$.</p>
+<p>When performing state transition, we consider whether to add the current $i$th element as the last item in the arithmetic progression.</p>
+<p>Use an outer loop to enumerate $d$, and in the inner loop, only two state transitions are required:</p>
+<ol>
+<li><p>$$<br>f[nums[i]] \leftarrow f[nums[i] - d] + 1<br>$$</p>
+</li>
+<li><p>$$<br>f[nums[i]] \leftarrow 1<br>$$</p>
+</li>
+</ol>
+<h2 id="Code-4"><a href="#Code-4" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">longestArithSeqLength</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; nums)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = nums.<span class="hljs-built_in">size</span>();<br><br>        <span class="hljs-comment">// f[i] is a hashmap where:</span><br>        <span class="hljs-comment">// key: difference d</span><br>        <span class="hljs-comment">// value: the length of the longest arithmetic subsequence ending at index i with difference d</span><br>        vector&lt;unordered_map&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">f</span>(n);<br><br>        <span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>;  <span class="hljs-comment">// To keep track of the maximum length found</span><br><br>        <span class="hljs-comment">// Iterate over each element in nums</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// Check all previous elements before i</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                <span class="hljs-type">int</span> d = nums[i] - nums[j];  <span class="hljs-comment">// Calculate the common difference</span><br><br>                <span class="hljs-comment">// If there exists a subsequence ending at j with difference d,</span><br>                <span class="hljs-comment">// extend that subsequence by including nums[i]</span><br>                <span class="hljs-comment">// Otherwise, start a new subsequence of length 2 (nums[j], nums[i])</span><br>                f[i][d] = f[j].<span class="hljs-built_in">count</span>(d) ? f[j][d] + <span class="hljs-number">1</span> : <span class="hljs-number">2</span>;<br><br>                <span class="hljs-comment">// Update the answer with the maximum length so far</span><br>                ans = <span class="hljs-built_in">max</span>(ans, f[i][d]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the length of the longest arithmetic subsequence</span><br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-5"><a href="#Complexity-Analysis-5" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n^2$)</p>
+</li>
+</ul>
+<hr>
+<h1 id="6-Russian-Doll-Envelope-Problem"><a href="#6-Russian-Doll-Envelope-Problem" class="headerlink" title="6. Russian Doll Envelope Problem"></a>6. Russian Doll Envelope Problem</h1><h2 id="Question-Description-4"><a href="#Question-Description-4" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given a two-dimensional integer array $envelopes$, where $envelopes[i] &#x3D; [w_i, h_i]$, represents the width and height of the $i$th envelope.</p>
+<p>When the width and height of another envelope are larger than this envelope can be put into another envelope, just like a Russian doll.</p>
+<p>Please calculate how many envelopes can form a set of “Russian doll” envelopes(that is, one envelope can be put into another envelope).</p>
+<p>Note : Envelope rotation is not allowed.</p>
+<h2 id="Analysis-5"><a href="#Analysis-5" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Russian doll envelope problem” question is:<br>$$<br>f[i] &#x3D; \max_{j&lt;i \land h_j&lt;h_i} { f[j] } + 1<br>$$<br>Following the LIS method, we can also get the below codes.</p>
+<h2 id="Code-5"><a href="#Code-5" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxEnvelopes</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-type">int</span>&gt;&gt;&amp; envelopes)</span> </span>&#123;<br>        <span class="hljs-comment">// If the envelope array is empty, return 0</span><br>        <span class="hljs-keyword">if</span> (envelopes.<span class="hljs-built_in">empty</span>()) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-type">int</span> n = envelopes.<span class="hljs-built_in">size</span>(); <span class="hljs-comment">// Number of envelopes</span><br><br>        <span class="hljs-comment">// Custom sorting:</span><br>        <span class="hljs-comment">// Sort by width in ascending order;</span><br>        <span class="hljs-comment">// If widths are equal, sort by height in descending order</span><br>        <span class="hljs-built_in">sort</span>(envelopes.<span class="hljs-built_in">begin</span>(), envelopes.<span class="hljs-built_in">end</span>(), [](<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; e1, <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; e2) &#123;<br>            <span class="hljs-keyword">return</span> e1[<span class="hljs-number">0</span>] &lt; e2[<span class="hljs-number">0</span>] || (e1[<span class="hljs-number">0</span>] == e2[<span class="hljs-number">0</span>] &amp;&amp; e1[<span class="hljs-number">1</span>] &gt; e2[<span class="hljs-number">1</span>]);<br>        &#125;);<br><br>        <span class="hljs-comment">// Initialize dp array:</span><br>        <span class="hljs-comment">// f[i] represents the maximum number of envelopes that can be nested ending at envelope i</span><br>        <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">f</span><span class="hljs-params">(n, <span class="hljs-number">1</span>)</span></span>; <span class="hljs-comment">// Each envelope can at least nest itself</span><br><br>        <span class="hljs-comment">// Double loop to enumerate all pairs (i, j)</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                <span class="hljs-comment">// If the height of envelope i is greater than that of envelope j</span><br>                <span class="hljs-comment">// Then envelope j can be nested into envelope i</span><br>                <span class="hljs-keyword">if</span> (envelopes[i][<span class="hljs-number">1</span>] &gt; envelopes[j][<span class="hljs-number">1</span>]) &#123;<br>                    <span class="hljs-comment">// Update the maximum nested count ending at envelope i</span><br>                    f[i] = <span class="hljs-built_in">max</span>(f[i], f[j] + <span class="hljs-number">1</span>);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// The result is the maximum value in the dp array</span><br>        <span class="hljs-keyword">return</span> *<span class="hljs-built_in">max_element</span>(f.<span class="hljs-built_in">begin</span>(), f.<span class="hljs-built_in">end</span>());<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-6"><a href="#Complexity-Analysis-6" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(n^2)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<p>However, the above code is too complex, so that we can consider “Dynamic programming based on binary search”.</p>
+<p>Let $f[j]$ represent the minimum value of the last element of the longest strictly increasing subsequence of length $j$ that can be formed by the first $i$ elements of $h$. If there is no longest strictly increasing subsequence of length $j$, the corresponding $f$ value is undefined.</p>
+<p>Within the defined range, it can be seen that the $f$ value is strictly monotonically increasing, because the longer the subsequence, the larger the last element.</p>
+<p>When performing state transition, we consider the current element $h$:</p>
+<ol>
+<li><p>If $h_i$ is greater than the maximum value in $f$, then $h_i$ can be connected to the maximum value in $f$ to form a longer strictly increasing subsequence;</p>
+</li>
+<li><p>Otherwise, we find the largest element in $f[j_0]$ in $f$ that is strictly smaller than $h_i$,that is $f[j_0] &lt; h_i ≤ f[j_0 + 1]$, then $h_i$ can be connected after $f[j_0]$ to form a strictly increasing subsequence of length $j$. So $f[j_0 + 1]$ need to be updated :<br>$$<br>f[j_0 + 1] &#x3D; h_i<br>$$</p>
+</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">maxEnvelopes(vector&lt;vector&lt;int&gt;&gt;&amp;</span> <span class="hljs-string">envelopes)</span> &#123;<br>        <span class="hljs-string">int</span> <span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">envelopes.size();</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-attr">Sort the envelopes:</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">First</span> <span class="hljs-string">by</span> <span class="hljs-string">width</span> <span class="hljs-string">in</span> <span class="hljs-string">ascending</span> <span class="hljs-string">order;</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">widths</span> <span class="hljs-string">are</span> <span class="hljs-string">equal</span>, <span class="hljs-string">by</span> <span class="hljs-string">height</span> <span class="hljs-string">in</span> <span class="hljs-string">descending</span> <span class="hljs-string">order</span><br>        <span class="hljs-string">sort(envelopes.begin()</span>, <span class="hljs-string">envelopes.end()</span>, []<span class="hljs-string">(const</span> <span class="hljs-string">auto&amp;</span> <span class="hljs-string">e1</span>, <span class="hljs-string">const</span> <span class="hljs-string">auto&amp;</span> <span class="hljs-string">e2)</span> &#123;<br>            <span class="hljs-string">return</span> <span class="hljs-string">e1</span>[<span class="hljs-number">0</span>] <span class="hljs-string">&lt;</span> <span class="hljs-string">e2</span>[<span class="hljs-number">0</span>] <span class="hljs-string">||</span> <span class="hljs-string">(e1</span>[<span class="hljs-number">0</span>] <span class="hljs-string">==</span> <span class="hljs-string">e2</span>[<span class="hljs-number">0</span>] <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">e1</span>[<span class="hljs-number">1</span>] <span class="hljs-string">&gt;</span> <span class="hljs-string">e2</span>[<span class="hljs-number">1</span>]<span class="hljs-string">);</span><br>        &#125;<span class="hljs-string">);</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">the</span> <span class="hljs-string">dp</span> <span class="hljs-string">array</span> <span class="hljs-string">for</span> <span class="hljs-string">heights</span><br>        <span class="hljs-string">//</span> <span class="hljs-string">f</span>[<span class="hljs-string">i</span>] <span class="hljs-string">will</span> <span class="hljs-string">maintain</span> <span class="hljs-string">the</span> <span class="hljs-string">minimum</span> <span class="hljs-string">possible</span> <span class="hljs-string">tail</span> <span class="hljs-string">value</span> <span class="hljs-string">for</span> <span class="hljs-string">an</span> <span class="hljs-string">increasing</span> <span class="hljs-string">subsequence</span> <span class="hljs-string">of</span> <span class="hljs-string">length</span> <span class="hljs-string">(i</span> <span class="hljs-string">+</span> <span class="hljs-number">1</span><span class="hljs-string">)</span><br>        <span class="hljs-string">vector&lt;int&gt;</span> <span class="hljs-string">f</span> <span class="hljs-string">=</span> &#123;<span class="hljs-string">envelopes</span>[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]&#125;<span class="hljs-string">;</span> <span class="hljs-string">//</span> <span class="hljs-string">Start</span> <span class="hljs-string">with</span> <span class="hljs-string">the</span> <span class="hljs-string">height</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">first</span> <span class="hljs-string">envelope</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Iterate</span> <span class="hljs-string">through</span> <span class="hljs-string">each</span> <span class="hljs-string">envelope</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">int</span> <span class="hljs-string">num</span> <span class="hljs-string">=</span> <span class="hljs-string">envelopes</span>[<span class="hljs-string">i</span>][<span class="hljs-number">1</span>]<span class="hljs-string">;</span> <span class="hljs-string">//</span> <span class="hljs-string">Current</span> <span class="hljs-string">envelope&#x27;s</span> <span class="hljs-string">height</span><br><br>            <span class="hljs-string">//</span> <span class="hljs-string">If</span> <span class="hljs-string">the</span> <span class="hljs-string">current</span> <span class="hljs-string">height</span> <span class="hljs-string">is</span> <span class="hljs-string">larger</span> <span class="hljs-string">than</span> <span class="hljs-string">any</span> <span class="hljs-string">seen</span> <span class="hljs-string">so</span> <span class="hljs-string">far</span>, <span class="hljs-string">extend</span> <span class="hljs-string">the</span> <span class="hljs-string">subsequence</span><br>            <span class="hljs-string">if</span> <span class="hljs-string">(num</span> <span class="hljs-string">&gt;</span> <span class="hljs-string">f.back())</span> &#123;<br>                <span class="hljs-string">f.push_back(num);</span><br>            &#125;<br>            <span class="hljs-string">else</span> &#123;<br>                <span class="hljs-string">//</span> <span class="hljs-string">Otherwise</span>, <span class="hljs-string">find</span> <span class="hljs-string">the</span> <span class="hljs-string">first</span> <span class="hljs-string">element</span> <span class="hljs-string">in</span> <span class="hljs-string">f</span> <span class="hljs-string">that</span> <span class="hljs-string">is</span> <span class="hljs-string">greater</span> <span class="hljs-string">than</span> <span class="hljs-string">or</span> <span class="hljs-string">equal</span> <span class="hljs-string">to</span> <span class="hljs-string">num</span> <span class="hljs-string">and</span> <span class="hljs-string">replace</span> <span class="hljs-string">it</span><br>                <span class="hljs-string">//</span> <span class="hljs-string">This</span> <span class="hljs-string">keeps</span> <span class="hljs-string">the</span> <span class="hljs-string">subsequence</span> <span class="hljs-string">optimal</span> <span class="hljs-string">for</span> <span class="hljs-string">future</span> <span class="hljs-string">extensions</span><br>                <span class="hljs-string">auto</span> <span class="hljs-string">it</span> <span class="hljs-string">=</span> <span class="hljs-string">lower_bound(f.begin()</span>, <span class="hljs-string">f.end()</span>, <span class="hljs-string">num);</span><br>                <span class="hljs-string">*it</span> <span class="hljs-string">=</span> <span class="hljs-string">num;</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">size</span> <span class="hljs-string">of</span> <span class="hljs-string">f</span> <span class="hljs-string">represents</span> <span class="hljs-string">the</span> <span class="hljs-string">length</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">longest</span> <span class="hljs-string">increasing</span> <span class="hljs-string">subsequence</span>,<br>        <span class="hljs-string">//</span> <span class="hljs-string">which</span> <span class="hljs-string">corresponds</span> <span class="hljs-string">to</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">envelopes</span> <span class="hljs-string">that</span> <span class="hljs-string">can</span> <span class="hljs-string">be</span> <span class="hljs-string">nested</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">f.size();</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-7"><a href="#Complexity-Analysis-7" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(nlogn)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<h1 id="7-Find-the-Longest-Valid-Obstacle-Course-to-Each-Position"><a href="#7-Find-the-Longest-Valid-Obstacle-Course-to-Each-Position" class="headerlink" title="7. Find the Longest Valid Obstacle Course to Each Position"></a>7. Find the Longest Valid Obstacle Course to Each Position</h1><h2 id="Question-Description-5"><a href="#Question-Description-5" class="headerlink" title="Question Description"></a>Question Description</h2><p>You are planning to build some obstacle courses. You are given an array of integers named obstacles with length $n$ and starting at index 0, where $obstacles[i]$ is the height of the $i$th obstacle.</p>
+<p>For each index $i$ between $0$ and $n-1$(inclusive), find the length of the longest obstacle course that can be constructed with $obstacles$, provided that:</p>
+<ul>
+<li>You can choose any number of obstacles with indices between $0$ and $i$, inclusive.</li>
+<li>The $i$th obstacle must be included in the course.</li>
+<li>You must place the obstacles in the order they appear in obstacles.</li>
+<li>Except for the first obstacle, each obstacle in the course must be the same height as or taller than the previous one.</li>
+</ul>
+<p>Return an answer array $ans$ of length $n$, where $ans[i]$ is the length of the longest obstacle course for index $i$ as described above.</p>
+<h2 id="Analysis-6"><a href="#Analysis-6" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Find the longest valid obstacle curse to each position” question is:<br>$$<br>dp(i) &#x3D; max(dp(i),dp(j+1)), \text{ if }, obstacles[i] &gt;&#x3D; obstacles[j]<br>$$<br>Following the LIS method, we can also get the below codes.</p>
+<h2 id="Code-6"><a href="#Code-6" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">longestObstacleCourseAtEachPosition</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; obstacles)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = obstacles.<span class="hljs-built_in">size</span>();<br><br>        <span class="hljs-comment">// Initialize the dp array,</span><br>        <span class="hljs-comment">// where dp[i] represents the length of the longest valid obstacle course ending at index i</span><br>        <span class="hljs-function">std::vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">dp</span><span class="hljs-params">(n, <span class="hljs-number">1</span>)</span></span>;  <span class="hljs-comment">// Initially, each obstacle can form a sequence of length 1 by itself</span><br><br>        <span class="hljs-comment">// Iterate through each obstacle position i</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// Check all previous obstacle positions j (j &lt; i)</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; i; j++) &#123;<br>                <span class="hljs-comment">// If obstacles[i] &gt;= obstacles[j],</span><br>                <span class="hljs-comment">// it means we can extend the sequence from j to i (non-decreasing height)</span><br>                <span class="hljs-keyword">if</span> (obstacles[i] &gt;= obstacles[j]) &#123;<br>                    <span class="hljs-comment">// Update dp[i]: take the maximum between the current dp[i] and dp[j] + 1</span><br>                    <span class="hljs-comment">// Meaning we can form a longer valid course ending at i by extending from j</span><br>                    dp[i] = std::<span class="hljs-built_in">max</span>(dp[i], dp[j] + <span class="hljs-number">1</span>);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the dp array,</span><br>        <span class="hljs-comment">// where each dp[i] indicates the length of the longest valid obstacle course up to position i</span><br>        <span class="hljs-keyword">return</span> dp;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-8"><a href="#Complexity-Analysis-8" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(n^2)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<p>However, the LIS method cost too much time, so that we need to simplify the code.</p>
+<p>The we can consider “Greed + Binary Search” mode.</p>
+<h3 id="Algorithm-Idea"><a href="#Algorithm-Idea" class="headerlink" title="Algorithm Idea"></a>Algorithm Idea</h3><ul>
+<li>We use a <strong>greedy + binary search</strong> approach.</li>
+<li>Maintain a list <code>f</code> where:<ul>
+<li><code>f[i]</code> represents the <strong>smallest possible last height</strong> of a valid obstacle course of length <code>i+1</code>.</li>
+</ul>
+</li>
+<li>For each obstacle:<ul>
+<li>If its height is <strong>greater than or equal to</strong> the last element in <code>f</code>, append it to extend the sequence.</li>
+<li>Otherwise, use <strong>binary search (<code>upper_bound</code>)</strong> to find the first element greater than <code>num</code>, and replace it to maintain a minimal end value.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>This is a modified version of the classical Longest Increasing Subsequence (LIS) algorithm, adapted for non-decreasing sequences.</p>
+</blockquote>
+<h3 id="Algorithm-Steps"><a href="#Algorithm-Steps" class="headerlink" title="Algorithm Steps"></a>Algorithm Steps</h3><ol>
+<li><strong>Initialization</strong>:<ul>
+<li>Create array <code>f</code> and add the first obstacle’s height.</li>
+<li>Create answer array <code>ans</code> and initialize with 1.</li>
+</ul>
+</li>
+<li><strong>Iterate through obstacles (starting from index 1)</strong>:<ul>
+<li>For each <code>num = obstacles[i]</code>:<ul>
+<li>If <code>num &gt;= f.back()</code>:<ul>
+<li>Append <code>num</code> to <code>f</code>.</li>
+<li>Update <code>ans[i] = length of f</code>.</li>
+</ul>
+</li>
+<li>Else:<ul>
+<li>Use <code>upper_bound</code> in <code>f</code> to find the first element greater than <code>num</code>.</li>
+<li>Replace that element with <code>num</code>.</li>
+<li>Update <code>ans[i] = position of replacement + 1</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Return the <code>ans</code> array</strong>.</li>
+</ol>
+<h2 id="Code-7"><a href="#Code-7" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">longestObstacleCourseAtEachPosition</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; obstacles)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = obstacles.<span class="hljs-built_in">size</span>();<br><br>        <span class="hljs-comment">// The array &#x27;f&#x27; maintains the minimal ending elements of valid obstacle courses</span><br>        <span class="hljs-comment">// f[i] represents the minimum possible last height of a valid course of length (i + 1)</span><br>        std::vector&lt;<span class="hljs-type">int</span>&gt; f = &#123;obstacles[<span class="hljs-number">0</span>]&#125;;  <br><br>        <span class="hljs-comment">// The array &#x27;ans&#x27; records the length of the longest valid obstacle course at each position</span><br>        std::vector&lt;<span class="hljs-type">int</span>&gt; ans = &#123;<span class="hljs-number">1</span>&#125;;<br><br>        <span class="hljs-comment">// Start traversing from the first index (index 0 is already handled)</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-type">int</span> num = obstacles[i];  <span class="hljs-comment">// Current obstacle height</span><br><br>            <span class="hljs-comment">// If the current obstacle height is greater than or equal to the last element of f,</span><br>            <span class="hljs-comment">// it can directly extend the current longest course</span><br>            <span class="hljs-keyword">if</span> (num &gt;= f.<span class="hljs-built_in">back</span>()) &#123;<br>                f.<span class="hljs-built_in">push_back</span>(num);<br>                ans.<span class="hljs-built_in">push_back</span>(f.<span class="hljs-built_in">size</span>());  <span class="hljs-comment">// The new course length after adding</span><br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// Otherwise, find the first element in f that is greater than num</span><br>                <span class="hljs-comment">// Replace it with num to maintain the minimal ending values</span><br>                <span class="hljs-keyword">auto</span> it = <span class="hljs-built_in">upper_bound</span>(f.<span class="hljs-built_in">begin</span>(), f.<span class="hljs-built_in">end</span>(), num);<br>                *it = num;<br><br>                <span class="hljs-comment">// The course length at this position is the index of the replaced element + 1</span><br>                <span class="hljs-type">int</span> loc = it - f.<span class="hljs-built_in">begin</span>();<br>                ans.<span class="hljs-built_in">push_back</span>(loc + <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the array representing the longest valid obstacle course length at each position</span><br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-9"><a href="#Complexity-Analysis-9" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(nlogn)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<h1 id="Common-Deployment-Commands"><a href="#Common-Deployment-Commands" class="headerlink" title="Common Deployment Commands"></a>Common Deployment Commands</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean <span class="hljs-comment"># Clear cache</span><br>hexo g <span class="hljs-comment"># Generate static files</span><br>hexo d <span class="hljs-comment"># Deploy to GitHub</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>📬If you have any questions, please contact me:<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+		<p class="copyright-item">
+  		     <span>Permalink:</span>
+  		     <span class="permalink-text"><a href="https://yangchen461.github.io/2025/04/29/Dynamic%20Programming(4)---Longest%20Increasing%20Subsequence/">https://yangchen461.github.io/2025/04/29/Dynamic%20Programming(4)---Longest%20Increasing%20Subsequence/</a></span>
+		</p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Study/"># Study</a>
+            
+              <a href="/tags/C/"># C++</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/04/26/Dynamic%20Programming(3)---Application%20of%20Dynamic%20Programming%20in%20Strings/">Dynamic Programming(3)---Application of Dynamic Programming in Strings</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+<style>
+  .permalink-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+  .post-copyright .copyright-item {
+    margin-bottom: 0.5rem;
+  }
+  .post-copyright .copyright-item span.permalink-text {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+  }
+
+</style>
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+
+  .permalink-container {
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>
