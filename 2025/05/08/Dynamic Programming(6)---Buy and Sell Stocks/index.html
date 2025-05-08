@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>Dynamic Programming(6)---Buy and Sell Stocks | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">Dynamic Programming(6)---Buy and Sell Stocks</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">May 8, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/C-Programming/">C++ Programming</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h1 id="✨-Overview-of-the-Programming-Content"><a href="#✨-Overview-of-the-Programming-Content" class="headerlink" title="✨ Overview of the Programming Content"></a>✨ Overview of the Programming Content</h1><ol>
+<li>Best time to buy and sell stocks;</li>
+<li>Best time to buy and sell stocks II;</li>
+<li>Best time to buy and sell stocks III;</li>
+<li>Best time to buy and sell stocks IV;</li>
+<li>Best time to buy and sell stocks including handling fee;</li>
+<li>Maximum profit of stocks;</li>
+</ol>
+<p>Recommended editing tool: **Typora **(Markdown editing) </p>
+<hr>
+<h1 id="1-Best-Time-to-Sell-Stocks"><a href="#1-Best-Time-to-Sell-Stocks" class="headerlink" title="1. Best Time to Sell Stocks"></a>1. Best Time to Sell Stocks</h1><p>Given an array $prices$, whose $i$-th element $prices[i]$ represents the price of a given stock on the $i$th day.</p>
+<p>You can only choose to buy this stock on a certain day and choose to sell it on a different day in the future. Design an algorithm to calculate the maximum profit you can get.</p>
+<p>Return the maximum profit you can get from this transaction. If you cannot get any profit, return $0$.</p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Best time to sell stocks” question is:<br>$$<br>maxProfit &#x3D; prices[i] - minprice<br>$$<br>In this question, we only need to use a variable to record the historical lowest price $minprice$, and we can assume that out stock was bought on that day. Then the profit we can get from selling the stock on the $i$th day is $prices[i] - minprice$.</p>
+<p>Therefore, we only need to traverse the price array once, record the historical lowest point, and then consider this question every day: If I bought it at the historical lowest point, how much money can I make by selling it today? when all the days are considered, we get the best answer.</p>
+<h2 id="Code-One-Pass"><a href="#Code-One-Pass" class="headerlink" title="Code(One Pass)"></a>Code(One Pass)</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">maxProfit(vector&lt;int&gt;&amp;</span> <span class="hljs-string">prices)</span> &#123;<br>        <span class="hljs-string">int</span> <span class="hljs-string">n</span> <span class="hljs-string">=</span> <span class="hljs-string">(int)prices.size();</span> <span class="hljs-string">//</span> <span class="hljs-string">Get</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">days</span><br>        <span class="hljs-string">int</span> <span class="hljs-string">ans</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">//</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">maximum</span> <span class="hljs-string">profit</span> <span class="hljs-string">to</span> <span class="hljs-number">0</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Iterate</span> <span class="hljs-string">over</span> <span class="hljs-string">all</span> <span class="hljs-string">possible</span> <span class="hljs-string">pairs</span> <span class="hljs-string">(i</span>, <span class="hljs-string">j)</span> <span class="hljs-string">with</span> <span class="hljs-string">j</span> <span class="hljs-string">&gt;</span> <span class="hljs-string">i</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">0</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">n;</span> <span class="hljs-string">++i)</span> &#123;<br>            <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">j</span> <span class="hljs-string">=</span> <span class="hljs-string">i</span> <span class="hljs-string">+</span> <span class="hljs-number">1</span><span class="hljs-string">;</span> <span class="hljs-string">j</span> <span class="hljs-string">&lt;</span> <span class="hljs-string">n;</span> <span class="hljs-string">++j)</span> &#123;<br>                <span class="hljs-string">//</span> <span class="hljs-string">Calculate</span> <span class="hljs-string">profit</span> <span class="hljs-string">if</span> <span class="hljs-string">buying</span> <span class="hljs-string">at</span> <span class="hljs-string">day</span> <span class="hljs-string">i</span> <span class="hljs-string">and</span> <span class="hljs-string">selling</span> <span class="hljs-string">at</span> <span class="hljs-string">day</span> <span class="hljs-string">j</span><br>                <span class="hljs-string">ans</span> <span class="hljs-string">=</span> <span class="hljs-string">max(ans</span>, <span class="hljs-string">prices</span>[<span class="hljs-string">j</span>] <span class="hljs-bullet">-</span> <span class="hljs-string">prices</span>[<span class="hljs-string">i</span>]<span class="hljs-string">);</span> <span class="hljs-string">//</span> <span class="hljs-string">Update</span> <span class="hljs-string">max</span> <span class="hljs-string">profit</span> <span class="hljs-string">if</span> <span class="hljs-string">this</span> <span class="hljs-string">profit</span> <span class="hljs-string">is</span> <span class="hljs-string">greater</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-string">return</span> <span class="hljs-string">ans;</span> <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">maximum</span> <span class="hljs-string">profit</span> <span class="hljs-string">found</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis"><a href="#Complexity-Analysis" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h2 id="Code-One-Pass-1"><a href="#Code-One-Pass-1" class="headerlink" title="Code(One Pass)"></a>Code(One Pass)</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-comment">// One Pass</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; prices)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = prices.<span class="hljs-built_in">size</span>();<br>        <span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> minPrice = INT_MAX; <span class="hljs-comment">// Tracks the minimum price seen so far</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (prices[i] &lt; minPrice) &#123;<br>                minPrice = prices[i]; <span class="hljs-comment">// Update minimum price if current is lower</span><br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (prices[i] - minPrice &gt; ans) &#123;<br>                ans = prices[i] - minPrice; <span class="hljs-comment">// Update maximum profit if current profit is higher</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-1"><a href="#Complexity-Analysis-1" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-Best-Time-to-Sell-Stocks-II"><a href="#2-Best-Time-to-Sell-Stocks-II" class="headerlink" title="2. Best Time to Sell Stocks II"></a>2. Best Time to Sell Stocks II</h1><h2 id="Question-Description"><a href="#Question-Description" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer array $prices$, where $prices[i]$ represents the price of a stock on day $i$. </p>
+<p>Once each day, you can decide whether to buy and&#x2F;or sell the stock. You can only hold at most one share of the stock at any time. You can also buy and then sell on the same day.</p>
+<p>Return the maximum profit you can make.</p>
+<h2 id="Analysis-1"><a href="#Analysis-1" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Best time to sell stocks II” question is:<br>$$<br>\begin{cases}<br>dp[i][0] &#x3D; max(dp[i-1][0],dp[i-1][1] + prices[i])\\<br>dp[i][1] &#x3D; max(dp[i-1][1],dp[i-1][0] - prices[0])<br>\end{cases}<br>$$<br>In the above equation, we use $’0’$ to represent ‘No stock hold’, and use $’1’$ to represent ‘stock hold’.</p>
+<p>Define the state $dp[i][0]$ to represent the maximum profit of holding no stock after the $i$th day of trading, and $dp[i][1]$ to represent the maximum profit of holding a stock after the $i$th day of trading($i$ starts at $0$).</p>
+<p>The boundary conditions:<br>$$<br>\begin{cases}<br>dp[0][0] &#x3D; 0 \\<br>dp[0][1] &#x3D; - prices[0]<br>\end{cases}<br>$$</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; prices)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = prices.<span class="hljs-built_in">size</span>();<br>        <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>        <span class="hljs-comment">// dp[i][0]: Maximum profit on day i when holding a stock</span><br>        <span class="hljs-comment">// dp[i][1]: Maximum profit on day i when not holding a stock</span><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">dp</span>(n, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>));<br><br>        <span class="hljs-comment">// Initialize state on day 0</span><br>        dp[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = -prices[<span class="hljs-number">0</span>]; <span class="hljs-comment">// Bought on the first day, so profit is negative</span><br>        dp[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;          <span class="hljs-comment">// Did nothing on the first day, profit is 0</span><br><br>        <span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>; <span class="hljs-comment">// Tracks the global maximum profit</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// On day i, if holding a stock:</span><br>            <span class="hljs-comment">// 1. Continue holding from the previous day</span><br>            <span class="hljs-comment">// 2. Buy today (must not have held yesterday)</span><br>            dp[i][<span class="hljs-number">0</span>] = std::<span class="hljs-built_in">max</span>(dp[i<span class="hljs-number">-1</span>][<span class="hljs-number">0</span>], dp[i<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>] - prices[i]);<br><br>            <span class="hljs-comment">// On day i, if not holding a stock:</span><br>            <span class="hljs-comment">// 1. Continue not holding from the previous day</span><br>            <span class="hljs-comment">// 2. Sell today (must have held yesterday)</span><br>            dp[i][<span class="hljs-number">1</span>] = std::<span class="hljs-built_in">max</span>(dp[i<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>], dp[i<span class="hljs-number">-1</span>][<span class="hljs-number">0</span>] + prices[i]);<br><br>            <span class="hljs-comment">// Update overall max profit for completeness (optional)</span><br>            ans = std::<span class="hljs-built_in">max</span>(dp[i][<span class="hljs-number">0</span>], dp[i][<span class="hljs-number">1</span>]);<br>        &#125;<br><br>        <span class="hljs-comment">// Final answer is max profit on the last day when not holding stock</span><br>        <span class="hljs-keyword">return</span> dp[n<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>];<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-2"><a href="#Complexity-Analysis-2" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-Best-Time-to-Buy-and-Sell-Stocks-III"><a href="#3-Best-Time-to-Buy-and-Sell-Stocks-III" class="headerlink" title="3. Best Time to Buy and Sell Stocks III"></a>3. Best Time to Buy and Sell Stocks III</h1><h2 id="Question-Description-1"><a href="#Question-Description-1" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an array whose $i$th elements is the price of a given stock on the $i$th day.</p>
+<p>Design an algorithm to calculate the maximum profit you can make. You can complete at most two trades.</p>
+<p>Note: You cannot participate in multiple trades at the same time(you must sell the previous stock before buying it again).</p>
+<h2 id="Analysis-2"><a href="#Analysis-2" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Best Time to Buy and Sell Stocks III” is :</p>
+<p>$$<br>\begin{cases}<br>dp[i][k][0] &#x3D; max(dp[i-1][k][0],dp[i-1][k][1] + prices[i]) \\<br>dp[i][k][1] &#x3D; max(dp[i-1][k][1],dp[i-1][k-1][0] - prices[i])<br>\end{cases}<br>$$<br>In the above equation, we use $’0’$ to represent ‘No stock hold’, and use $’1’$ to represent ‘stock hold’.</p>
+<p>Moreover, $dp[i][k][s]$ means: “On the $i$th day, there are at most $k$ transactions and the maximum profit when the holding status is $s(0&#x2F;1)$”.</p>
+<p>The boundary conditions:<br>$$<br>\begin{cases}<br>dp[0][k][0] &#x3D; 0,&amp;  \text{k &#x3D; 0,1,2}\\<br>dp[0][k][1] &#x3D; - prices[i],&amp;  \text{k &#x3D; 0,1,2}<br>\end{cases}<br>$$<br>While the question acquire “You can complete at most two trades”, $k$ must satisfy $k &lt; 3$.</p>
+<h2 id="Code-1"><a href="#Code-1" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; prices)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = prices.<span class="hljs-built_in">size</span>();<br><br>        <span class="hljs-comment">// 3D DP array: dp[i][k][s]</span><br>        <span class="hljs-comment">// i: the i-th day (0-indexed)</span><br>        <span class="hljs-comment">// k: the maximum number of completed transactions (range: 0~2)</span><br>        <span class="hljs-comment">// s: stock holding status — 0 means not holding, 1 means holding</span><br>        std::vector&lt;std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt;&gt; <span class="hljs-built_in">dp</span>(n, std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt;(<span class="hljs-number">3</span>, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>)));<br><br>        <span class="hljs-comment">// Initialize the state for day 0</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">3</span>; ++k) &#123;<br>            dp[<span class="hljs-number">0</span>][k][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;              <span class="hljs-comment">// Not holding stock on day 0, profit is 0</span><br>            dp[<span class="hljs-number">0</span>][k][<span class="hljs-number">1</span>] = -prices[<span class="hljs-number">0</span>];     <span class="hljs-comment">// Bought stock on day 0, profit is negative</span><br>        &#125;<br><br>        <span class="hljs-comment">// Iterate from day 1 to the last day</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; ++i) &#123;<br>            <span class="hljs-comment">// Traverse all possible transaction counts (up to 2 transactions allowed)</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">1</span>; k &lt; <span class="hljs-number">3</span>; ++k) &#123;<br>                <span class="hljs-comment">// Transition 1: Not holding stock on day i</span><br>                <span class="hljs-comment">// Option 1: Still not holding from yesterday</span><br>                <span class="hljs-comment">// Option 2: Sold stock today that was held yesterday</span><br>                dp[i][k][<span class="hljs-number">0</span>] = std::<span class="hljs-built_in">max</span>(dp[i<span class="hljs-number">-1</span>][k][<span class="hljs-number">0</span>], dp[i<span class="hljs-number">-1</span>][k][<span class="hljs-number">1</span>] + prices[i]);<br><br>                <span class="hljs-comment">// Transition 2: Holding stock on day i</span><br>                <span class="hljs-comment">// Option 1: Continued holding from yesterday</span><br>                <span class="hljs-comment">// Option 2: Bought stock today (must have not held yesterday, and k-1 transactions before)</span><br>                dp[i][k][<span class="hljs-number">1</span>] = std::<span class="hljs-built_in">max</span>(dp[i<span class="hljs-number">-1</span>][k][<span class="hljs-number">1</span>], dp[i<span class="hljs-number">-1</span>][k<span class="hljs-number">-1</span>][<span class="hljs-number">0</span>] - prices[i]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Return the maximum profit on the last day with at most 1 or 2 transactions and not holding stock</span><br>        <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">max</span>(dp[n<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>][<span class="hljs-number">0</span>], dp[n<span class="hljs-number">-1</span>][<span class="hljs-number">2</span>][<span class="hljs-number">0</span>]);<br>    &#125;<br>&#125;;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">dp[n-1][2][0] = 2 in 4</span><br><span class="hljs-comment">means:</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">A maximum of 2 transactions can be made (it can also be understood as &quot;no more than 2 transactions have been completed&quot;).</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">It is not &quot;2 more transactions can be made&quot; or &quot;exactly 2 transactions have been completed&quot;.</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">In dynamic programming, the meaning of dp[i][k][j] is usually defined as:</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">At the end of the i-th day, at most k complete transactions (buy + sell) have been made, and the maximum profit when the stock is currently held (j=0 not holding, j=1 holding).</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">dp[i][2][0]: indicates that up to the i-th day, at most 2 transactions have been made, and the maximum profit when the stock is currently not held.</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">It can mean:</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">Already traded 2 times;</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">Or only traded 1 time;</span><br><span class="hljs-comment">﻿</span><br><span class="hljs-comment">Even 0 times (because we define it as &quot;at most&quot; k times).</span><br><span class="hljs-comment">*/</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-3"><a href="#Complexity-Analysis-3" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(n)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<h1 id="4-Best-Time-to-Sell-Stocks-IV"><a href="#4-Best-Time-to-Sell-Stocks-IV" class="headerlink" title="4. Best Time to Sell Stocks IV"></a>4. Best Time to Sell Stocks IV</h1><h2 id="Question-Description-2"><a href="#Question-Description-2" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer array $prices$ and an integer $k$, where $prices[i]$ represents the price of a stock on day $i$. </p>
+<p>Design an algorithm to calculate the maximum profit you can make. You can complete at most $k$ trades. That is, you can buy at most $k$ times and sell at most $k$ times.</p>
+<p>Note: You cannot participate in multiple trades at the same time(you must sell the previous stock before buying it again).</p>
+<h2 id="Analysis-3"><a href="#Analysis-3" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Best time to sell stocks IV” question is:<br>$$<br>\begin{cases}<br>dp[i][k][0] &#x3D; max(dp[i-1][k][0],dp[i-1][k][1] + prices[i]) \\<br>dp[i][k][1] &#x3D; max(dp[i-1][k][1],dp[i-1][k-1][0] - prices[i])<br>\end{cases}<br>$$<br>In the above equation, we use $’0’$ to represent ‘No stock hold’, and use $’1’$ to represent ‘stock hold’.</p>
+<p>Moreover, $dp[i][k][s]$ means: “On the $i$th day, there are at most $k$ transactions and the maximum profit when the holding status is $s(0&#x2F;1)$”.</p>
+<p>The boundary conditions:<br>$$<br>\begin{cases}<br>dp[0][k][0] &#x3D; 0,&amp;  \text{k &lt; m+1}\\<br>dp[0][k][1] &#x3D; - prices[i],&amp;  \text{k &lt; m+1}<br>\end{cases}<br>$$<br>While the question acquire “You can complete at most two trades”, $k$ must satisfy $k &lt; m+1$.</p>
+<h2 id="Code-2"><a href="#Code-2" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(<span class="hljs-type">int</span> k, vector&lt;<span class="hljs-type">int</span>&gt;&amp; prices)</span> </span>&#123;<br>        <span class="hljs-type">int</span> m = k;  <span class="hljs-comment">// Maximum number of transactions allowed</span><br>        <span class="hljs-type">int</span> n = prices.<span class="hljs-built_in">size</span>();  <span class="hljs-comment">// Total number of days</span><br><br>        <span class="hljs-comment">// Handle edge case: no prices or only one day — no profit possible</span><br>        <span class="hljs-keyword">if</span> (n &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>        <span class="hljs-comment">// If the allowed number of transactions is large (greater than half the days),</span><br>        <span class="hljs-comment">// it&#x27;s equivalent to the &quot;unlimited transactions&quot; case</span><br>        <span class="hljs-keyword">if</span> (m &gt;= n / <span class="hljs-number">2</span>) &#123;<br>            <span class="hljs-type">int</span> profit = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>                <span class="hljs-keyword">if</span> (prices[i] &gt; prices[i - <span class="hljs-number">1</span>])<br>                    profit += prices[i] - prices[i - <span class="hljs-number">1</span>];<br>            &#125;<br>            <span class="hljs-keyword">return</span> profit;<br>        &#125;<br><br>        <span class="hljs-comment">// 3D Dynamic Programming array:</span><br>        <span class="hljs-comment">// dp[i][k][0] — the max profit on day i with at most k transactions and **not holding a stock**</span><br>        <span class="hljs-comment">// dp[i][k][1] — the max profit on day i with at most k transactions and **holding a stock**</span><br>        std::vector&lt;std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt;&gt; <span class="hljs-built_in">dp</span>(n, std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt;(m + <span class="hljs-number">1</span>, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>)));<br><br>        <span class="hljs-comment">// Initialize base cases for day 0</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt;= m; k++) &#123;<br>            dp[<span class="hljs-number">0</span>][k][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;              <span class="hljs-comment">// Day 0, not holding stock: profit is 0</span><br>            dp[<span class="hljs-number">0</span>][k][<span class="hljs-number">1</span>] = -prices[<span class="hljs-number">0</span>];     <span class="hljs-comment">// Day 0, holding stock: cost of buying stock</span><br>        &#125;<br><br>        <span class="hljs-comment">// State transitions</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">1</span>; k &lt;= m; k++) &#123;<br>                <span class="hljs-comment">// Not holding a stock:</span><br>                <span class="hljs-comment">// 1. Remain not holding from previous day</span><br>                <span class="hljs-comment">// 2. Sell stock today (had stock yesterday)</span><br>                dp[i][k][<span class="hljs-number">0</span>] = std::<span class="hljs-built_in">max</span>(dp[i - <span class="hljs-number">1</span>][k][<span class="hljs-number">0</span>], dp[i - <span class="hljs-number">1</span>][k][<span class="hljs-number">1</span>] + prices[i]);<br><br>                <span class="hljs-comment">// Holding a stock:</span><br>                <span class="hljs-comment">// 1. Continue holding from previous day</span><br>                <span class="hljs-comment">// 2. Buy stock today (was not holding yesterday, so use k-1 transactions)</span><br>                dp[i][k][<span class="hljs-number">1</span>] = std::<span class="hljs-built_in">max</span>(dp[i - <span class="hljs-number">1</span>][k][<span class="hljs-number">1</span>], dp[i - <span class="hljs-number">1</span>][k - <span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - prices[i]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// Final answer: max profit on last day with at most m transactions and not holding any stock</span><br>        <span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">1</span>; k &lt;= m; k++) &#123;<br>            ans = std::<span class="hljs-built_in">max</span>(ans, dp[n - <span class="hljs-number">1</span>][k][<span class="hljs-number">0</span>]);<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-4"><a href="#Complexity-Analysis-4" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n \times k)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n \times k)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="5-Best-Time-to-Buy-and-Sell-Stocks-Including-Freeze-Period"><a href="#5-Best-Time-to-Buy-and-Sell-Stocks-Including-Freeze-Period" class="headerlink" title="5. Best Time to Buy and Sell Stocks Including Freeze Period"></a>5. Best Time to Buy and Sell Stocks Including Freeze Period</h1><h2 id="Question-Description-3"><a href="#Question-Description-3" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer array $prices$, where $prices[i]$ represents the stock price on the $i$th day.</p>
+<p>Design an algorithm to calculate the maximum profit. You can complete as many transactions as possible(buy and sell a stock multiple times) under the following constraints:</p>
+<p>After selling a stock, you cannot but it back the next day(i.e. the freezing period is 1 day).</p>
+<p>Note: You cannot participate in multiple transactions at the same time(you must sell the previous stock before buying it again).</p>
+<h2 id="Analysis-4"><a href="#Analysis-4" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Best time to buy and sell stocks including freeze period” question is:<br>$$<br>\begin{cases}<br>dp[i][0] &#x3D; max(dp[i-1][0],dp[i-1][1] - prices[i]) \\<br>dp[i][1] &#x3D; max(dp[i-1][1],dp[i-1][2])\\<br>dp[i][2] &#x3D; dp[i][0] + prices[i]<br>\end{cases}<br>$$<br>The boundary conditions:<br>$$<br>\begin{cases}<br>dp[0][0] &#x3D; - prices[i]\\<br>dp[0][1] &#x3D; 0 \\<br>dp[0][2] &#x3D; 0<br>\end{cases}<br>$$<br>In the above equation, we divide this question into three different conditions. </p>
+<p>We use $’0’$ to represent ‘stock hold’, and use $’1’$ to represent ‘no stock hold but in the non-freezing period’ and use $’2’$ to represent ‘no stock hold and in the freezing period’.</p>
+<p>Moreover, $dp[i][s]$ means: “On the $i$th day,  the maximum profit when the holding status is $s(0&#x2F;1&#x2F;2)$”.</p>
+<h2 id="Code-3"><a href="#Code-3" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; prices)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = prices.<span class="hljs-built_in">size</span>();<br>        <span class="hljs-keyword">if</span>(n &lt; <span class="hljs-number">2</span>)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>; <span class="hljs-comment">// If there are fewer than two days, no transaction is possible</span><br>        &#125;<br><br>        <span class="hljs-comment">// Define the DP array:</span><br>        <span class="hljs-comment">// f[i][0] = holding stock on day i</span><br>        <span class="hljs-comment">// f[i][1] = just sold stock on day i</span><br>        <span class="hljs-comment">// f[i][2] = in cooldown or rest on day i</span><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">f</span>(n, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">3</span>, <span class="hljs-number">0</span>));<br><br>        <span class="hljs-comment">// Initialize states for day 0</span><br>        f[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = -prices[<span class="hljs-number">0</span>]; <span class="hljs-comment">// Buy stock on day 0</span><br>        f[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;          <span class="hljs-comment">// Cannot sell on the first day</span><br>        f[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>] = <span class="hljs-number">0</span>;          <span class="hljs-comment">// No action taken on the first day</span><br><br>        <span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>; <span class="hljs-comment">// Initialize maximum profit</span><br><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++)&#123;<br>            <span class="hljs-comment">// State 0: holding stock today</span><br>            <span class="hljs-comment">// =&gt; either held from yesterday, or bought today after cooldown</span><br>            f[i][<span class="hljs-number">0</span>] = std::<span class="hljs-built_in">max</span>(f[i<span class="hljs-number">-1</span>][<span class="hljs-number">0</span>], f[i<span class="hljs-number">-1</span>][<span class="hljs-number">2</span>] - prices[i]);<br><br>            <span class="hljs-comment">// State 1: sold stock today</span><br>            <span class="hljs-comment">// =&gt; must have held stock yesterday</span><br>            f[i][<span class="hljs-number">1</span>] = f[i<span class="hljs-number">-1</span>][<span class="hljs-number">0</span>] + prices[i];<br><br>            <span class="hljs-comment">// State 2: in cooldown today</span><br>            <span class="hljs-comment">// =&gt; either sold yesterday, or already in cooldown</span><br>            f[i][<span class="hljs-number">2</span>] = std::<span class="hljs-built_in">max</span>(f[i<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>], f[i<span class="hljs-number">-1</span>][<span class="hljs-number">2</span>]);<br><br>            <span class="hljs-comment">// Update max profit (can be in any state)</span><br>            ans = std::<span class="hljs-built_in">max</span>(&#123;f[i][<span class="hljs-number">0</span>], f[i][<span class="hljs-number">1</span>], f[i][<span class="hljs-number">2</span>]&#125;);<br>        &#125;<br><br>        <span class="hljs-comment">// On the last day, cannot be holding stock.</span><br>        <span class="hljs-comment">// Return the maximum between selling and cooldown states</span><br>        <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">max</span>(f[n<span class="hljs-number">-1</span>][<span class="hljs-number">1</span>], f[n<span class="hljs-number">-1</span>][<span class="hljs-number">2</span>]);<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-5"><a href="#Complexity-Analysis-5" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(n)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<h1 id="6-The-Best-Time-to-Buy-and-Sell-Stocks-with-Commission"><a href="#6-The-Best-Time-to-Buy-and-Sell-Stocks-with-Commission" class="headerlink" title="6. The Best Time to Buy and Sell Stocks with Commission"></a>6. The Best Time to Buy and Sell Stocks with Commission</h1><h2 id="Question-Description-4"><a href="#Question-Description-4" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer array $prices$, where $prices[i]$ represents the stock prices on the $i$th day; the integer fee represents the commission for trading stocks.</p>
+<p>You can complete transactions as many times as you want, but you need to pay a commission for each transaction. If you have already bought a stock, you cannot continue to buy stocks before selling it.</p>
+<p>Return the maximum profit.</p>
+<p>Note: A transaction here refers to the entire process of buying, holding and selling stocks. You only need to pay a commission once for each transaction.</p>
+<h2 id="Analysis-5"><a href="#Analysis-5" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Best time to buy and sell stocks with commission” question is:<br>$$<br>\begin{cases}<br>dp[i][0] &#x3D; max(dp[i-1][0],dp[i-1][1] + prices[i] - fee) \\<br>dp[i][1] &#x3D; max(dp[i-1][1],dp[i-1][0] - prices[i])<br>\end{cases}<br>$$<br>The boundary conditions:<br>$$<br>\begin{cases}<br>dp[0][0] &#x3D; 0\\<br>dp[0][1] &#x3D; - prices[i]<br>\end{cases}<br>$$</p>
+<h4 id="Details"><a href="#Details" class="headerlink" title="Details"></a>Details</h4><p>Why is the transaction fee subtracted when ‘selling’ instead of added when ‘buying’?</p>
+<p>From the semantics of the transaction:</p>
+<ul>
+<li>The handling fee is incurred in conjunction with a complete “buy + sell” and is only charged once;</li>
+<li>It is generally believed that only when selling is the transaction truly completed and the handling fee needs to be paid.</li>
+</ul>
+<h2 id="Code-4"><a href="#Code-4" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxProfit</span><span class="hljs-params">(vector&lt;<span class="hljs-type">int</span>&gt;&amp; prices, <span class="hljs-type">int</span> fee)</span> </span>&#123;<br>        <span class="hljs-type">int</span> n = prices.<span class="hljs-built_in">size</span>();<br><br>        <span class="hljs-comment">// Define a 2D dynamic programming array:</span><br>        <span class="hljs-comment">// dp[i][0] represents the maximum profit on day i when not holding any stock</span><br>        <span class="hljs-comment">// dp[i][1] represents the maximum profit on day i when holding a stock</span><br>        std::vector&lt;std::vector&lt;<span class="hljs-type">int</span>&gt;&gt; <span class="hljs-built_in">dp</span>(n, std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>));<br><br>        <span class="hljs-comment">// Initialization for day 0</span><br>        dp[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;            <span class="hljs-comment">// No stock bought on day 0, profit is 0</span><br>        dp[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = -prices[<span class="hljs-number">0</span>];   <span class="hljs-comment">// Bought stock on day 0, profit is negative price</span><br><br>        <span class="hljs-type">int</span> ans = <span class="hljs-number">0</span>;  <span class="hljs-comment">// Track global maximum profit (optional; can just return dp[n-1][0])</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// On day i, not holding stock:</span><br>            <span class="hljs-comment">// 1. Stayed not holding from the previous day</span><br>            <span class="hljs-comment">// 2. Sold stock today (held yesterday + today&#x27;s price - transaction fee)</span><br>            dp[i][<span class="hljs-number">0</span>] = std::<span class="hljs-built_in">max</span>(dp[i - <span class="hljs-number">1</span>][<span class="hljs-number">0</span>], dp[i - <span class="hljs-number">1</span>][<span class="hljs-number">1</span>] + prices[i] - fee);<br><br>            <span class="hljs-comment">// On day i, holding stock:</span><br>            <span class="hljs-comment">// 1. Continued holding from the previous day</span><br>            <span class="hljs-comment">// 2. Bought stock today (was not holding yesterday - today&#x27;s price)</span><br>            dp[i][<span class="hljs-number">1</span>] = std::<span class="hljs-built_in">max</span>(dp[i - <span class="hljs-number">1</span>][<span class="hljs-number">1</span>], dp[i - <span class="hljs-number">1</span>][<span class="hljs-number">0</span>] - prices[i]);<br><br>            <span class="hljs-comment">// Update current maximum profit (optional)</span><br>            ans = std::<span class="hljs-built_in">max</span>(dp[i][<span class="hljs-number">0</span>], dp[i][<span class="hljs-number">1</span>]);<br>        &#125;<br><br>        <span class="hljs-comment">// At the end, the maximum profit must be in the non-holding state</span><br>        <span class="hljs-keyword">return</span> dp[n - <span class="hljs-number">1</span>][<span class="hljs-number">0</span>];<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-6"><a href="#Complexity-Analysis-6" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="Common-Deployment-Commands"><a href="#Common-Deployment-Commands" class="headerlink" title="Common Deployment Commands"></a>Common Deployment Commands</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean <span class="hljs-comment"># Clear cache</span><br>hexo g <span class="hljs-comment"># Generate static files</span><br>hexo d <span class="hljs-comment"># Deploy to GitHub</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>📬If you have any questions, please contact me:<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+		<p class="copyright-item">
+  		     <span>Permalink:</span>
+  		     <span class="permalink-text"><a href="https://yangchen461.github.io/2025/05/08/Dynamic%20Programming(6)---Buy%20and%20Sell%20Stocks/">https://yangchen461.github.io/2025/05/08/Dynamic%20Programming(6)---Buy%20and%20Sell%20Stocks/</a></span>
+		</p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Study/"># Study</a>
+            
+              <a href="/tags/C/"># C++</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/04/29/Dynamic%20Programming(4)---Longest%20Increasing%20Subsequence/">Dynamic Programming(4)---Longest Increasing Subsequence</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+<style>
+  .permalink-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+  .post-copyright .copyright-item {
+    margin-bottom: 0.5rem;
+  }
+  .post-copyright .copyright-item span.permalink-text {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+  }
+
+</style>
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+
+  .permalink-container {
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>
