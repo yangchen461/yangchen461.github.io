@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>Dynamic Programming(7)---Application of Dynamic Programming in Trees | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">Dynamic Programming(7)---Application of Dynamic Programming in Trees</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">May 22, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/C-Programming/">C++ Programming</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h1 id="✨-Overview-of-the-Programming-Content"><a href="#✨-Overview-of-the-Programming-Content" class="headerlink" title="✨ Overview of the Programming Content"></a>✨ Overview of the Programming Content</h1><ol>
+<li>Different binary search trees;</li>
+<li>Different binary search trees II;</li>
+<li>Robbery III;</li>
+<li>Maximum path sum in a binary tree;</li>
+</ol>
+<p>Recommended editing tool: **Typora **(Markdown editing) </p>
+<hr>
+<h1 id="1-Different-Binary-Search-Trees"><a href="#1-Different-Binary-Search-Trees" class="headerlink" title="1. Different Binary Search Trees"></a>1. Different Binary Search Trees</h1><p>Given an integer $n$, how many binary search trees are there that consist of exactly $n$ nodes and whose node values are different from $1$ to $n$?</p>
+<p>Return the number of binary search trees that satisfy the question.</p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Different Binary Search Trees” question is:<br>$$<br>G(n) &#x3D; \sum_{i&#x3D;1}^{n} G(i - 1) \cdot G(n - i)<br>$$<br>In the above equation, there are two definitions:</p>
+<ol>
+<li>$G(n)$：The number of different binary search trees that can be constructed from a sequence of length $n$;</li>
+<li>$F(i,n)$：The number of different binary search trees $(1≤i≤n)$ with $i$ as the root and sequence length $n$;</li>
+</ol>
+<p>Firstly, according to the idea in the previous section, the total number of different binary search trees $G(n)$ is the sum of $F(i,n)$ traversing all $i$ $(1≤i≤n)$.</p>
+<p>In other words:<br>$$<br>G(n) &#x3D; \sum_{i&#x3D;1}^{n}F(i,n)<br>$$<br>To edge cases, while the sequence length is $1$(only the root) or $0$ (empty tree), there is only one case, namely:<br>$$<br>G(0) &#x3D; 1 , G(1) &#x3D; 1<br>$$</p>
+<h2 id="Code-Dynamic-Programming"><a href="#Code-Dynamic-Programming" class="headerlink" title="Code(Dynamic Programming)"></a>Code(Dynamic Programming)</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs yaml"><span class="hljs-string">class</span> <span class="hljs-string">Solution</span> &#123;<br><span class="hljs-attr">public:</span><br>    <span class="hljs-string">int</span> <span class="hljs-string">numTrees(int</span> <span class="hljs-string">n)</span> &#123;<br>        <span class="hljs-string">//</span> <span class="hljs-string">Create</span> <span class="hljs-string">an</span> <span class="hljs-string">array</span> <span class="hljs-string">G</span> <span class="hljs-string">of</span> <span class="hljs-string">length</span> <span class="hljs-string">n</span> <span class="hljs-string">+</span> <span class="hljs-number">1</span> <span class="hljs-string">to</span> <span class="hljs-string">store</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">unique</span> <span class="hljs-string">BSTs</span> <span class="hljs-string">for</span> <span class="hljs-number">0</span> <span class="hljs-string">to</span> <span class="hljs-string">n</span> <span class="hljs-string">nodes</span><br>        <span class="hljs-string">vector&lt;int&gt;</span> <span class="hljs-string">G(n</span> <span class="hljs-string">+</span> <span class="hljs-number">1</span>, <span class="hljs-number">0</span><span class="hljs-string">);</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-attr">Initialization:</span> <span class="hljs-string">There</span> <span class="hljs-string">is</span> <span class="hljs-string">only</span> <span class="hljs-string">one</span> <span class="hljs-string">BST</span> <span class="hljs-string">when</span> <span class="hljs-string">there</span> <span class="hljs-string">are</span> <span class="hljs-number">0</span> <span class="hljs-string">or</span> <span class="hljs-number">1</span> <span class="hljs-string">nodes</span><br>        <span class="hljs-string">G</span>[<span class="hljs-number">0</span>] <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span><br>        <span class="hljs-string">G</span>[<span class="hljs-number">1</span>] <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span><br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Compute</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">BSTs</span> <span class="hljs-string">for</span> <span class="hljs-string">each</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">nodes</span> <span class="hljs-string">from</span> <span class="hljs-number">2</span> <span class="hljs-string">to</span> <span class="hljs-string">n</span><br>        <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">i</span> <span class="hljs-string">=</span> <span class="hljs-number">2</span><span class="hljs-string">;</span> <span class="hljs-string">i</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">n;</span> <span class="hljs-string">i++)</span> &#123;<br>            <span class="hljs-string">//</span> <span class="hljs-string">Enumerate</span> <span class="hljs-string">each</span> <span class="hljs-string">number</span> <span class="hljs-string">j</span> <span class="hljs-string">as</span> <span class="hljs-string">the</span> <span class="hljs-string">root</span> <span class="hljs-string">node</span><br>            <span class="hljs-string">for</span> <span class="hljs-string">(int</span> <span class="hljs-string">j</span> <span class="hljs-string">=</span> <span class="hljs-number">1</span><span class="hljs-string">;</span> <span class="hljs-string">j</span> <span class="hljs-string">&lt;=</span> <span class="hljs-string">i;</span> <span class="hljs-string">j++)</span> &#123;<br>                <span class="hljs-string">//</span> <span class="hljs-string">The</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">nodes</span> <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">left</span> <span class="hljs-string">subtree</span> <span class="hljs-string">is</span> <span class="hljs-string">j</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span>, <span class="hljs-string">and</span> <span class="hljs-string">in</span> <span class="hljs-string">the</span> <span class="hljs-string">right</span> <span class="hljs-string">subtree</span> <span class="hljs-string">is</span> <span class="hljs-string">i</span> <span class="hljs-bullet">-</span> <span class="hljs-string">j</span><br>                <span class="hljs-string">//</span> <span class="hljs-string">G</span>[<span class="hljs-string">j</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span>] <span class="hljs-string">*</span> <span class="hljs-string">G</span>[<span class="hljs-string">i</span> <span class="hljs-bullet">-</span> <span class="hljs-string">j</span>] <span class="hljs-string">represents</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">combinations</span> <span class="hljs-string">with</span> <span class="hljs-string">j</span> <span class="hljs-string">as</span> <span class="hljs-string">the</span> <span class="hljs-string">root</span><br>                <span class="hljs-string">//</span> <span class="hljs-attr">Note the meaning of the two-level recursion here:</span> <span class="hljs-string">G</span>[<span class="hljs-string">n</span>] <span class="hljs-string">=</span> <span class="hljs-string">∑(i=1</span> <span class="hljs-string">to</span> <span class="hljs-string">n)</span> <span class="hljs-string">G</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">*</span> <span class="hljs-string">G</span>[<span class="hljs-string">n-i</span>]<br>                <span class="hljs-string">//</span> <span class="hljs-string">However</span>, <span class="hljs-string">G</span>[<span class="hljs-string">n</span> <span class="hljs-bullet">-</span> <span class="hljs-string">i</span>] <span class="hljs-string">is</span> <span class="hljs-string">also</span> <span class="hljs-string">unknown</span> <span class="hljs-string">and</span> <span class="hljs-string">depends</span> <span class="hljs-string">on</span> <span class="hljs-string">previous</span> <span class="hljs-string">results</span>, <span class="hljs-string">so</span> <span class="hljs-string">it</span> <span class="hljs-string">must</span> <span class="hljs-string">be</span> <span class="hljs-string">computed</span> <span class="hljs-string">recursively</span> <span class="hljs-string">from</span> <span class="hljs-string">smaller</span> <span class="hljs-string">values</span><br>                <span class="hljs-string">//</span> <span class="hljs-string">G</span>[<span class="hljs-string">n</span>] <span class="hljs-string">=</span> <span class="hljs-string">∑(i=1</span> <span class="hljs-string">to</span> <span class="hljs-string">n)</span> <span class="hljs-string">G</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">*</span> <span class="hljs-string">G</span>[<span class="hljs-string">n-i</span>] <span class="hljs-string">=</span> <span class="hljs-string">∑(i=1</span> <span class="hljs-string">to</span> <span class="hljs-string">n-1)</span> <span class="hljs-string">G</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">*</span> <span class="hljs-string">G</span>[<span class="hljs-string">n-1-i</span>] <span class="hljs-string">+</span> <span class="hljs-string">G</span>[<span class="hljs-string">i-1</span>] <span class="hljs-string">*</span> <span class="hljs-string">G</span>[<span class="hljs-string">n-i</span>]<span class="hljs-string">;</span><br>                <br>                <span class="hljs-string">G</span>[<span class="hljs-string">i</span>] <span class="hljs-string">+=</span> <span class="hljs-string">G</span>[<span class="hljs-string">j</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1</span>] <span class="hljs-string">*</span> <span class="hljs-string">G</span>[<span class="hljs-string">i</span> <span class="hljs-bullet">-</span> <span class="hljs-string">j</span>]<span class="hljs-string">;</span><br>            &#125;<br>        &#125;<br><br>        <span class="hljs-string">//</span> <span class="hljs-string">Return</span> <span class="hljs-string">the</span> <span class="hljs-string">number</span> <span class="hljs-string">of</span> <span class="hljs-string">unique</span> <span class="hljs-string">BSTs</span> <span class="hljs-string">for</span> <span class="hljs-string">n</span> <span class="hljs-string">nodes</span><br>        <span class="hljs-string">return</span> <span class="hljs-string">G</span>[<span class="hljs-string">n</span>]<span class="hljs-string">;</span><br>    &#125;<br>&#125;<span class="hljs-string">;</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis"><a href="#Complexity-Analysis" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n^2)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h2 id="Code-Math"><a href="#Code-Math" class="headerlink" title="Code(Math)"></a>Code(Math)</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">numTrees</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> </span>&#123;<br>        <span class="hljs-comment">// Use long long to avoid overflow during intermediate calculations</span><br>        <span class="hljs-type">long</span> <span class="hljs-type">long</span> C = <span class="hljs-number">1</span>;<br><br>        <span class="hljs-comment">// Iteratively compute the Catalan number using the formula:</span><br>        <span class="hljs-comment">// C_n = C(n) = (2n)! / (n! * (n+1)!) = C(2n, n) / (n+1)</span><br>        <span class="hljs-comment">// To avoid overflow from factorials, we use a recurrence relation:</span><br>        <span class="hljs-comment">// C_&#123;n+1&#125; = C_n * 2*(2n+1)/(n+2)</span><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            C = C * <span class="hljs-number">2</span> * (<span class="hljs-number">2</span> * i + <span class="hljs-number">1</span>) / (i + <span class="hljs-number">2</span>);<br>        &#125;<br><br>        <span class="hljs-comment">// Return the result (converted to int type)</span><br>        <span class="hljs-keyword">return</span> C;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-1"><a href="#Complexity-Analysis-1" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(1)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-Different-Binary-Search-Trees-II"><a href="#2-Different-Binary-Search-Trees-II" class="headerlink" title="2. Different Binary Search Trees II;"></a>2. Different Binary Search Trees II;</h1><h2 id="Question-Description"><a href="#Question-Description" class="headerlink" title="Question Description"></a>Question Description</h2><p>Given an integer $n$, how many binary search trees are there that consist of exactly $n$ nodes and whose node values are different from $1$ to $n$ ?</p>
+<p>Return the number of binary search trees that satisfy the question.</p>
+<h2 id="Analysis-1"><a href="#Analysis-1" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Different Binary Search Trees II” question is:<br>$$<br>[start, end] \rightarrow [start,i-1] and [i+1,end]<br>$$<br>The key property of a binary search tree is that the value of the root node is greater than the value of all nodes in the left subtree, and less than the value of all nodes in the right subtree, and the left and right subtrees are also binary search trees. Therefore, when generating all feasible binary search trees assuming that the current sequence length is $n$, if we enumerate the value of the root node as $i$, then according to the properties of the binary search tree, we can know that the set of node values in the left subtree is $[i…i-1]$, and the set of node values in the right subtree is [i+1…n].</p>
+<p>Compared with the original problem, the generation of the left and right subtrees is a subproblem with a reduced sequence length, so we can think of using the backtracking method to solve this problem.</p>
+<p>We define the $generateTrees(start,end)$ function to represent the current value set as $[start,end]$, and return all feasible binary search trees generated by the sequence $[start,end]$. According to the above idea, we consider enumerating the value $i$ in $[start,end]$ as the root of the current binary search tree, then the sequence is divided into two parts:$[start,i-1]$ and $[i+1,end]$. </p>
+<p>We recursively call these two parts, $generateTrees(start, i - 1)$ and $generateTrees(i + 1, end)$, to obtain all feasible left subtrees and feasible right subtrees. Then the last step is to select a tree from the set of feasible left subtrees, and then select a tree from the set of feasible right subtrees to splice to the root node, and put the generated binary search tree into the answer array.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for a binary tree node.</span><br><span class="hljs-comment"> * struct TreeNode &#123;</span><br><span class="hljs-comment"> *     int val;</span><br><span class="hljs-comment"> *     TreeNode *left;</span><br><span class="hljs-comment"> *     TreeNode *right;</span><br><span class="hljs-comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span><br><span class="hljs-comment"> * &#125;;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">// Helper function to recursively generate all unique BSTs within the range [start, end]</span><br>    <span class="hljs-function">vector&lt;TreeNode*&gt; <span class="hljs-title">generateTrees</span><span class="hljs-params">(<span class="hljs-type">int</span> start, <span class="hljs-type">int</span> end)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (start &gt; end) &#123;<br>            <span class="hljs-comment">// Base case: when the range is invalid, return a list with a single null tree</span><br>            <span class="hljs-keyword">return</span> &#123;<span class="hljs-literal">nullptr</span>&#125;;<br>        &#125;<br><br>        vector&lt;TreeNode*&gt; allTrees;<br><br>        <span class="hljs-comment">// Iterate through each value as the root node</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = start; i &lt;= end; i++) &#123;<br>            <span class="hljs-comment">// Recursively generate all possible left subtrees with values less than i</span><br>            vector&lt;TreeNode*&gt; leftTrees = <span class="hljs-built_in">generateTrees</span>(start, i - <span class="hljs-number">1</span>);<br>            <span class="hljs-comment">// Recursively generate all possible right subtrees with values greater than i</span><br>            vector&lt;TreeNode*&gt; rightTrees = <span class="hljs-built_in">generateTrees</span>(i + <span class="hljs-number">1</span>, end);<br><br>            <span class="hljs-comment">// Combine each pair of left and right subtree with the current node i as root</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; left : leftTrees) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; right : rightTrees) &#123;<br>                    TreeNode* currTree = <span class="hljs-keyword">new</span> <span class="hljs-built_in">TreeNode</span>(i);  <span class="hljs-comment">// Create root node</span><br>                    currTree-&gt;left = left;                 <span class="hljs-comment">// Attach left subtree</span><br>                    currTree-&gt;right = right;               <span class="hljs-comment">// Attach right subtree</span><br>                    allTrees.<span class="hljs-built_in">push_back</span>(currTree);          <span class="hljs-comment">// Add this tree to result list</span><br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> allTrees;<br>    &#125;<br><br>    <span class="hljs-comment">// Public function to generate all unique BSTs that store values 1 to n</span><br>    <span class="hljs-function">vector&lt;TreeNode*&gt; <span class="hljs-title">generateTrees</span><span class="hljs-params">(<span class="hljs-type">int</span> n)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (n == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> &#123;&#125;;  <span class="hljs-comment">// Return an empty list if n is 0</span><br>        &#125;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">generateTrees</span>(<span class="hljs-number">1</span>, n);  <span class="hljs-comment">// Generate trees with values from 1 to n</span><br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-2"><a href="#Complexity-Analysis-2" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O\left( \dfrac{4^n}{\sqrt{n}} \right)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O\left( \dfrac{4^n}{\sqrt{n}} \right)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-Robbery-III"><a href="#3-Robbery-III" class="headerlink" title="3. Robbery III"></a>3. Robbery III</h1><h2 id="Question-Description-1"><a href="#Question-Description-1" class="headerlink" title="Question Description"></a>Question Description</h2><p>The thief has discovered a new area to steal. This area has only one entrance, which we call root.</p>
+<p>In addition to the root, each house has only one “parent” house connected to it. After some reconnaissance, the clever thief realized that “the arrangement of all the house in this place is similar to a binary tree.” If two directly connected houses are robbed on the same night, the houses will automatically alarm.</p>
+<p>Given the root of the binary tree. Return the maximum amount that thief can steal without triggering the alarm.</p>
+<h2 id="Analysis-2"><a href="#Analysis-2" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Robbery III” is :</p>
+<p>$$<br>\begin{cases}<br>f[node] &#x3D; node + g[left]+g[right] \\<br>g[node] &#x3D; max(f[left],g[left]) + max(f[right],g[right])<br>\end{cases}<br>$$<br>We can use $f(0)$ to represent the maximum weight sum of nodes selected on the subtree of node $0$ when node $0$ is selected; $g(0)$ represents the maximum weight sum of nodes selected on the subtree of node $0$ when node $0$ is not selected; $l$ and $r$ represent the left and right children of $0$.</p>
+<ol>
+<li>When $o$ is selected, neither the left nor right child of $o$ can be selected. Therefore, the maximum weight of the selected points on the subtree when $o$ is selected is the sum of the maximum weight of $l$ and $r$ when they are not selected, that is $f(0) &#x3D; g(l) + g(r)$.</li>
+<li>When $o$ is not selected, the left and right children of $o$ can be selected or not. For a specific child $x$ of $o$, its contribution to $o$ is the larger value of the sum of the weights when $x$ is selected and not selected. Therefore, $g(o) &#x3D; max(f(l),g(l)) + max(f(r),g(r))$.</li>
+</ol>
+<h2 id="Code-1"><a href="#Code-1" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for a binary tree node.</span><br><span class="hljs-comment"> * struct TreeNode &#123;</span><br><span class="hljs-comment"> *     int val;</span><br><span class="hljs-comment"> *     TreeNode *left;</span><br><span class="hljs-comment"> *     TreeNode *right;</span><br><span class="hljs-comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span><br><span class="hljs-comment"> * &#125;;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">// f[node]: max amount if we rob the current node</span><br>    <span class="hljs-comment">// g[node]: max amount if we do NOT rob the current node</span><br>    unordered_map&lt;TreeNode*, <span class="hljs-type">int</span>&gt; f, g;<br><br>    <span class="hljs-comment">// Depth-first search to fill in DP values</span><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">dfs</span><span class="hljs-params">(TreeNode* node)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">nullptr</span>) &#123;<br>            <span class="hljs-keyword">return</span>;  <span class="hljs-comment">// Base case: null node contributes 0</span><br>        &#125;<br><br>        <span class="hljs-comment">// Recursively solve left and right subtrees</span><br>        <span class="hljs-built_in">dfs</span>(node-&gt;left);<br>        <span class="hljs-built_in">dfs</span>(node-&gt;right);<br><br>        <span class="hljs-comment">// If we rob this node, we cannot rob its children</span><br>        f[node] = node-&gt;val + g[node-&gt;left] + g[node-&gt;right];<br><br>        <span class="hljs-comment">// If we do NOT rob this node, we can choose to rob or not rob its children</span><br>        g[node] = <span class="hljs-built_in">max</span>(f[node-&gt;left], g[node-&gt;left]) + <span class="hljs-built_in">max</span>(f[node-&gt;right], g[node-&gt;right]);<br>    &#125;<br><br>    <span class="hljs-comment">// Main function to start the process and return the maximum amount that can be robbed</span><br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">rob</span><span class="hljs-params">(TreeNode* root)</span> </span>&#123;<br>        <span class="hljs-built_in">dfs</span>(root);<br>        <span class="hljs-comment">// Return the maximum between robbing or not robbing the root</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">max</span>(f[root], g[root]);<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-3"><a href="#Complexity-Analysis-3" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><strong>Time Complexity:</strong> $O(n)$</li>
+<li><strong>Space Complexity:</strong> $O(n)$</li>
+</ul>
+<hr>
+<h1 id="4-Maximum-Path-Sum-in-a-Binary-Tree"><a href="#4-Maximum-Path-Sum-in-a-Binary-Tree" class="headerlink" title="4. Maximum Path Sum in a Binary Tree;"></a>4. Maximum Path Sum in a Binary Tree;</h1><h2 id="Question-Description-2"><a href="#Question-Description-2" class="headerlink" title="Question Description"></a>Question Description</h2><p>A path in a binary tree is defined as a sequence of nodes with an edge between each pair of adjacent nodes. The same node appears at most once in a path sequence. The path contains at least one node and does not necessarily pass through the root node.</p>
+<p>The path sum is the sum of the values of the nodes in the path.</p>
+<p>Given a binary tree root node, return its maximum path sum.</p>
+<h2 id="Analysis-3"><a href="#Analysis-3" class="headerlink" title="Analysis"></a>Analysis</h2><p>The core equation of “Maximum Path Sum in a Binary Tree” question is:<br>$$<br>\begin{cases}<br>leftGain &#x3D; max(maxGain(node-&gt;left),0) \\<br>rightGain &#x3D; max(maxGain(node-&gt;right),0)<br>\end{cases}<br>$$<br>$$<br>priceNewpath &#x3D; node + leftGain + rightGain<br>$$</p>
+<p>To calculate the maximum contribution value of a node in a binary tree, specifically, to find a path starting from the node in the subtree with the node as the root node, so that the sum of the node values on the path is maximized.</p>
+<p>The function is calculated as follows.</p>
+<ol>
+<li>The maximum contribution of an empty node is equal to $0$;</li>
+<li>The maximum contribution of a non-empty node is equal to the sum of the node value and the maximum contribution of its child nodes (for leaf nodes, the maximum contribution is equal to the node value).</li>
+</ol>
+<p>After getting the maximum contribution value of each node according to the function $maxGain$, how to get the maximum path sum of the binary tree? For a node in a binary tree, the maximum path sum of the node depends on the value of the node and the maximum contribution values of the left and right child nodes of the node. If the maximum contribution value of the child node is positive, it is included in the maximum path sum of the node, otherwise it is not included in the maximum path sum of the node. Maintain a global variable $maxSum$ to store the maximum path sum, update the value of $maxSum$ during the recursive process, and the final value of $maxSum$ is the maximum path sum in the binary tree.</p>
+<h2 id="Code-2"><a href="#Code-2" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for a binary tree node.</span><br><span class="hljs-comment"> * struct TreeNode &#123;</span><br><span class="hljs-comment"> *     int val;</span><br><span class="hljs-comment"> *     TreeNode *left;</span><br><span class="hljs-comment"> *     TreeNode *right;</span><br><span class="hljs-comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="hljs-comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span><br><span class="hljs-comment"> * &#125;;</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-comment">// Stores the maximum path sum found so far (global result)</span><br>    <span class="hljs-type">int</span> max_sum = INT_MIN;<br><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-comment">// Helper function to compute the maximum gain from each subtree</span><br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxGain</span><span class="hljs-params">(TreeNode* node)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">nullptr</span>) &#123;<br>            <span class="hljs-comment">// A null node contributes 0 gain</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-comment">// Recursively get the maximum gain from left and right subtrees</span><br>        <span class="hljs-comment">// If the gain is negative, ignore it by taking max with 0</span><br>        <span class="hljs-type">int</span> leftGain = <span class="hljs-built_in">max</span>(<span class="hljs-built_in">maxGain</span>(node-&gt;left), <span class="hljs-number">0</span>);<br>        <span class="hljs-type">int</span> rightGain = <span class="hljs-built_in">max</span>(<span class="hljs-built_in">maxGain</span>(node-&gt;right), <span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// The price of starting a new path where the current node is the highest node</span><br>        <span class="hljs-type">int</span> priceNewpath = node-&gt;val + leftGain + rightGain;<br><br>        <span class="hljs-comment">// Update global maximum if the new path sum is higher</span><br>        max_sum = <span class="hljs-built_in">max</span>(max_sum, priceNewpath);<br><br>        <span class="hljs-comment">// For recursion: return the max gain if continuing the same path upward</span><br>        <span class="hljs-keyword">return</span> node-&gt;val + <span class="hljs-built_in">max</span>(leftGain, rightGain);<br>    &#125;<br><br>    <span class="hljs-comment">// Main function to initiate recursion and return the result</span><br>    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">maxPathSum</span><span class="hljs-params">(TreeNode* root)</span> </span>&#123;<br>        <span class="hljs-built_in">maxGain</span>(root);<br>        <span class="hljs-keyword">return</span> max_sum;<br>    &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Complexity-Analysis-4"><a href="#Complexity-Analysis-4" class="headerlink" title="Complexity Analysis"></a>Complexity Analysis</h3><ul>
+<li><p><strong>Time Complexity:</strong> $O(n)$</p>
+</li>
+<li><p><strong>Space Complexity:</strong> $O(n)$</p>
+</li>
+</ul>
+<hr>
+<h1 id="Common-Deployment-Commands"><a href="#Common-Deployment-Commands" class="headerlink" title="Common Deployment Commands"></a>Common Deployment Commands</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><div class="code-wrapper"><button class="copy-btn" data-clipboard-snippet>copy</button><pre><code class="hljs bash">hexo clean <span class="hljs-comment"># Clear cache</span><br>hexo g <span class="hljs-comment"># Generate static files</span><br>hexo d <span class="hljs-comment"># Deploy to GitHub</span><br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>📬If you have any questions, please contact me:<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+		<p class="copyright-item">
+  		     <span>Permalink:</span>
+  		     <span class="permalink-text"><a href="https://yangchen461.github.io/2025/05/22/Dynamic%20Programming(7)---Buy%20and%20Sell%20Stocks/">https://yangchen461.github.io/2025/05/22/Dynamic%20Programming(7)---Buy%20and%20Sell%20Stocks/</a></span>
+		</p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Study/"># Study</a>
+            
+              <a href="/tags/C/"># C++</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/05/08/Dynamic%20Programming(6)---Buy%20and%20Sell%20Stocks/">Dynamic Programming(6)---Buy and Sell Stocks</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+<style>
+  .permalink-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+  .post-copyright .copyright-item {
+    margin-bottom: 0.5rem;
+  }
+  .post-copyright .copyright-item span.permalink-text {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+  }
+
+</style>
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+
+  .permalink-container {
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>
