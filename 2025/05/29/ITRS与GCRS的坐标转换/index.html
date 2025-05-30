@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YM04CHX6D5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YM04CHX6D5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Yang Chen">
+
+
+
+
+
+<title>ITRS与GCRS的坐标转换 | Hexo</title>
+
+
+
+    <link rel="icon" href="/sky.ico">
+
+
+
+<!-- highlight theme -->
+<!-- Highlight.js style: Atom One Dark -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">YangChen&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">YangChen&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/categories">Categories</a>
+                
+                    <a class="menu-item" href="/tags">Tags</a>
+                
+                    <a class="menu-item" href="/search">Search</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <!-- 阅读进度条（顶部 + 限定宽度 + 居中） -->
+<div id="reading-progress-container">
+  <div class="reading-progress-wrapper">
+    <div id="reading-progress-bar"></div>
+  </div>
+</div>
+
+
+<div class="container">
+  
+  
+    <div class="post-toc">
+  <div class="tocbot-list">
+  </div>
+
+  <div class="tocbot-list-menu">
+    <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+    <a onclick="go_top()">Back to top</a>
+    <a onclick="go_bottom()">Go to bottom</a>
+  </div>
+
+  
+</div>
+
+
+
+
+
+<!-- 字数信息样式 -->
+<style>
+  .reading-meta-box {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
+  }
+</style>
+
+<script>
+  document.ready(
+    function () {
+      tocbot.init({
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        collapseDepth: 1,
+        orderedList: false,
+        scrollSmooth: true,
+      })
+    }
+  )
+
+  function expand_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 6,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "collapse_toc()");
+    b.innerHTML = "Collapse all"
+  }
+
+  function collapse_toc() {
+    var b = document.querySelector(".tocbot-toc-expand");
+    tocbot.init({
+      tocSelector: '.tocbot-list',
+      contentSelector: '.post-content',
+      headingSelector: 'h1, h2, h3, h4, h5',
+      collapseDepth: 1,
+      orderedList: false,
+      scrollSmooth: true,
+    });
+    b.setAttribute("onclick", "expand_toc()");
+    b.innerHTML = "Expand all"
+  }
+
+  function go_top() {
+    window.scrollTo(0, 0);
+  }
+
+  function go_bottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+</script>
+
+  
+
+  
+  <article class="post-wrap">
+    <header class="post-header">
+      <h1 class="post-title">ITRS与GCRS的坐标转换</h1>
+      
+        <div class="post-meta">
+          
+            Author: <a itemprop="author" rel="author" href="/">Yang Chen</a>
+          
+          
+            <span class="post-time">
+              Date: <a href="#">May 29, 2025&nbsp;&nbsp;10:15:28</a>
+            </span>
+          
+          
+            <span class="post-category">
+              Category:
+              
+                <a href="/categories/Attitude-and-track-control/">Attitude and track control</a>
+              
+            </span>
+          
+        </div>
+      
+    </header>
+
+    <div class="post-content">
+      <hr>
+<h1 id="✨-内容摘要"><a href="#✨-内容摘要" class="headerlink" title="✨ 内容摘要"></a>✨ 内容摘要</h1><p>本文件（TN36第5章）系统阐述了从地固参考系（ITRS）到地心天球参考系（GCRS）的转换方法，基于IAU 2000&#x2F;2006决议，引入中间参考系（TIRS、CIRS）和三矩阵模型（W、R、Q），规范了精确天文测量中的坐标转换流程。</p>
+<hr>
+<h1 id="1-ITRS与GCRS的坐标转换公式"><a href="#1-ITRS与GCRS的坐标转换公式" class="headerlink" title="1. ITRS与GCRS的坐标转换公式"></a>1. ITRS与GCRS的坐标转换公式</h1><h2 id="1-1-ITRS与GCRS坐标系"><a href="#1-1-ITRS与GCRS坐标系" class="headerlink" title="1.1 ITRS与GCRS坐标系"></a>1.1 ITRS与GCRS坐标系</h2><ul>
+<li>ITRS: 国际地固参考系;</li>
+<li>GCRS: 地心天球参考系;</li>
+</ul>
+<p>二者之间的联系公式：<br>$$<br>[GCRS] &#x3D; Q(t)R(t)W(t)[ITRS]\tag{5.1}<br>$$</p>
+<ul>
+<li>$Q(t)$ 表示由天球参考系中天极运动所引起的变换；</li>
+<li>$R(t)$表示地球绕该天极所对应轴旋转引起的变换；</li>
+<li>$W(t)$表示极移引起的变换；</li>
+</ul>
+<p>三部分的物理含义如下：</p>
+<ul>
+<li>$Q(t)$：天极运动矩阵（$CIRS$ → $GCRS$）；</li>
+<li>$R(t)$：地球自转矩阵（$TIRS$ → $CIRS$）；</li>
+<li>$W(t)$：极移矩阵（$ITRS$ → $TIRS$）；</li>
+</ul>
+<h3 id="1-1-1-极移变换矩阵的表达式（-W-t-）"><a href="#1-1-1-极移变换矩阵的表达式（-W-t-）" class="headerlink" title="1.1.1 极移变换矩阵的表达式（$W(t)$）"></a>1.1.1 极移变换矩阵的表达式（$W(t)$）</h3><p>从 $ITRS$ 到 $TIRS$（地固中间参考系）的极移变换矩阵为：</p>
+<p>$$<br>W(t) &#x3D; R_3(-s’) \cdot R_2(x_p) \cdot R_1(y_p) \tag{5.3}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>( $x_p$, $y_p$ )：$CIP$ 在 $ITRS$ 中的“极坐标”（单位为角度）；</li>
+<li>( $s’ $)：$TIO$ 定位器（TIO locator），用于定义在极移影响下 $ITRS$ 中非旋转原点在 $CIP$ 赤道上的位置。</li>
+</ul>
+<p>($s’$ ) 的定义为：</p>
+<p>$$<br>s’(t) &#x3D; \frac{1}{2} \int_{t_0}^{t} (x_p \dot{y}_p - \dot{x}_p y_p) , dt \tag{5.4}<br>$$</p>
+<p>在 2003 年前的经典形式中 ( $s’$ ) 常被忽略，但在 $CIO$ 方案中，它是精确确定“瞬时本初子午线”（$TIO$ 子午线）所必须的。</p>
+<hr>
+<h3 id="1-1-2-地球自转矩阵（基于CIO）"><a href="#1-1-2-地球自转矩阵（基于CIO）" class="headerlink" title="1.1.2 地球自转矩阵（基于CIO）"></a>1.1.2 地球自转矩阵（基于CIO）</h3><p>$TIRS$ 到 $CIRS$ 的转换，即围绕 $CIP$ 轴的地球自转，由以下表达式给出：</p>
+<p>$$<br>R(t) &#x3D; R_3(-\mathrm{ERA}) \tag{5.5}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$\mathrm{ERA}$：地球旋转角（<em>Earth Rotation Angle</em>），为在 $CIP$ 赤道上从 $CIO$ 到 $TIO$ 的角度。</li>
+</ul>
+<hr>
+<h3 id="1-1-3-CIP在GCRS中的运动矩阵-Q-t"><a href="#1-1-3-CIP在GCRS中的运动矩阵-Q-t" class="headerlink" title="1.1.3 CIP在GCRS中的运动矩阵($Q(t)$)"></a>1.1.3 CIP在GCRS中的运动矩阵($Q(t)$)</h3><p>在 $CIO$ 程序中，$CIRS$ 到 $GCRS$ 的转换矩阵由 $CIP$ 的运动给出：</p>
+<p>$$<br>Q(t) &#x3D; R_3(-E) \cdot R_2(-d) \cdot R_3(E) \cdot R_3(s) \tag{5.6}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$d$：$CIP$ 与参考轴之间的夹角；</li>
+<li>$E$：$CIP$ 在 $GCRS$中的赤经；</li>
+<li>$s$：$CIO$ 定位器（CIO locator），代表 $CIO$ 在 $CIP$ 赤道上的位置。</li>
+</ul>
+<p>$CIP$ 在$GCRS$中的三维坐标为：</p>
+<p>$$<br>X &#x3D; \sin d \cos E, \quad Y &#x3D; \sin d \sin E, \quad Z &#x3D; \cos d \tag{5.7}<br>$$</p>
+<p>而 $s(t)$ 的表达式为（Capitaine 等，2000）：</p>
+<p>$$<br>s(t) &#x3D; - \int_{t_0}^{t} \frac{X(t)\dot{Y}(t) - Y(t)\dot{X}(t)}{1 + Z(t)} dt - (\sigma_0 N_0 - \Sigma_0 N_0) \tag{5.8}<br>$$</p>
+<p>或等价地（$1 μas$ 精度）：</p>
+<p>$$<br>s(t) &#x3D; -\frac{1}{2} \left[ X(t)Y(t) - X(t_0)Y(t_0) \right] + \int_{t_0}^{t} \dot{X}(t)Y(t) dt - (\sigma_0 N_0 - \Sigma_0 N_0) \tag{5.9}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$\sigma_0 N_0, \Sigma_0 N_0$：$J2000.0$ 时刻 $CIO$ 与 $GCRS$ 赤道交点的偏移量。</li>
+</ul>
+<p>也可用直接表达式表示 $Q(t)$：</p>
+<p>$$<br>Q(t) &#x3D;<br>\begin{bmatrix}<br>1 - aX^2 &amp; -aXY &amp; X \<br>-aXY &amp; 1 - aY^2 &amp; Y \<br>-X &amp; -Y &amp; 1 - a(X^2 + Y^2)<br>\end{bmatrix}<br>\cdot R_3(s)<br>\tag{5.10}<br>$$</p>
+<p>其中 $a &#x3D; \dfrac{1}{1 + \cos d}$，精度为 $1 μas $时可写作：</p>
+<p>$$<br>a \approx \frac{1}{2} + \frac{1}{8}(X^2 + Y^2)<br>$$</p>
+<hr>
+<h3 id="1-1-4-春分点方案的-Q-t-表达式（岁差-章动）"><a href="#1-1-4-春分点方案的-Q-t-表达式（岁差-章动）" class="headerlink" title="1.1.4 春分点方案的 $Q(t)$ 表达式（岁差-章动）"></a>1.1.4 春分点方案的 $Q(t)$ 表达式（岁差-章动）</h3><p>传统方案下，从真岁差赤道系统到 $GCRS$ 的转换矩阵 $Q(t)$ 可有多种表示方式：</p>
+<h4 id="方法一：经典方法（推荐于旧版章程中）"><a href="#方法一：经典方法（推荐于旧版章程中）" class="headerlink" title="方法一：经典方法（推荐于旧版章程中）"></a>方法一：经典方法（推荐于旧版章程中）</h4><p>由以下部分组成：</p>
+<ol>
+<li>章动矩阵（利用赤经与黄赤交角下的章动角 $\Delta\psi, \Delta\epsilon$）；</li>
+<li>四旋转构成的岁差矩阵：</li>
+</ol>
+<p>$$<br>R_1(-\epsilon_0) \cdot R_3(\psi_A) \cdot R_1(\omega_A) \cdot R_3(-\chi_A)<br>$$</p>
+<p>其中 $\psi_A, \omega_A, \chi_A$ 分别为岁差角、倾角变化和黄道沿赤道的岁差。</p>
+<ol start="3">
+<li>单独处理的框架偏差旋转矩阵。</li>
+</ol>
+<h4 id="方法二：Fukushima-2003-推荐"><a href="#方法二：Fukushima-2003-推荐" class="headerlink" title="方法二：Fukushima (2003) 推荐"></a>方法二：Fukushima (2003) 推荐</h4><p>该方法是 Williams (1994) 方法在 GCRS 框架下的扩展，更简洁，且不需额外加入框架偏差：</p>
+<p>$$<br>Q(t) &#x3D; R_1(-\epsilon) \cdot R_3(-\psi) \cdot R_1(\bar{\phi}) \cdot R_3(\bar{\gamma})<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$\epsilon, \psi$：包括偏差、岁差和章动的总量；</li>
+<li>$\bar{\phi}$：当前黄道与 GCRS 赤道的夹角；</li>
+<li>$\bar{\gamma}$：当前黄道与 GCRS 赤道交点的赤经。</li>
+</ul>
+<h3 id="1-1-5-天球中间天极（CIP）在-ITRS-中的运动"><a href="#1-1-5-天球中间天极（CIP）在-ITRS-中的运动" class="headerlink" title="1.1.5 天球中间天极（CIP）在 ITRS 中的运动"></a>1.1.5 天球中间天极（CIP）在 ITRS 中的运动</h3><p>用于公式 (5.3) 中的极移参数 $x_p$ 和 $y_p$，若不直接由观测数据确定，则推荐使用 $IERS$ 发布的标准极坐标，并增加两个附加项以考虑以下影响：</p>
+<ul>
+<li><strong>海洋潮汐效应</strong> (<em>ocean tides</em>)</li>
+<li><strong>&lt; 2 天周期的强迫项</strong> (<em>libration</em>)</li>
+</ul>
+<p>表达式为：</p>
+<p>$$<br>(x_p, y_p) &#x3D; (x, y)<em>{\text{IERS}} + (\Delta x, \Delta y)</em>{\text{ocean tides}} + (\Delta x, \Delta y)_{\text{libration}} \tag{5.11}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$(x, y)_{\text{IERS}}$：$IERS$ 发布的极坐标；</li>
+<li>$(\Delta x, \Delta y)_{\text{ocean tides}}$：海洋潮汐引起的日、半日周期极移；——极移中的海洋潮汐变化；</li>
+<li>$(\Delta x, \Delta y)_{\text{libration}}$：未包含在 $IAU 2000$ 章动模型中的短周期强迫极移。——极移中的短周期强迫项；</li>
+</ul>
+<h3 id="1-1-6-TIO在ITRS中的位置-s’"><a href="#1-1-6-TIO在ITRS中的位置-s’" class="headerlink" title="1.1.6 TIO在ITRS中的位置($s’$)"></a>1.1.6 TIO在ITRS中的位置($s’$)</h3><p>公式$ (5.3)$ 中的 TIO 定位器 $s’(t)$，只对<strong>最大幅度的极移分量敏感</strong>。部分分量可从观测中获得，也可以使用 $IERS$ 数据外推估算。</p>
+<p>其主要近似项（单位 μas）为（Capitaine et al., 1986）：</p>
+<p>$$<br>s’ &#x3D; -0.0015 \left( \frac{a_c^2}{1.2} + a_a^2 \right)t \tag{5.12}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$a_c$：钱德勒摆动（<em>Chandler wobble</em>）平均幅度（单位：角秒）；</li>
+<li>$a_a$：周年极移平均幅度（单位：角秒）；</li>
+<li>$t$：以儒略世纪为单位的时间变量。</li>
+</ul>
+<p>采用当前观测值（Lambert 和 Bizouard，2002），得出：</p>
+<p>$$<br>s’(t) &#x3D; -47\ \mu\text{as} \cdot t \tag{5.13}<br>$$</p>
+<p>即使摆动幅度高达 $0.5″$ 和 $0.1″$，未来一百年内 $s’$ 也不会超过 $0.4 mas$。</p>
+<h3 id="1-1-7-地球旋转角（ERA）"><a href="#1-1-7-地球旋转角（ERA）" class="headerlink" title="1.1.7 地球旋转角（ERA）"></a>1.1.7 地球旋转角（ERA）</h3><p>在公式 $(5.5)$ 中定义 $UT1$ 和 $ERA$ 的关系（Capitaine et al., 2000）为：</p>
+<p>$$<br>\mathrm{ERA}(T_u) &#x3D; 2\pi \left(0.7790572732640 + 1.00273781191135448 \cdot T_u \right) \tag{5.14}<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$T_u &#x3D; \text{Julian UT1 Date} - 2451545.0$</li>
+</ul>
+<p>为减少含入误差，也可以写作：</p>
+<p>$$<br>\mathrm{ERA}(T_u) &#x3D; 2\pi \left(\text{UT1 日小数部分} + 0.7790572732640 + 0.00273781191135448 \cdot T_u \right) \tag{5.15}<br>$$</p>
+<p>此定义的优点是：</p>
+<ul>
+<li><strong>不受章动模型与天极偏移观测误差影响（在 μas 级别）</strong>；</li>
+<li>ERA 是一种非常稳定的时间变量定义。</li>
+</ul>
+<h3 id="1-1-8-GCRS-中-CIP-的强迫运动"><a href="#1-1-8-GCRS-中-CIP-的强迫运动" class="headerlink" title="1.1.8 GCRS 中 CIP 的强迫运动"></a>1.1.8 GCRS 中 CIP 的强迫运动</h3><p>用于公式 (5.10) 的参数 $X(t), Y(t)$，可表示为时间函数的级数展开：</p>
+<p>$$<br>\begin{aligned}<br>X(t) &amp;&#x3D; -0.016617’’ + 2004.191898’’t - 0.4297829’’t^2 - 0.19861834’’t^3 + \cdots \<br>Y(t) &amp;&#x3D; -0.006951’’ - 0.025896’’t - 22.4072747’’t^2 + 0.00190059’’t^3 + \cdots<br>\end{aligned}\tag{5.16}<br>$$</p>
+<p>这些多项式项反映：</p>
+<ul>
+<li><strong>J2000.0</strong> 处的天极偏移；</li>
+<li><strong>IAU 2006</strong> 岁差模型；</li>
+<li><strong>IAU 2000A</strong> 章动模型；</li>
+<li>被称为 <strong>IAU 2006&#x2F;2000A 预报模型</strong>。</li>
+</ul>
+<p>后续还有附加的傅里叶（周期性）项、Poisson 项（含 $t \sin$, $t \cos$, $t^2 \sin$ 等项）：</p>
+<ul>
+<li>参数可从表 5.2a（X 坐标）与表 5.2b（Y 坐标）中查得；</li>
+<li>时间变量 $t$ 定义如公式 (5.2)。</li>
+</ul>
+<h2 id="1-2-坐标系定义"><a href="#1-2-坐标系定义" class="headerlink" title="1.2 坐标系定义"></a>1.2 坐标系定义</h2><ul>
+<li>BCRS: 太阳系的“质心天球参考系统”；</li>
+<li>GCRS: 地球的“地心天球参考系统”；</li>
+<li>CIRS: 天球中间参考系;</li>
+<li>CIP： 天球中间天极；</li>
+<li>CEP：天球历书天极；</li>
+<li>CIO：天球中间原点；</li>
+<li>TIO：地固中间原点；</li>
+<li>ERA：地球旋转角；</li>
+<li>TCB：质心协调时；</li>
+<li>TCG：地心协调时；</li>
+<li>TT：地球时；</li>
+<li>TIRS：（地固中间参考系）；</li>
+<li>TIRS：极移后的地面参考系，使用 CIP 为 z 轴，TIO 为 x 轴；</li>
+<li>CIRS：地球自转后的天球参考系，使用 CIP 为 z 轴，CIO 为 x 轴。</li>
+</ul>
+<p>参数$t$的定义为：<br>$$<br>t &#x3D; \frac{\mathrm{TT} - \text{2000年1月1日12时TT}}{36525\ \text{天}} \tag{5.2}<br>$$</p>
+<h2 id="1-3-天球中间天极（CIP）运动的示意"><a href="#1-3-天球中间天极（CIP）运动的示意" class="headerlink" title="1.3 天球中间天极（CIP）运动的示意"></a>1.3 天球中间天极（CIP）运动的示意</h2><p>CIP 是一个中间天极，用于将 ITRS 中天极在 GCRS 中的运动分解为天球部分和地球部分。该约定如下：</p>
+<ul>
+<li><strong>天球运动部分（即岁差-章动）</strong>：包含在 GCRS 中周期大于2天的所有项（即频率在 -0.5 到 +0.5 恒星日周期&#x2F;cpsd 之间）；</li>
+<li><strong>地球运动部分（即极移）</strong>：包含在 ITRS 中频率小于 -1.5 cpsd 或大于 -0.5 cpsd 的所有项（即排除反向日运动频带）。</li>
+</ul>
+<h2 id="1-4-天球转换程序"><a href="#1-4-天球转换程序" class="headerlink" title="1.4 天球转换程序"></a>1.4 天球转换程序</h2><p>根据 NFA 推荐，这两个程序因对 CIP 赤道上参考原点（即春分点或 CIO）选择不同而区分为：</p>
+<ul>
+<li><strong>基于春分点的程序（equinox-based）</strong>；</li>
+<li><strong>基于CIO的程序（CIO-based）</strong>。</li>
+</ul>
+<p>每种程序的本质区别在于转换矩阵中 $Q(t)$ 和 $R(t)$ 的表示形式，而极移变换矩阵 $W(t)$ 在两种程序中是相同的。</p>
+<h2 id="1-5-岁差章动模式"><a href="#1-5-岁差章动模式" class="headerlink" title="1.5 岁差章动模式"></a>1.5 岁差章动模式</h2><h3 id="1-5-1-岁差"><a href="#1-5-1-岁差" class="headerlink" title="1.5.1 岁差"></a>1.5.1 岁差</h3><p>岁差的坐标变换采用与 IERS Technical Note No. 32 相同的表示方法，使用 <strong>IAU 2006 岁差角</strong>：</p>
+<ul>
+<li>$\psi_A$：岁差在黄经方向上的分量；</li>
+<li>$\omega_A$：岁差在黄赤交角方向上的分量；</li>
+<li>$\chi_A$：黄道平面的岁差量；</li>
+<li>$\epsilon_0$：J2000.0 的黄赤交角（84381.406″）；</li>
+</ul>
+<p>变换矩阵由如下旋转组合：</p>
+<p>$$<br>P &#x3D; R_1(-\epsilon_0) \cdot R_3(\psi_A) \cdot R_1(\omega_A) \cdot R_3(-\chi_A)<br>$$</p>
+<p>其中岁差角的多项式展开为（单位为角秒）：</p>
+<p>$$<br>\begin{aligned}<br>\psi_A &amp;&#x3D; 5038.481507,t - 1.0790069,t^2 - 0.00114045,t^3 + 0.000132851,t^4 - 0.0000000951,t^5 \<br>\omega_A &amp;&#x3D; \epsilon_0 - 0.025754,t + 0.0512623,t^2 - 0.00772503,t^3 - 0.000000467,t^4 + 0.0000003337,t^5 \<br>\chi_A &amp;&#x3D; 10.556403,t - 2.3814292,t^2 - 0.00121197,t^3 + 0.000170663,t^4 - 0.0000000560,t^5<br>\end{aligned}\tag{5.17–5.19}<br>$$</p>
+<p>其中 $t$ 为 TT 时间自 J2000.0 起的儒略世纪数（见公式 5.2）。</p>
+<h3 id="1-5-2-章动"><a href="#1-5-2-章动" class="headerlink" title="1.5.2 章动"></a>1.5.2 章动</h3><p>章动模型采用 <strong>IAU 2000A</strong>，由 Mathews、Herring 和 Buffett（2002）开发，具有 1365 个项，分别描述：</p>
+<ul>
+<li>$\Delta \psi$：沿黄经方向的章动角；</li>
+<li>$\Delta \epsilon$：沿黄赤交角方向的章动角。</li>
+</ul>
+<p>表达形式为：</p>
+<p>$$<br>\Delta\psi &#x3D; \sum_i \left( A_{s,i} + A’<em>{s,i} t \right) \sin \Phi_i + \left( A</em>{c,i} + A’_{c,i} t \right) \cos \Phi_i<br>$$</p>
+<p>$$<br>\Delta\epsilon &#x3D; \sum_i \left( B_{s,i} + B’<em>{s,i} t \right) \sin \Phi_i + \left( B</em>{c,i} + B’_{c,i} t \right) \cos \Phi_i<br>$$</p>
+<p>其中：</p>
+<ul>
+<li>$\Phi_i$：由月球与行星运动参数构成的线性组合，称为<strong>基本章动因子</strong> (<em>Delaunay 参数</em>)；</li>
+<li>角频参数取自公式 5.43 和 5.44；</li>
+<li>各项系数（振幅、时间导数）来自 IERS 文件 <code>tab5.3a.txt</code> 和 <code>tab5.3b.txt</code>；</li>
+<li>表格中仅列出振幅大于 0.1 微角秒（μas）的项。</li>
+</ul>
+<h3 id="1-5-3-J2-变化引起的修正（地球扁率变化）"><a href="#1-5-3-J2-变化引起的修正（地球扁率变化）" class="headerlink" title="1.5.3 J2 变化引起的修正（地球扁率变化）"></a>1.5.3 J2 变化引起的修正（地球扁率变化）</h3><p>IAU 2006 决议采纳了更精确的地球自转相关参数，其中包括地球扁率项 $J_2$ 的长期变化率：</p>
+<ul>
+<li>$\dot{J}_2 &#x3D; -2.6 \times 10^{-11}\ \text{yr}^{-1}$</li>
+</ul>
+<p>该项影响黄道面与赤道的相对运动，因此被纳入新模型中。</p>
+<p>相应地，X、Y 坐标中的某些 <strong>Poisson 项</strong> 发生微调（见公式 5.19）：</p>
+<p>$$<br>\begin{aligned}<br>dX_{J2d} &amp;&#x3D; 18.8,t \sin \Omega + 1.4,t \sin 2(F - D + \Omega) \<br>dY_{J2d} &amp;&#x3D; -25.6,t \cos \Omega - 1.6,t \cos 2(F - D + \Omega)<br>\end{aligned}<br>$$</p>
+<p>这些变化已包含在 IAU 2006&#x2F;2000A 的 $X(t), Y(t)$ 表达式中。</p>
+<h2 id="1-6-天体方向的计算与中间系统"><a href="#1-6-天体方向的计算与中间系统" class="headerlink" title="1.6 天体方向的计算与中间系统"></a>1.6 天体方向的计算与中间系统</h2><p>ITRS → GCRS 的变换可以分为如下三步：</p>
+<ol>
+<li><strong>极移（polar motion）</strong><br> ITRS → TIRS，应用矩阵 $W(t)$，消除极移影响；</li>
+<li><strong>地球自转（Earth Rotation）</strong><br> TIRS → CIRS，应用矩阵 $R(t)$，通过 ERA 表达地球自转；</li>
+<li><strong>天极运动（precession-nutation）</strong><br> CIRS → GCRS，应用矩阵 $Q(t)$，考虑 $CIP$ 在 $GCRS$ 中的运动。</li>
+</ol>
+<p>即最终转换表达为：<br>$$<br>[GCRS] &#x3D; Q(t)R(t)W(t)[ITRS]<br>$$</p>
+<h3 id="1-6-1-系统对应关系总结表"><a href="#1-6-1-系统对应关系总结表" class="headerlink" title="1.6.1 系统对应关系总结表"></a>1.6.1 系统对应关系总结表</h3><p><img src="C:\Users\11360\AppData\Roaming\Typora\typora-user-images\image-20250526164508299.png" alt="image-20250526164508299"></p>
+<p><strong>CIO路径具有更高的数值稳定性；</strong></p>
+<h2 id="1-7-软件实现"><a href="#1-7-软件实现" class="headerlink" title="1.7 软件实现"></a>1.7 软件实现</h2><p>SOFA 库中的核心函数如：</p>
+<p><img src="C:\Users\11360\AppData\Roaming\Typora\typora-user-images\image-20250526164856063.png" alt="image-20250526164856063"></p>
+<p>所有这些程序遵循 IAU 决议，具有微角秒级的计算精度，广泛应用于：</p>
+<ul>
+<li>VLBI 天文测量；</li>
+<li>高精度卫星轨道计算；</li>
+<li>星历数据服务；</li>
+<li>高分辨率天文图像配准。</li>
+</ul>
+<p>SOFA 库及其文档可从官方页面获取：<br> 👉 <a target="_blank" rel="noopener" href="https://www.iausofa.org/">https://www.iausofa.org</a></p>
+<h2 id="1-8-天球-地固转换流程图"><a href="#1-8-天球-地固转换流程图" class="headerlink" title="1.8 天球-地固转换流程图"></a>1.8 天球-地固转换流程图</h2><p>为帮助用户理解 IAU 坐标转换的标准结构，IAU NFA 工作组提供了一张流程图，总结了 ITRS 与 GCRS 之间的转换路径以及中间参考系统的使用。</p>
+<h2 id="流程核心要点如下："><a href="#流程核心要点如下：" class="headerlink" title="流程核心要点如下："></a>流程核心要点如下：</h2><h3 id="1-地固参考系-ITRS"><a href="#1-地固参考系-ITRS" class="headerlink" title="1. 地固参考系 ITRS"></a>1. 地固参考系 ITRS</h3><ul>
+<li>输入坐标；</li>
+<li>由测地观测给出；</li>
+<li>涉及极移参数。</li>
+</ul>
+<h3 id="2-地固中间系-TIRS"><a href="#2-地固中间系-TIRS" class="headerlink" title="2. 地固中间系 TIRS"></a>2. 地固中间系 TIRS</h3><ul>
+<li>消除极移；</li>
+<li>通过极移矩阵 $W(t)$ 转换；</li>
+<li>使用极坐标 $x_p, y_p$ 和 TIO 定位器 $s’$。</li>
+</ul>
+<h3 id="3-天球中间系-CIRS"><a href="#3-天球中间系-CIRS" class="headerlink" title="3. 天球中间系 CIRS"></a>3. 天球中间系 CIRS</h3><ul>
+<li>消除地球自转；</li>
+<li>使用 ERA（地球旋转角）通过 $R(t)$ 转换；</li>
+<li>CIO 路径避免依赖春分点。</li>
+</ul>
+<h3 id="4-地心天球系-GCRS"><a href="#4-地心天球系-GCRS" class="headerlink" title="4. 地心天球系 GCRS"></a>4. 地心天球系 GCRS</h3><ul>
+<li>表示恒星背景下的位置；</li>
+<li>使用 CIP 的天球坐标 $X, Y$，以及 CIO 定位器 $s$，通过矩阵 $Q(t)$ 完成最终变换。</li>
+</ul>
+<hr>
+<h3 id="完整转换表达式："><a href="#完整转换表达式：" class="headerlink" title="完整转换表达式："></a>完整转换表达式：</h3><p>$$<br>\text{GCRS坐标} &#x3D; Q(t) \cdot R(t) \cdot W(t) \cdot \text{ITRS坐标}<br>$$</p>
+<p>流程图清楚地区分了：</p>
+<ul>
+<li>每个变换步骤所涉及的物理效应；</li>
+<li>所属参考系；</li>
+<li>所用参数与软件支持点；</li>
+<li>IAU 决议和 IERS 数据在每一阶段中的作用。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>IAU 2000&#x2F;2006 决议所定义的 ITRS → GCRS 转换是现代高精度天文和空间测量中不可或缺的部分，涉及：</p>
+<ul>
+<li>多级坐标系（ITRS, TIRS, CIRS, GCRS）；</li>
+<li>分离处理的地球运动机制（极移、自转、章动）；</li>
+<li>高精度模型（IAU 2006 岁差 + IAU 2000A 章动）；</li>
+<li>软件支持（SOFA）与数据支持（IERS）；</li>
+<li>统一的非旋转原点（CIO-TIO）定义路径。</li>
+</ul>
+<p>此变换框架是精确建立天体参考系、处理测地观测和空间导航数据的国际标准。</p>
+<hr>
+<h1 id="2-中英对照术语表"><a href="#2-中英对照术语表" class="headerlink" title="2. 中英对照术语表"></a>2. 中英对照术语表</h1><h2 id="2-1-🌍-坐标系统与参考框架"><a href="#2-1-🌍-坐标系统与参考框架" class="headerlink" title="2.1 🌍 坐标系统与参考框架"></a>2.1 🌍 坐标系统与参考框架</h2><table>
+<thead>
+<tr>
+<th>中文术语</th>
+<th>英文术语</th>
+<th>简写</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>国际地固参考系统</td>
+<td>International Terrestrial Reference System</td>
+<td>ITRS</td>
+<td>固定于地球本体，用于地面站等的空间位置描述</td>
+</tr>
+<tr>
+<td>国际地固参考框架</td>
+<td>International Terrestrial Reference Frame</td>
+<td>ITRF</td>
+<td>ITRS 的数值实现，由 IERS 发布</td>
+</tr>
+<tr>
+<td>地固中间参考系</td>
+<td>Terrestrial Intermediate Reference System</td>
+<td>TIRS</td>
+<td>处理极移后的 ITRS，以 CIP 为 z 轴、TIO 为 x 轴</td>
+</tr>
+<tr>
+<td>天球中间参考系</td>
+<td>Celestial Intermediate Reference System</td>
+<td>CIRS</td>
+<td>处理地球自转后的系统，以 CIP 为 z 轴、CIO 为 x 轴</td>
+</tr>
+<tr>
+<td>地心天球参考系统</td>
+<td>Geocentric Celestial Reference System</td>
+<td>GCRS</td>
+<td>观察天体的最终参考系统，静止于地心，无自转和章动</td>
+</tr>
+<tr>
+<td>国际天球参考框架</td>
+<td>International Celestial Reference Frame</td>
+<td>ICRF</td>
+<td>GCRS 的数值实现，由 VLBI 实现并更新</td>
+</tr>
+<tr>
+<td>质心天球参考系统</td>
+<td>Barycentric Celestial Reference System</td>
+<td>BCRS</td>
+<td>整个太阳系的惯性参考系，静止于太阳系质心</td>
+</tr>
+</tbody></table>
+<h2 id="2-2-🧭-关键点与方向定义"><a href="#2-2-🧭-关键点与方向定义" class="headerlink" title="2.2 🧭 关键点与方向定义"></a>2.2 🧭 关键点与方向定义</h2><table>
+<thead>
+<tr>
+<th>中文术语</th>
+<th>英文术语</th>
+<th>简写</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>天球中间天极</td>
+<td>Celestial Intermediate Pole</td>
+<td>CIP</td>
+<td>包含岁差与章动但不包含日变化的天极</td>
+</tr>
+<tr>
+<td>天球中间原点</td>
+<td>Celestial Intermediate Origin</td>
+<td>CIO</td>
+<td>非旋转原点，定义 ERA 的起点</td>
+</tr>
+<tr>
+<td>地固中间原点</td>
+<td>Terrestrial Intermediate Origin</td>
+<td>TIO</td>
+<td>ITRS 中 CIP 赤道上的非旋转原点</td>
+</tr>
+<tr>
+<td>春分点</td>
+<td>True Equinox</td>
+<td>-</td>
+<td>用于传统岁差-章动定义，容易引入误差</td>
+</tr>
+<tr>
+<td>非旋转原点</td>
+<td>Non-Rotating Origin</td>
+<td>NRO</td>
+<td>CIO 和 TIO 的本质定义基础，随极移&#x2F;章动运动但不旋转</td>
+</tr>
+</tbody></table>
+<h2 id="2-3-🔁-转换与矩阵"><a href="#2-3-🔁-转换与矩阵" class="headerlink" title="2.3 🔁 转换与矩阵"></a>2.3 🔁 转换与矩阵</h2><table>
+<thead>
+<tr>
+<th>中文术语</th>
+<th>英文术语</th>
+<th>矩阵符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>极移矩阵</td>
+<td>Polar Motion Matrix</td>
+<td><code>W(t)</code></td>
+<td>ITRS → TIRS，考虑 <code>x_p</code>, <code>y_p</code>, <code>s&#39;</code></td>
+</tr>
+<tr>
+<td>地球自转矩阵</td>
+<td>Earth Rotation Matrix</td>
+<td><code>R(t)</code></td>
+<td>TIRS → CIRS，基于地球旋转角 ERA</td>
+</tr>
+<tr>
+<td>天极运动矩阵</td>
+<td>Precession-Nutation Matrix</td>
+<td><code>Q(t)</code></td>
+<td>CIRS → GCRS，考虑章动、岁差、CIO 定位器</td>
+</tr>
+<tr>
+<td>总体变换</td>
+<td>Coordinate Transformation</td>
+<td>–</td>
+<td><code>GCRS = Q(t) · R(t) · W(t) · ITRS</code></td>
+</tr>
+</tbody></table>
+<h2 id="2-4-🧮-时间与参数"><a href="#2-4-🧮-时间与参数" class="headerlink" title="2.4 🧮 时间与参数"></a>2.4 🧮 时间与参数</h2><table>
+<thead>
+<tr>
+<th>中文术语</th>
+<th>英文术语</th>
+<th>简写</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>地球旋转角</td>
+<td>Earth Rotation Angle</td>
+<td>ERA</td>
+<td>CIO → TIO 的赤道角距</td>
+</tr>
+<tr>
+<td>世界时</td>
+<td>Universal Time</td>
+<td>UT1</td>
+<td>与 ERA 成比例，代表地球自转实时时间</td>
+</tr>
+<tr>
+<td>原子时</td>
+<td>International Atomic Time</td>
+<td>TAI</td>
+<td>精密时钟时间，UTC 的基础</td>
+</tr>
+<tr>
+<td>地球时</td>
+<td>Terrestrial Time</td>
+<td>TT</td>
+<td>TAI + 32.184 秒，用于天体力学计算</td>
+</tr>
+<tr>
+<td>地心协调时</td>
+<td>Geocentric Coordinate Time</td>
+<td>TCG</td>
+<td>GCRS 中的时间坐标</td>
+</tr>
+<tr>
+<td>质心协调时</td>
+<td>Barycentric Coordinate Time</td>
+<td>TCB</td>
+<td>BCRS 中的时间坐标</td>
+</tr>
+<tr>
+<td>TIO 定位器</td>
+<td>TIO locator</td>
+<td><code>s&#39;</code></td>
+<td>TIO 在 CIP 赤道上的角位置</td>
+</tr>
+<tr>
+<td>CIO 定位器</td>
+<td>CIO locator</td>
+<td><code>s</code></td>
+<td>CIO 在 CIP 赤道上的角位置</td>
+</tr>
+</tbody></table>
+<h2 id="2-5-🌐-模型与组织"><a href="#2-5-🌐-模型与组织" class="headerlink" title="2.5 🌐 模型与组织"></a>2.5 🌐 模型与组织</h2><table>
+<thead>
+<tr>
+<th>中文术语</th>
+<th>英文术语</th>
+<th>缩写</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>岁差-章动模型</td>
+<td>Precession-Nutation Model</td>
+<td>IAU 2006&#x2F;2000A</td>
+<td>包括 IAU 2006 岁差与 IAU 2000A 章动</td>
+</tr>
+<tr>
+<td>岁差模型</td>
+<td>Precession Model</td>
+<td>IAU 2006</td>
+<td>Capitaine 等提出，取代旧1976模型</td>
+</tr>
+<tr>
+<td>章动模型</td>
+<td>Nutation Model</td>
+<td>IAU 2000A</td>
+<td>Mathews 等提出，高精度含 1365 项</td>
+</tr>
+<tr>
+<td>自由核章动</td>
+<td>Free Core Nutation</td>
+<td>FCN</td>
+<td>地幔与流体核之间相互作用引起的自由章动</td>
+</tr>
+<tr>
+<td>国际天文学联合会</td>
+<td>International Astronomical Union</td>
+<td>IAU</td>
+<td>定义所有天文参考系统标准</td>
+</tr>
+<tr>
+<td>国际地球自转服务</td>
+<td>International Earth Rotation and Reference Systems Service</td>
+<td>IERS</td>
+<td>提供极移、章动、EOP等观测数据</td>
+</tr>
+<tr>
+<td>基础天文标准程序库</td>
+<td>Standards of Fundamental Astronomy</td>
+<td>SOFA</td>
+<td>IAU 提供的高精度天文计算程序库</td>
+</tr>
+</tbody></table>
+<h2 id="2-6-📌-其他相关术语"><a href="#2-6-📌-其他相关术语" class="headerlink" title="2.6 📌 其他相关术语"></a>2.6 📌 其他相关术语</h2><table>
+<thead>
+<tr>
+<th>中文术语</th>
+<th>英文术语</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>极移</td>
+<td>Polar Motion</td>
+<td>地球极轴相对于地壳的运动</td>
+</tr>
+<tr>
+<td>岁差</td>
+<td>Precession</td>
+<td>地球自转轴缓慢圆周摆动</td>
+</tr>
+<tr>
+<td>章动</td>
+<td>Nutation</td>
+<td>岁差上的周期性短期摆动</td>
+</tr>
+<tr>
+<td>偏差</td>
+<td>Frame Bias</td>
+<td>坐标系统在 J2000.0 时刻的偏移</td>
+</tr>
+<tr>
+<td>潮汐章动</td>
+<td>Tidal Libration</td>
+<td>由地球形状与月日引潮力导致的日&#x2F;半日周期章动项</td>
+</tr>
+<tr>
+<td>钱德勒摆动</td>
+<td>Chandler Wobble</td>
+<td>地球极轴以约 14 个月周期摆动的现象</td>
+</tr>
+</tbody></table>
+<hr>
+<p>📬If you have any questions, please contact me:<br>📧 <code>cy2102056@gmail.com</code></p>
+
+    </div>
+
+    
+      <section class="post-copyright">
+        
+          <p class="copyright-item">
+            <span>Author:</span>
+            <span>Yang Chen</span>
+          </p>
+        
+        
+          <p class="copyright-item">
+            <span>License:</span>
+            <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+          </p>
+        
+        
+		<p class="copyright-item">
+  		     <span>Permalink:</span>
+  		     <span class="permalink-text"><a href="https://yangchen461.github.io/2025/05/29/ITRS%E4%B8%8EGCRS%E7%9A%84%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/">https://yangchen461.github.io/2025/05/29/ITRS%E4%B8%8EGCRS%E7%9A%84%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/</a></span>
+		</p>
+        
+      </section>
+    
+
+    <section class="post-tags">
+      <div>
+        <span>Tag(s):</span>
+        <span class="tag">
+          
+            
+              <a href="/tags/Study/"># Study</a>
+            
+              <a href="/tags/Attitude-and-track-control/"># Attitude and track control</a>
+            
+          
+        </span>
+      </div>
+      <div>
+        <a href="javascript:window.history.back();">back</a>
+        <span>· </span>
+        <a href="/">home</a>
+      </div>
+    </section>
+
+    <section class="post-nav">
+      
+      
+        <a class="next" rel="next" href="/2025/05/22/Dynamic%20Programming(7)---Buy%20and%20Sell%20Stocks/">Dynamic Programming(7)---Application of Dynamic Programming in Trees</a>
+      
+    </section>
+
+    <!-- ✅ Giscus 评论系统：放在文章内 -->
+    <div class="giscus-wrapper" style="margin-top: 3rem;">
+      <div id="giscus_container"></div>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.setAttribute("data-repo", "yangchen461/yangchen461.github.io");
+          script.setAttribute("data-repo-id", "R_kgDOOMPwGg");
+          script.setAttribute("data-category", "Announcements");
+          script.setAttribute("data-category-id", "DIC_kwDOOMPwGs4CoZpM");
+          script.setAttribute("data-mapping", "pathname");
+          script.setAttribute("data-strict", "0");
+          script.setAttribute("data-reactions-enabled", "1");
+          script.setAttribute("data-emit-metadata", "0");
+          script.setAttribute("data-input-position", "bottom");
+          script.setAttribute("data-theme", "preferred_color_scheme");
+          script.setAttribute("data-lang", "zh-CN");
+          script.setAttribute("crossorigin", "anonymous");
+          script.async = true;
+          document.getElementById("giscus_container").appendChild(script);
+        });
+      </script>
+    </div>
+
+  </article> <!-- ✅ 正确关闭 article -->
+</div> <!-- ✅ 正确关闭 container -->
+
+<style>
+  .permalink-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+  .post-copyright .copyright-item {
+    margin-bottom: 0.5rem;
+  }
+  .post-copyright .copyright-item span.permalink-text {
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+  }
+
+</style>
+
+
+<!-- 阅读信息：固定在右侧目录按钮下方 -->
+<aside class="reading-meta-sidebar">
+  
+</aside>
+
+<!-- 样式 -->
+<style>
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .reading-progress-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 100%;
+    background: transparent;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 固定在目录按钮下方的阅读信息 */
+  .reading-meta-sidebar {
+    position: fixed;
+    top: 220px; /* ✅ 调整此值来控制距顶部高度 */
+    right: 30px;
+    font-size: 0.88rem;
+    color: #888;
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    z-index: 999;
+    line-height: 1.6;
+    pointer-events: none;
+  }
+
+  .reading-meta-box {
+    text-align: left;
+  }
+
+  .permalink-container {
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+    word-break: break-all;
+    text-align: center;
+  }
+  .permalink-container a {
+    color: #3498db;
+    font-size: 0.9rem;
+  }
+</style>
+
+<!-- 脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+            </div>
+            <!-- 阅读进度条容器：铺满屏幕顶部 -->
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+
+<footer id="footer" class="footer">
+  <div class="copyright">
+    <div>
+      © Yang Chen | Powered by 
+      <a href="https://hexo.io" target="_blank">Hexo</a> & 
+      <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a>
+    </div>
+    <div class="busuanzi-box">
+      <span id="busuanzi_container_site_pv" style="display:none">
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      |
+      <span id="busuanzi_container_site_uv" style="display:none">
+        本站访客数 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- 样式 -->
+<style>
+  /* 阅读进度条样式 */
+  #reading-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  #reading-progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 0.2s ease-out;
+  }
+
+  /* 不蒜子样式 */
+  .busuanzi-box {
+    font-size: 0.9rem;
+    color: #999;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- 阅读进度条脚本 -->
+<script>
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('reading-progress-bar').style.width = progress + '%';
+  });
+</script>
+
+<!-- 不蒜子统计脚本 -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      e.trigger.innerText = '复制成功！';
+      setTimeout(() => {
+        e.trigger.innerHTML = '<i class="fa fa-copy"></i>';
+      }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const clipboard = new ClipboardJS('.copy-btn', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+
+    clipboard.on('success', function (e) {
+      const originalText = e.trigger.innerText;
+      e.trigger.innerText = '已复制';
+      setTimeout(() => {
+        e.trigger.innerText = originalText;
+      }, 1500);
+    });
+
+    clipboard.on('error', function (e) {
+      e.trigger.innerText = '复制失败';
+    });
+  });
+</script>
+
+
+    </div>
+</body>
+
+</html>

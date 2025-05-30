@@ -26,7 +26,7 @@
 
 
 
-<title>Archives: 2025/4 | Hexo</title>
+<title>Tag: Attitude and track control | Hexo</title>
 
 
 
@@ -144,111 +144,80 @@
     }
 </script>
             <div class="main">
-                <div class="sort-options">
-  <button onclick="sortPosts('name')">Sort by Title</button>
-  <button onclick="sortPosts('date')">Sort by Time</button>
-</div>
+                <style>
+.tag-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 16px;
+}
 
-<div class="post-wrap archive">
-  <ul class="archive-list" id="archiveList">
-    
-      <li class="archive-item" data-title="Dynamic Programming(4)---Longest Increasing Subsequence" data-date="2025-04-29T08:17:08.656Z">
-        <a class="archive-item-link" href="/2025/04/29/Dynamic%20Programming(4)---Longest%20Increasing%20Subsequence/">Dynamic Programming(4)---Longest Increasing Subsequence</a>
-        <span class="archive-item-date">April 29, 2025</span>
-      </li>
-    
-      <li class="archive-item" data-title="Dynamic Programming(5)---Longest Common Subsequence" data-date="2025-05-06T07:44:59.599Z">
-        <a class="archive-item-link" href="/2025/04/29/Dynamic%20Programming(5)---Longest%20common%20subsequence/">Dynamic Programming(5)---Longest Common Subsequence</a>
-        <span class="archive-item-date">May 6, 2025</span>
-      </li>
-    
-      <li class="archive-item" data-title="Dynamic Programming(3)---Application of Dynamic Programming in Strings" data-date="2025-04-24T05:37:23.607Z">
-        <a class="archive-item-link" href="/2025/04/26/Dynamic%20Programming(3)---Application%20of%20Dynamic%20Programming%20in%20Strings/">Dynamic Programming(3)---Application of Dynamic Programming in Strings</a>
-        <span class="archive-item-date">April 24, 2025</span>
-      </li>
-    
-      <li class="archive-item" data-title="Dynamic Programming(2)---Matrix Types" data-date="2025-04-16T08:36:18.462Z">
-        <a class="archive-item-link" href="/2025/04/16/Dynamic%20Programming(2)---Matrix%20Types/">Dynamic Programming(2)---Matrix Types</a>
-        <span class="archive-item-date">April 16, 2025</span>
-      </li>
-    
-      <li class="archive-item" data-title="Dynamic Programming(1)---Fibonacci Types" data-date="2025-04-16T08:36:24.081Z">
-        <a class="archive-item-link" href="/2025/04/11/Dynamic_Programming(1)---Fibonacci%20Types/">Dynamic Programming(1)---Fibonacci Types</a>
-        <span class="archive-item-date">April 16, 2025</span>
-      </li>
-    
-  </ul>
+.tag-container h1 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
 
-  
-</div>
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-<script>
-  function sortPosts(type) {
-    const list = document.getElementById("archiveList");
-    const items = Array.from(list.getElementsByTagName("li"));
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
 
-    items.sort((a, b) => {
-      if (type === 'name') {
-        return a.dataset.title.localeCompare(b.dataset.title, 'zh');
-      } else if (type === 'date') {
-        return new Date(b.dataset.date) - new Date(a.dataset.date);
-      }
-    });
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
 
-    items.forEach(item => list.appendChild(item));
-  }
-</script>
+.card-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-<style>
-  .sort-options {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-bottom: 1.5rem;
-  }
+.card-title a {
+  text-decoration: none;
+  color: #007acc;
+}
 
-  .sort-options button {
-    width: 130px;
-    height: 40px;
-    margin-bottom: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid #ccc;
-    background-color: #f8f8f8;
-    cursor: pointer;
-    font-size: 0.88rem;
-    border-radius: 6px;
-    line-height: 1.2;
-    text-align: center;
-  }
+.card-date {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 10px;
+}
 
-  .sort-options button:hover {
-    background-color: #eee;
-  }
-
-  .archive-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .archive-item {
-    margin: 0.5rem 0;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px dashed #ddd;
-    padding-bottom: 0.3rem;
-  }
-
-  .archive-item-link {
-    text-decoration: none;
-    color: #333;
-  }
-
-  .archive-item-date {
-    color: #888;
-    font-size: 0.85rem;
-  }
+.card-excerpt {
+  color: #555;
+  line-height: 1.6;
+}
 </style>
 
+<div class="tag-container">
+  <h1>Articles tagged: Attitude and track control</h1>
+
+  <div class="card-list">
+    
+      <div class="card">
+        <div class="card-date">2025-05-29</div>
+        <div class="card-title">
+          <a href="/2025/05/29/ITRS%E4%B8%8EGCRS%E7%9A%84%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2/">ITRS与GCRS的坐标转换</a>
+        </div>
+        <div class="card-excerpt">
+          <hr>
+<h1 id="✨-内容摘要"><a href="#✨-内容摘要" class="headerlink" title="✨ 内容摘要"></a>✨ 内容摘要</h1><p>本文件（TN36第5章）系统阐述了从地固参考系（ITRS）...
+        </div>
+      </div>
+    
+  </div>
+</div>
 
             </div>
             <!-- 阅读进度条容器：铺满屏幕顶部 -->
